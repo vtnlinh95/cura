@@ -32,5 +32,6 @@ proguard/
 captures/
 
 # Android Studio tracking files
+*.iml
 /.idea/workspace.xml
 /.idea/libraries
