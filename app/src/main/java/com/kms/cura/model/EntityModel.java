@@ -4,7 +4,7 @@ import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.HelloWorldEntity;
 
 /**
- * Abstract class for all controller to deal with data handling
+ * Abstract class for all model to deal with data loading
  * All methods of this class is protected, subclasses must create public methods for views to use
  */
 public abstract class EntityModel {
