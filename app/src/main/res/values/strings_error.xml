@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email_error">"Please enter a valid e-mail</string>
+    <string name="pwd_error">Password must be 6-16 characters</string>
+
+</resources>
