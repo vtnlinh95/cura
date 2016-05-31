@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.AccountTypeSelectionActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation"/>
     </application>
 
 </manifest>
