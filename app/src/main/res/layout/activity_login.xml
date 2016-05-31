@@ -77,14 +77,16 @@
         android:textSize="25sp" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:text="@string/login"
         android:id="@+id/button_LoginUI_Login"
         android:layout_below="@+id/editText_LoginUI_Password"
         android:layout_alignRight="@+id/editText_LoginUI_Password"
         android:layout_alignEnd="@+id/editText_LoginUI_Password"
-        android:textSize="20sp" />
+        android:textSize="@dimen/textSizeButton"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_register_state_list"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -104,7 +106,9 @@
         android:id="@+id/button_LoginUI_CreateAccount"
         android:layout_below="@+id/textView_LoginUI_NoAccount"
         android:layout_centerHorizontal="true"
-        android:textSize="20sp" />
+        android:textColor="@color/white"
+        android:background="@color/colorPrimaryDark"
+        android:textSize="@dimen/textSizeButton" />
 
     <Button
         android:layout_width="wrap_content"
