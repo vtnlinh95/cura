@@ -2,5 +2,8 @@
 <resources>
     <string name="email_error">"Please enter a valid e-mail</string>
     <string name="pwd_error">Password must be 6-16 characters</string>
-
+    <string name="FirstNameError">This field cannot be left blank</string>
+    <string name="EmailError">Please enter a valid e-mail</string>
+    <string name="PasswordError">Passwords must be 6-16 characters in length</string>
+    <string name="PasswordReenterError">The Re-enter Password does not match</string>
 </resources>

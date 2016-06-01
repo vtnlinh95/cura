@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.kms.cura.R;
+import com.kms.cura.utils.InputUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +28,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        createAccountButton.setOnClickListener(this);
     }
 
     /**
@@ -96,12 +98,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
            *   Disable the login button if either condition is invalid nad display an error message accordingly*/
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!isEmailValid(email.getText().toString())) {
+        if (!InputUtils.isEmailValid(email.getText().toString())) {
             email.setError(getResources().getString(R.string.email_error));
             loginButton.setEnabled(false);
 
         }
-        if (!isPasswordValid(password.getText().toString())) {
+        if (!InputUtils.isPasswordValid(password.getText().toString())) {
             password.setError(getResources().getString(R.string.pwd_error));
             loginButton.setEnabled(false);
         }
@@ -110,25 +112,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     /* Check email and password after the user done entering information and re-enable the login button if both conditions are valid */
     @Override
     public void afterTextChanged(Editable s) {
-        if (isEmailValid(email.getText().toString()) && isPasswordValid(password.getText().toString())) {
+        if (InputUtils.isEmailValid(email.getText().toString()) && InputUtils.isPasswordValid(password.getText().toString())) {
             loginButton.setEnabled(true);
         }
 
     }
 
-    private boolean isEmailValid(String email) {
-        String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-
-        Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(email);
-
-        return (email.contains("@") && matcher.matches());
-    }
-
-    private boolean isPasswordValid(String password) {
-        return password.length() >= 6 && password.length() <= 16;
-    }
 
     @Override
     public void onClick(View v) {

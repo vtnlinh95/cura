@@ -26,7 +26,8 @@ public class AccountTypeSelectionActivity extends AppCompatActivity implements V
             // navigate to Doc Register
 
         } else if (v.getId() == R.id.btnSelectPat) {
-            // navigate to Pat Register
+            Intent toPatientRegister = new Intent(AccountTypeSelectionActivity.this, PatientSignUpActivity.class);
+            startActivity(toPatientRegister);
 
         }
     }
