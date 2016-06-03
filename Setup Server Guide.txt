@@ -1,0 +1,15 @@
+
+1/ Download these software below if you don't have it on your computer:
+	MySQL (server and workbench) http://dev.mysql.com/downloads/installer/
+	Apache Tomcat 7 https://tomcat.apache.org/download-70.cgi
+	JRE and JDK 1.7 http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html 
+	Apache Maven 3.3 https://maven.apache.org/download.cgi
+2/ Open MySQL workbench and create a new connection. Set everything as default. The connection's username and password should both be "root".
+3/ In MySQL workbench, open the script file locates in com.kms.cura.dal\resources\SQL Script. Make sure connect to the connection that you've just created in step 2 first then File -> Run SQL Script and navigate to the SQL script ("InitDatabase")
+4/ Go to cura main folder and open a command windows there
+5/ Type in "mvn package" or "mvn clean install" and wait for the web app to be compiled
+6/ After the compiling process is done, go to com.kms.cura_server\target . There should be a newly generated file calls "com.kms.cura_server-0.1.war" there. Copy it to your Apache Tomcat's "webapps" folder. You can change the file's name so the path will be easier to remeber.
+7/ Open a command windows in Apache Tomcat's "bin" folder, and type in "startup.bat"
+8/ Once the server done starting up, you should be able to access it normal. Check localhost:8080/com.kms.cura_server-0.1/cura_server/hello to make sure if it's working correctly (replace "com.kms.cura_server-0.1" with a new name if you change the war file's name in step 6.
+
+	
