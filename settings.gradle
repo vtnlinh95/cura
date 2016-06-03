@@ -1,1 +1,2 @@
+include ':com.kms.cura.entity'
 include ':app'

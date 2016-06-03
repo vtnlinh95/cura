@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/com.kms.cura.entity/com.kms.cura.entity.iml" filepath="$PROJECT_DIR$/com.kms.cura.entity/com.kms.cura.entity.iml" />
       <module fileurl="file://$PROJECT_DIR$/cura.iml" filepath="$PROJECT_DIR$/cura.iml" />
     </modules>
   </component>

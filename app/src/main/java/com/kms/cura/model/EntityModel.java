@@ -1,7 +1,6 @@
 package com.kms.cura.model;
 
 import com.kms.cura.entity.Entity;
-import com.kms.cura.entity.HelloWorldEntity;
 
 /**
  * Abstract class for all model to deal with data loading
