@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.kms.cura.R;
 import com.kms.cura.controller.UserController;
 import com.kms.cura.view.fragment.DoctorHomeFragment;
+import com.kms.cura.view.fragment.DoctorProfileFragment;
 
 public class DoctorViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DialogInterface.OnClickListener {
     private Toolbar doctorToolbar;
@@ -35,8 +36,9 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
     }
 
     private void initFragments() {
-        doctorHomeFragment = new DoctorHomeFragment();
-        changeFragment(doctorHomeFragment);
+        //doctorHomeFragment = new DoctorHomeFragment();
+        doctorProfileFragment = new DoctorProfileFragment();
+        changeFragment(doctorProfileFragment);
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -77,8 +79,6 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 

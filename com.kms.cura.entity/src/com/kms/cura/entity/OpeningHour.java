@@ -41,6 +41,13 @@ public class OpeningHour {
 		return this.dayOfTheWeek +" " +this.openTime.toString() +"-"+this.closeTime.toString();
 	}
 	
+	 public String getTime() {
+         StringBuilder builder = new StringBuilder();
+         builder.append(getOpenTime().toString().substring(0, 5));
+         builder.append("-");
+         builder.append(getCloseTime().toString().substring(0, 5));
+         return builder.toString();
+     }
 	public static Type getPatientUserType() {
 		Type type = new TypeToken<OpeningHour>() {
 		}.getType();

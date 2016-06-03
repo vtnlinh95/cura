@@ -28,5 +28,5 @@
     <dimen name="CommentHeight">240sp</dimen>
     <dimen name="timeHeight">100sp</dimen>
     <dimen name="topPadding">65sp</dimen>
-
+    <dimen name="marginTopProfile">15sp</dimen>
 </resources>

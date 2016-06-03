@@ -1,5 +1,6 @@
 package com.kms.cura.model.request;
 
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.kms.cura.constant.EventConstant;
 import com.kms.cura.entity.json.JsonToEntityConverter;
@@ -34,7 +35,6 @@ public class LoginUserModelResponse implements EntityModelResponse {
                     CurrentUserProfile.getInstance().setData(entity);
                     EventBroker.getInstance().pusblish(EventConstant.LOGIN_SUCCESS,EventConstant.TYPE_DOCTOR);
                 }
-                EventBroker.getInstance().pusblish(EventConstant.LOGIN_SUCCESS, "");
             } else {
                 String message = jsonObject.getString(UserEntity.MESSAGE);
                 EventBroker.getInstance().pusblish(EventConstant.LOGIN_FAILED, message);
