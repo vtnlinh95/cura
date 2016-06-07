@@ -10,6 +10,9 @@ import javax.ws.rs.Path;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
+import com.kms.cura.dal.database.PatientUserDatabaseHelper;
+import com.kms.cura.dal.database.UserDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
 import com.kms.cura.dal.user.DoctorUserDAL;
 import com.kms.cura.dal.user.PatientUserDAL;
@@ -27,11 +30,11 @@ public final class UserAPI {
 	@Path("/getAllUser")
 	public String getAllUser() {
 		try {
-			List<Entity> users = UserDAL.getInstance().getAll();
+			List<Entity> users = UserDAL.getInstance().getAll(new UserDatabaseHelper());
 			JsonElement element = EntityToJsonConverter.convertEntityListToJson(users);
 			return element.toString();
 		} catch (ClassNotFoundException | SQLException e) {
-			return Strings.error_internal + e.toString();
+			return Strings.error_internal + e.getMessage();
 		}
 	}
 
@@ -39,11 +42,11 @@ public final class UserAPI {
 	@Path("/getAllAdmin")
 	public String getAllUserAdmin() {
 		try {
-			List<Entity> users = UserDAL.getInstance().getAll();
+			List<Entity> users = UserDAL.getInstance().getAll(new UserDatabaseHelper());
 			JsonElement element = EntityToJsonConverter.convertEntityListToJson(users);
 			return element.toString();
 		} catch (ClassNotFoundException | SQLException e) {
-			return Strings.error_internal + e.toString();
+			return Strings.error_internal + e.getMessage();
 		}
 	}
 
@@ -51,7 +54,7 @@ public final class UserAPI {
 	@Path("/getAllPatient")
 	public String getAllPatient() {
 		try {
-			List<Entity> users = PatientUserDAL.getInstance().getAll();
+			List<Entity> users = PatientUserDAL.getInstance().getAll(new PatientUserDatabaseHelper());
 			JsonElement element = EntityToJsonConverter.convertEntityListToJson(users);
 			return element.toString();
 		} catch (ClassNotFoundException | SQLException e) {
@@ -63,11 +66,11 @@ public final class UserAPI {
 	@Path("/getAllDoctor")
 	public String getAllDoctor() {
 		try {
-			List<Entity> users = DoctorUserDAL.getInstance().getAll();
+			List<Entity> users = DoctorUserDAL.getInstance().getAll(new DoctorUserDatabaseHelper());
 			JsonElement element = EntityToJsonConverter.convertEntityListToJson(users);
 			return element.toString();
 		} catch (ClassNotFoundException | SQLException e) {
-			return Strings.error_internal + e.toString();
+			return Strings.error_internal + e.getMessage();
 		}
 	}
 
@@ -79,7 +82,7 @@ public final class UserAPI {
 			PatientUserEntity user = PatientUserDAL.getInstance().createUser(entity);
 			return EntityToJsonConverter.convertEntityToJson(user).toString();
 		} catch (ClassNotFoundException | SQLException | DALException e) {
-			return Strings.error_internal + e.toString();
+			return Strings.error_internal + e.getMessage();
 		}
 	}
 
@@ -91,7 +94,7 @@ public final class UserAPI {
 			DoctorUserEntity user = DoctorUserDAL.getInstance().createUser(entity);
 			return EntityToJsonConverter.convertEntityToJson(user).toString();
 		} catch (ClassNotFoundException | SQLException | DALException e) {
-			return Strings.error_internal + e.toString();
+			return Strings.error_internal + e.getMessage();
 		}
 	}
 
