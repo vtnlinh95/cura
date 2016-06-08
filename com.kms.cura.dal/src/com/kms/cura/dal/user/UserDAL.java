@@ -8,6 +8,7 @@ import com.kms.cura.dal.EntityDAL;
 import com.kms.cura.dal.database.DatabaseHelper;
 import com.kms.cura.dal.database.UserDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.mapping.PatientColumn;
 import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.user.UserEntity;
 
@@ -60,22 +61,27 @@ public class UserDAL extends EntityDAL {
 		return rs;
 	}
 	
-	public Entity searchUser(UserEntity entity) throws ClassNotFoundException, SQLException{
+	public int searchUser(UserEntity entity) throws ClassNotFoundException, SQLException{
 		DatabaseHelper dbh = null;
 		try {
-			dbh = new UserDatabaseHelper();
+			dbh = new DatabaseHelper();
 			ResultSet rs = null;
-			Entity result = null;
 			rs = dbh.queryByEmailPassword(USER_TABLE_NAME, entity.getEmail(), entity.getPassword());
-			if (rs != null && rs.next()) {
-				result = getEntityFromResultSet(rs, dbh);
+			if(rs != null && rs.next()){
+				return rs.getInt("id");
 			}
-			return result;
+			return -1;
 		} finally {
 			if (dbh != null) {
 				dbh.closeConnection();
 			}
 		}
+	}
+	
+	protected ResultSet searchUserbyID(String tableName, int id, String id_column, DatabaseHelper dbh) throws ClassNotFoundException, SQLException {
+		ResultSet rs = null;
+		rs = dbh.queryByID(tableName, id, id_column);
+		return rs;
 	}
 
 }

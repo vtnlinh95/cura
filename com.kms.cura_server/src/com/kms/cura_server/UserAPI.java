@@ -102,18 +102,22 @@ public final class UserAPI {
 	public String userLogin(String jsonData) {
 		UserEntity entity = JsonToEntityConverter.convertJsonStringToEntity(jsonData, getUserEntityType());
 		try {
-			PatientUserEntity patientUserEntity= PatientUserDAL.getInstance().searchUser(entity);
-			if(patientUserEntity == null){
-				DoctorUserEntity doctorUserEntity = DoctorUserDAL.getInstance().searchUser(entity);
-				if(doctorUserEntity == null){
+			int id = UserDAL.getInstance().searchUser(entity);
+			if(id != -1){
+				PatientUserEntity patientUserEntity = PatientUserDAL.getInstance().searchPatientbyID(id);
+				if(patientUserEntity == null){
+					DoctorUserEntity doctorUserEntity = DoctorUserDAL.getInstance().searchDoctorbyID(id);
+					if(doctorUserEntity != null){
+						return SuccessResponse(doctorUserEntity);
+					}
 					return UnsuccessResponse("Account does not exist");
 				}
 				else{
-					return SuccessResponse(doctorUserEntity);
+					return SuccessResponse(patientUserEntity);
 				}
 			}
 			else{
-				return SuccessResponse(patientUserEntity);
+				return UnsuccessResponse("Account does not exist");
 			}
 		} catch (ClassNotFoundException | SQLException e) {
 			return UnsuccessResponse(e);
