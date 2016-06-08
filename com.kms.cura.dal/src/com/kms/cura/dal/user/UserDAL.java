@@ -59,5 +59,23 @@ public class UserDAL extends EntityDAL {
 		rs = dbh.insertUser(entity);
 		return rs;
 	}
+	
+	public Entity searchUser(UserEntity entity) throws ClassNotFoundException, SQLException{
+		DatabaseHelper dbh = null;
+		try {
+			dbh = new UserDatabaseHelper();
+			ResultSet rs = null;
+			Entity result = null;
+			rs = dbh.queryByEmailPassword(USER_TABLE_NAME, entity.getEmail(), entity.getPassword());
+			if (rs != null && rs.next()) {
+				result = getEntityFromResultSet(rs, dbh);
+			}
+			return result;
+		} finally {
+			if (dbh != null) {
+				dbh.closeConnection();
+			}
+		}
+	}
 
 }

@@ -58,7 +58,15 @@ public class DatabaseHelper {
 		rs = stmt.executeQuery();
 		return rs;
 	}
-
+	public ResultSet queryByEmailPassword(String tableName, String email, String password) throws SQLException {
+		ResultSet rs = null;
+		stmt = con.prepareStatement("SELECT * FROM " + tableName + " WHERE email = ? AND password = ?");
+		stmt.setString(1, email);
+		stmt.setString(2, password);
+		rs = stmt.executeQuery();
+		return rs;
+	}
+	
 	public ResultSet insert(String tableName, Entity entity) throws SQLException {
 		ResultSet rs = null;
 		stmt = con.prepareStatement("INSERT INTO " + tableName + " (name) VALUES (" + entity.getName() + ")");

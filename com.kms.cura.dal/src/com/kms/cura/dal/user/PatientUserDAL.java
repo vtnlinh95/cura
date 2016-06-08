@@ -59,4 +59,11 @@ public class PatientUserDAL extends UserDAL {
 	return null;
     }
 
+	@Override
+	public PatientUserEntity searchUser(UserEntity entity) throws ClassNotFoundException, SQLException {
+		return (PatientUserEntity) super.searchUser(entity);
+	}
+    
+    
+
 }

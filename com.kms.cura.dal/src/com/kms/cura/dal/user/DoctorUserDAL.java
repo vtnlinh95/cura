@@ -90,4 +90,10 @@ public class DoctorUserDAL extends UserDAL {
 		return null;
 	}
 
+	@Override
+	public DoctorUserEntity searchUser(UserEntity entity) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return (DoctorUserEntity) super.searchUser(entity);
+	}
+	
 }
