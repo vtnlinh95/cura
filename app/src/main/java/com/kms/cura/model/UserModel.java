@@ -1,21 +1,12 @@
 package com.kms.cura.model;
 
-import android.content.Context;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.JsonElement;
-import com.kms.cura.R;
-import com.kms.cura.controller.ErrorController;
 import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.UserEntity;
+import com.kms.cura.model.request.LoginUserModelResponse;
+import com.kms.cura.model.request.RegisterModelResponse;
 import com.kms.cura.utils.RequestUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class UserModel extends EntityModel {
     private static UserModel instance;
@@ -42,13 +33,23 @@ public class UserModel extends EntityModel {
         return false;
     }
 
-    public void registerPatient(final UserEntity entity, final Context mContext) {
+    public void registerPatient(final UserEntity entity) {
         StringBuilder builder = new StringBuilder();
         builder.append(Settings.SERVER_URL);
         builder.append(Settings.CREATE_PATIENT_API);
-        StringRequest stringRequest = RequestUtils.getInstance().createRequest(mContext,builder.toString(), Request.Method.POST,entity);
+
+        StringRequest stringRequest = RequestUtils.createRequest(builder.toString(),
+                Request.Method.POST, EntityToJsonConverter.convertEntityToJson(entity).toString(),
+                new RegisterModelResponse());
         VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
     }
 
-
+    public void userLogin(final UserEntity entity) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(Settings.SERVER_URL);
+        builder.append(Settings.USER_LOGIN);
+        StringRequest stringRequest = RequestUtils.createRequest(builder.toString(), Request.Method.POST,
+                EntityToJsonConverter.convertEntityToJson(entity).toString(), new LoginUserModelResponse());
+        VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
+    }
 }

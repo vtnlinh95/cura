@@ -84,7 +84,7 @@ public final class UserAPI {
 			PatientUserEntity user = PatientUserDAL.getInstance().createUser(entity);
 			return SuccessResponse(user);
 		} catch (ClassNotFoundException | SQLException | DALException e) {
-			return UnsuccessResponse(e);
+			return UnsuccessResponse(e.getMessage());
 		}
 	}
 
@@ -96,11 +96,30 @@ public final class UserAPI {
 			DoctorUserEntity user = DoctorUserDAL.getInstance().createUser(entity);
 			return SuccessResponse(user);
 		} catch (ClassNotFoundException | SQLException | DALException e) {
-			return UnsuccessResponse(e);
+			return UnsuccessResponse(e.getMessage());
 
 		}
 	}
 
+	@POST
+	@Path("/userLogin")
+	public String userLogin(String jsonData){
+		UserEntity entity = JsonToEntityConverter.convertJsonStringToEntity(jsonData, getPatientUserType());
+		try {
+			PatientUserEntity patientUserEntity=PatientUserDAL.getInstance().searchPatient(entity);
+			if (patientUserEntity != null){
+				return SuccessResponse(patientUserEntity);
+			}
+			DoctorUserEntity doctorUserEntity = DoctorUserDAL.getInstance().searchDoctor(entity);
+			if (doctorUserEntity != null) {
+				return SuccessResponse(doctorUserEntity);
+			}
+			return UnsuccessResponse("Email and password combination does not exist");
+		} catch (ClassNotFoundException | SQLException e) {
+			return UnsuccessResponse(e.getMessage());
+		}
+
+	}
 	private static Type getDoctorEntityType() {
 		return new TypeToken<DoctorUserEntity>() {
 		}.getType();
@@ -111,16 +130,19 @@ public final class UserAPI {
 		}.getType();
 		return type;
 	}
+
 	private String SuccessResponse(UserEntity user){
 		JsonElement JsonUser = EntityToJsonConverter.convertEntityToJson(user);
 		JsonObject JsonUserConvert =(JsonObject) JsonUser;
 		JsonUserConvert.addProperty(UserEntity.STATUS_KEY, true);
+		JsonUserConvert.addProperty(UserEntity.TYPE, user.getType());
 		return JsonUserConvert.toString();
 	}
-	private String UnsuccessResponse(Exception e){
+
+	private String UnsuccessResponse(String message){
 		JsonObject jsonError=new JsonObject();
 		jsonError.addProperty(UserEntity.STATUS_KEY, false);
-		jsonError.addProperty(UserEntity.MESSAGE, e.toString());
+		jsonError.addProperty(UserEntity.MESSAGE, message);
 		return jsonError.toString();
 	}
 }

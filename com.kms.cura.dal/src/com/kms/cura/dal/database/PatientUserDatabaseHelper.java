@@ -120,4 +120,10 @@ public class PatientUserDatabaseHelper extends UserDatabaseHelper {
 		}
 		return null;
 	}
+
+	public PatientUserEntity searchPatient(UserEntity entity) throws ClassNotFoundException, SQLException {
+		return (PatientUserEntity) queryUserEntitybyEmailPassword(PatientColumn.TABLE_NAME, UserColumn.TABLE_NAME,
+				entity.getEmail(), entity.getPassword(), PatientColumn.USER_ID.getColumnName(),
+				UserColumn.ID.getColumnName());
+	}
 }

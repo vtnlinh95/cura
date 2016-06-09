@@ -1,0 +1,49 @@
+package com.kms.cura.model.request;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.kms.cura.constant.EventConstant;
+import com.kms.cura.entity.user.PatientUserEntity;
+import com.kms.cura.entity.user.UserEntity;
+import com.kms.cura.event.EventBroker;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * Created by linhtnvo on 6/10/2016.
+ */
+public class LoginUserModelResponse implements EntityModelResponse {
+    @Override
+    public void onResponse(String response) {
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(response);
+            boolean status = jsonObject.getBoolean(UserEntity.STATUS_KEY);
+            if (status) {
+                int type = jsonObject.getInt(UserEntity.TYPE);
+                if(type == PatientUserEntity.PATIENT_TYPE){
+                    //Save into Patient class
+                }
+                else{
+                    //Save into Doctor class
+                }
+                EventBroker.getInstance().pusblish(EventConstant.LOGIN_SUCCESS, "");
+            } else {
+                String message = jsonObject.getString(UserEntity.MESSAGE);
+                EventBroker.getInstance().pusblish(EventConstant.LOGIN_FAILED, message);
+            }
+        } catch (JSONException e) {
+            EventBroker.getInstance().pusblish(EventConstant.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        if(error.getMessage() == null){
+            EventBroker.getInstance().pusblish(EventConstant.CONNECTION_ERROR,null);
+            return;
+        }
+        EventBroker.getInstance().pusblish(EventConstant.CONNECTION_ERROR, error.getMessage());
+    }
+}

@@ -3,6 +3,7 @@ package com.kms.cura.entity.user;
 import java.sql.Date;
 
 public class PatientUserEntity extends UserEntity {
+	public static int PATIENT_TYPE = 2;
 	private String gender;
 	private Date birth;
 	private String location;
@@ -58,5 +59,12 @@ public class PatientUserEntity extends UserEntity {
 	public void setHealthConcern(String healthConcern) {
 		this.healthConcern = healthConcern;
 	}
+
+	@Override
+	public int getType() {
+		return PATIENT_TYPE;
+	}
+
+
 
 }

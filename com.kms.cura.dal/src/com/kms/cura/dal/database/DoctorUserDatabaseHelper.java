@@ -210,4 +210,10 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 			doctorSpecialityRS.close();
 		}
 	}
+
+	public DoctorUserEntity searchDoctor(UserEntity entity) throws ClassNotFoundException, SQLException {
+		return (DoctorUserEntity) queryUserEntitybyEmailPassword(DoctorColumn.TABLE_NAME, UserColumn.TABLE_NAME,
+				entity.getEmail(), entity.getPassword(), DoctorColumn.USER_ID.getColumnName(),
+				UserColumn.ID.getColumnName());
+	}
 }

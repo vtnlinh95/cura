@@ -42,5 +42,9 @@ public class PatientUserDAL extends UserDAL {
 		PatientUserDatabaseHelper dbh = new PatientUserDatabaseHelper();
 		return dbh.insertUser((PatientUserEntity) entity);
 	}
-
+	
+	public PatientUserEntity searchPatient(UserEntity entity) throws ClassNotFoundException, SQLException{
+		PatientUserDatabaseHelper dbh = new PatientUserDatabaseHelper();
+		return dbh.searchPatient(entity);
+	}
 }
