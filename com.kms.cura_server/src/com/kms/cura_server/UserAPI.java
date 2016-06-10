@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
 import com.kms.cura.dal.database.PatientUserDatabaseHelper;
@@ -22,6 +23,7 @@ import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.PatientUserEntity;
+import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura_server.resources.Strings;
 
 @Path("/user")
@@ -80,9 +82,9 @@ public final class UserAPI {
 		try {
 			PatientUserEntity entity = JsonToEntityConverter.convertJsonStringToEntity(jsonData, getPatientUserType());
 			PatientUserEntity user = PatientUserDAL.getInstance().createUser(entity);
-			return EntityToJsonConverter.convertEntityToJson(user).toString();
+			return SuccessResponse(user);
 		} catch (ClassNotFoundException | SQLException | DALException e) {
-			return Strings.error_internal + e.getMessage();
+			return UnsuccessResponse(e);
 		}
 	}
 
@@ -92,9 +94,10 @@ public final class UserAPI {
 		try {
 			DoctorUserEntity entity = JsonToEntityConverter.convertJsonStringToEntity(jsonData, getDoctorEntityType());
 			DoctorUserEntity user = DoctorUserDAL.getInstance().createUser(entity);
-			return EntityToJsonConverter.convertEntityToJson(user).toString();
+			return SuccessResponse(user);
 		} catch (ClassNotFoundException | SQLException | DALException e) {
-			return Strings.error_internal + e.getMessage();
+			return UnsuccessResponse(e);
+
 		}
 	}
 
@@ -107,5 +110,17 @@ public final class UserAPI {
 		Type type = new TypeToken<PatientUserEntity>() {
 		}.getType();
 		return type;
+	}
+	private String SuccessResponse(UserEntity user){
+		JsonElement JsonUser = EntityToJsonConverter.convertEntityToJson(user);
+		JsonObject JsonUserConvert =(JsonObject) JsonUser;
+		JsonUserConvert.addProperty(UserEntity.STATUS_KEY, true);
+		return JsonUserConvert.toString();
+	}
+	private String UnsuccessResponse(Exception e){
+		JsonObject jsonError=new JsonObject();
+		jsonError.addProperty(UserEntity.STATUS_KEY, false);
+		jsonError.addProperty(UserEntity.MESSAGE, e.toString());
+		return jsonError.toString();
 	}
 }
