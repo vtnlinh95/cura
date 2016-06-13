@@ -1,4 +1,4 @@
-package com.kms.cura.view;
+package com.kms.cura.view.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -14,9 +14,6 @@ import android.widget.EditText;
 
 import com.kms.cura.R;
 import com.kms.cura.utils.InputUtils;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener {
 
