@@ -1,4 +1,4 @@
-package com.kms.cura.view;
+package com.kms.cura.view.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,8 +71,12 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
     }
 
     public boolean validateFirstName() {
-        if (!InputUtils.isNotEmpty(getEditTextText(edtFirstName))) {
+        if("".equals(getEditTextText(edtFirstName))){
             edtFirstName.setError(getResources().getString(R.string.FirstNameError));
+            return false;
+        }
+        if (!InputUtils.isNameValid(getEditTextText(edtFirstName))) {
+            edtFirstName.setError(getResources().getString(R.string.first_name_error));
             return false;
         }
         return true;
@@ -99,6 +103,7 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
             edtPasswordReenter.setError(getResources().getString(R.string.PasswordReenterError));
             return false;
         }
+        edtPasswordReenter.setError(null);
         return true;
     }
 }

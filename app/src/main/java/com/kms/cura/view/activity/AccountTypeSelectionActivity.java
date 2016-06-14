@@ -1,4 +1,4 @@
-package com.kms.cura.view;
+package com.kms.cura.view.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +24,8 @@ public class AccountTypeSelectionActivity extends AppCompatActivity implements V
     public void onClick(View v) {
         if (v.getId() == R.id.btnSelectDoc) {
             // navigate to Doc Register
-
+            Intent intent = new Intent(this, RegisterDoctorActivity.class);
+            startActivity(intent);
         } else if (v.getId() == R.id.btnSelectPat) {
             Intent toPatientRegister = new Intent(AccountTypeSelectionActivity.this, PatientSignUpActivity.class);
             startActivity(toPatientRegister);
