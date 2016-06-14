@@ -15,6 +15,7 @@
     <string name="create_doc">Create Doctor Account</string>
     <string name="sex">Sex*: </string>
     <string name="birthday">Birth Date*:</string>
+
     <string-array name="sex">
         <item>Male</item>
         <item>Female</item>
@@ -34,4 +35,10 @@
     <string name="re_pwd">Re-enter Password*</string>
     <string name="register">Register</string>
     <string name="name">Name*</string>
+    <string name="sort_by_prompt">Sort by: </string>
+    <string-array name="sort_by">
+        <item>Name</item>
+        <item>Rating</item>
+        <item>Price</item>
+    </string-array>
 </resources>
