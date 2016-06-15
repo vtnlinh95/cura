@@ -9,26 +9,33 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.kms.cura.R;
+import com.kms.cura.constant.EventConstant;
+import com.kms.cura.controller.ErrorController;
 import com.kms.cura.controller.UserController;
 import com.kms.cura.entity.user.UserEntity;
+import com.kms.cura.event.EventBroker;
+import com.kms.cura.event.EventHandler;
 import com.kms.cura.model.UserModel;
 import com.kms.cura.utils.InputUtils;
 
-public class PatientSignUpActivity extends AppCompatActivity implements TextWatcher {
+public class PatientSignUpActivity extends AppCompatActivity implements TextWatcher, EventHandler {
     private EditText edtFirstName, edtEmail, edtPassword, edtPasswordReenter;
     private Button btnRegister;
     private int count = 0;
+    private EventBroker broker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_sign_up);
         initEditText();
+        broker = EventBroker.getInstance();
         btnRegister = (Button) findViewById(R.id.btnRegister);
+        registerEvent();
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserController.registerPatient(PatientSignUpActivity.this, getEditTextText(edtFirstName), getEditTextText(edtEmail), getEditTextText(edtPassword));
+                UserController.registerPatient(getEditTextText(edtFirstName), getEditTextText(edtEmail), getEditTextText(edtPassword));
             }
         });
 
@@ -53,6 +60,20 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
         //Ignore
     }
 
+    public void registerEvent() {
+        broker.register(this, EventConstant.REGISTER_SUCCESS);
+        broker.register(this, EventConstant.REGISTER_FAILED);
+        broker.register(this, EventConstant.CONNECTION_ERROR);
+        broker.register(this, EventConstant.INTERNAL_ERROR);
+    }
+
+    public void unregisterEvent() {
+        broker.unRegister(this, EventConstant.REGISTER_SUCCESS);
+        broker.unRegister(this, EventConstant.REGISTER_FAILED);
+        broker.unRegister(this, EventConstant.CONNECTION_ERROR);
+        broker.unRegister(this, EventConstant.INTERNAL_ERROR);
+    }
+
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         validateFirstName();
@@ -71,12 +92,8 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
     }
 
     public boolean validateFirstName() {
-        if("".equals(getEditTextText(edtFirstName))){
+        if (!InputUtils.isNotEmpty(getEditTextText(edtFirstName))) {
             edtFirstName.setError(getResources().getString(R.string.FirstNameError));
-            return false;
-        }
-        if (!InputUtils.isNameValid(getEditTextText(edtFirstName))) {
-            edtFirstName.setError(getResources().getString(R.string.first_name_error));
             return false;
         }
         return true;
@@ -103,7 +120,39 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
             edtPasswordReenter.setError(getResources().getString(R.string.PasswordReenterError));
             return false;
         }
-        edtPasswordReenter.setError(null);
         return true;
+    }
+
+    @Override
+    public void handleEvent(String event, String data) {
+        switch (event) {
+            case EventConstant.REGISTER_SUCCESS:
+                ErrorController.showDialog(this, "Register success");
+                break;
+            case EventConstant.REGISTER_FAILED:
+                ErrorController.showDialog(this, "Register failed :" + data);
+                break;
+            case EventConstant.CONNECTION_ERROR:
+                if (data != null) {
+                    ErrorController.showDialog(this, "Error " + data);
+                } else {
+                    ErrorController.showDialog(this, "Error " + getResources().getString(R.string.ConnectionError));
+                }
+                break;
+            case EventConstant.INTERNAL_ERROR:
+                ErrorController.showDialog(this, getResources().getString(R.string.InternalError) + " :" + data);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterEvent();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        registerEvent();
+        super.onResume();
     }
 }

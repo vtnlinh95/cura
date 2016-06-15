@@ -1,12 +1,14 @@
 package com.kms.cura.entity.user;
 
-import com.kms.cura.entity.DegreeEntity;
-import com.kms.cura.entity.FacilityEntity;
-import com.kms.cura.entity.SpecialityEntity;
 import java.sql.Date;
 import java.util.List;
 
+import com.kms.cura.entity.DegreeEntity;
+import com.kms.cura.entity.FacilityEntity;
+import com.kms.cura.entity.SpecialityEntity;
+
 public class DoctorUserEntity extends UserEntity {
+	public static int DOCTOR_TYPE = 1;
 	private String phone;
 	private DegreeEntity degree;
 	private List<SpecialityEntity> speciality;
@@ -134,4 +136,8 @@ public class DoctorUserEntity extends UserEntity {
 		this.insurance = insurance;
 	}
 
+	@Override
+	public int getType() {
+		return DOCTOR_TYPE;
+	}
 }

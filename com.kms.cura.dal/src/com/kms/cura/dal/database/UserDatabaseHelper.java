@@ -72,8 +72,12 @@ public class UserDatabaseHelper extends DatabaseHelper {
 
 		} finally {
 			con.setAutoCommit(true);
-			stmt.close();
-			stmt2.close();
+			if(stmt != null){
+				stmt.close();
+			}
+			if(stmt2 != null){
+				stmt2.close();
+			}
 		}
 	}
 
@@ -123,6 +127,45 @@ public class UserDatabaseHelper extends DatabaseHelper {
 		return new UserEntity(resultSet.getString(UserColumn.ID.getColumnName()), "",
 				resultSet.getString(UserColumn.EMAIL.getColumnName()),
 				resultSet.getString(UserColumn.PASSWORD.getColumnName()));
+	}
+
+	public UserEntity queryUserEntitybyEmailPassword(String tableName1, String tableName2, String email,
+			String password, String onTable1, String onTable2) throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT * FROM ");
+		builder.append(tableName1);
+		builder.append(" LEFT JOIN ");
+		builder.append(tableName2);
+		builder.append(" ON ");
+		builder.append(tableName1);
+		builder.append(".");
+		builder.append(onTable1);
+		builder.append(" = ");
+		builder.append(tableName2);
+		builder.append(".");
+		builder.append(onTable2);
+		builder.append(" WHERE ");
+		builder.append(UserColumn.EMAIL.getColumnName());
+		builder.append(" = ? AND ");
+		builder.append(UserColumn.PASSWORD.getColumnName());
+		builder.append(" = ?");
+		try {
+			stmt = con.prepareStatement(builder.toString());
+			stmt.setString(1, email);
+			stmt.setString(2, password);
+			rs = stmt.executeQuery();
+			if (rs != null && rs.next()) {
+				return getEntityFromResultSet(rs);
+			}
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+		return null;
+
 	}
 
 }

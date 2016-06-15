@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kms.cura.dal.mapping.EntityColumn;
-import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.Entity;
 
 public abstract class DatabaseHelper {
@@ -61,7 +60,7 @@ public abstract class DatabaseHelper {
 		ResultSet rs = null;
 		try {
 			stmt = con.prepareStatement(
-					"SELECT * FROM " + tableName + " WHERE " + UserColumn.ID.getColumnName() + " = ?");
+					"SELECT * FROM " + tableName + " WHERE " + EntityColumn.ID.getColumnName() + " = ?");
 			stmt.setInt(1, id);
 			rs = stmt.executeQuery();
 			rs.next();
@@ -140,4 +139,5 @@ public abstract class DatabaseHelper {
 			}
 		}
 	}
+	
 }
