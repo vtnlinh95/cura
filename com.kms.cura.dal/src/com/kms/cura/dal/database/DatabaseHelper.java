@@ -96,7 +96,6 @@ public abstract class DatabaseHelper {
 		stmt = con.prepareStatement("SELECT * FROM " + tableName + " WHERE " + referenceID + " = ?");
 		stmt.setInt(1, referenceValue);
 		rs = stmt.executeQuery();
-		rs.next();
 		return rs;
 	}
 
