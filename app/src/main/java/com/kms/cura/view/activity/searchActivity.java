@@ -3,6 +3,7 @@ package com.kms.cura.view.activity;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,8 +63,8 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
 
         setContentView(R.layout.activity_search);
 
-
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.menu_search);
         lv = (ListView) findViewById(R.id.listView1);
         lv.setAdapter(new DoctorListViewAdapter(this, users));
 
