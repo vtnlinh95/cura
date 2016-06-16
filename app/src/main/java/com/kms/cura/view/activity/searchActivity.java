@@ -38,7 +38,6 @@ public class searchActivity extends Activity implements OnItemSelectedListener {
     private ListView lv;
     private Spinner spinner;
 
-    String[] teams = {"Man Utd", "Man City", "Chelsea", "Arsenal", "Liverpool", "Totenham"};
     List<SpecialityEntity> list1 = new ArrayList<SpecialityEntity>();
     List<SpecialityEntity> list2 = new ArrayList<SpecialityEntity>();
     List<SpecialityEntity> list3 = new ArrayList<SpecialityEntity>();
@@ -47,7 +46,7 @@ public class searchActivity extends Activity implements OnItemSelectedListener {
     DoctorUserEntity u3 = new DoctorUserEntity("3", "Linh", "linh123@yahoo.com", "123456", null, null, list2, 2, 1, 15, 15, null, null, null, null, null);
     DoctorUserEntity u4 = new DoctorUserEntity("4", "Toan", "toan123@yahoo.com", "123456", null, null, list3, 3.5, 1, 20, 26, null, null, null, null, null);
     DoctorUserEntity u5 = new DoctorUserEntity("5", "Jenny", "Jenny123@yahoo.com", "123456", null, null, list1, 2.5, 1, 10, 13, null, null, null, null, null);
-    private DoctorUserEntity[] users;
+    private List<DoctorUserEntity> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +56,13 @@ public class searchActivity extends Activity implements OnItemSelectedListener {
         list2.add(new SpecialityEntity(null, "Dentist"));
         list2.add(new SpecialityEntity(null, "abv"));
         list2.add(new SpecialityEntity(null, "sdf"));
-        list2.add(new SpecialityEntity(null, "czxv"));
-        list3.add(new SpecialityEntity(null, "ertert"));
+        list2.add(new SpecialityEntity(null, "czasdfadfxv"));
+        list3.add(new SpecialityEntity(null, "ertcggdfgarasdfasdfasdfeerzxcvzxcvert"));
         list3.add(new SpecialityEntity(null, "Denterist"));
         list3.add(new SpecialityEntity(null, "sdfs"));
         list3.add(new SpecialityEntity(null, "sdf"));
-        list3.add(new SpecialityEntity(null, "Dentxcvist"));
-        list3.add(new SpecialityEntity(null, "Dentist"));
+        list3.add(new SpecialityEntity(null, "Dewewerqwerwerqwerntxcvist"));
+        list3.add(new SpecialityEntity(null, "Dentis22222t"));
 
         users = initArray();
 
@@ -84,8 +83,13 @@ public class searchActivity extends Activity implements OnItemSelectedListener {
         return true;
     }
 
-    private DoctorUserEntity[] initArray() {
-        DoctorUserEntity[] array = {u1, u2, u3, u4, u5};
+    private List<DoctorUserEntity> initArray() {
+        List<DoctorUserEntity> array = new ArrayList<DoctorUserEntity>();
+        array.add(u1);
+        array.add(u2);
+        array.add(u3);
+        array.add(u4);
+        array.add(u5);
         return array;
     }
 
@@ -110,11 +114,11 @@ public class searchActivity extends Activity implements OnItemSelectedListener {
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         if (position == 1) {
-            Arrays.sort(users, new NameComparator());
+            Collections.sort(users, new NameComparator());
         } else if (position == 2) {
-            Arrays.sort(users, new RatingComparator());
+            Collections.sort(users, new RatingComparator());
         } else if (position == 3) {
-            Arrays.sort(users, new PriceComparator());
+            Collections.sort(users, new PriceComparator());
         }
         lv.setAdapter(new DoctorListViewAdapter(this, users));
     }

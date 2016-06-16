@@ -6,9 +6,11 @@ package com.kms.cura.view.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +26,12 @@ import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class DoctorListViewAdapter extends BaseAdapter {
-    DoctorUserEntity[] result;
+    List<DoctorUserEntity> result;
     Context context;
     int[] imageId;
     private static LayoutInflater inflater = null;
 
-    public DoctorListViewAdapter(Activity activity, DoctorUserEntity[] users) {
+    public DoctorListViewAdapter(Activity activity, List<DoctorUserEntity> users) {
         // TODO Auto-generated constructor stub
         result = users;
         context = activity;
@@ -40,7 +42,7 @@ public class DoctorListViewAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return result.length;
+        return result.size();
     }
 
     @Override
@@ -71,24 +73,32 @@ public class DoctorListViewAdapter extends BaseAdapter {
         holder.speciality = (TextView) rowView.findViewById(R.id.speciality);
         holder.raiting = (RatingBar) rowView.findViewById(R.id.ratingBar);
 
-        holder.name.setText(result[position].getName());
-        StringBuilder sb = new StringBuilder();
-        for(SpecialityEntity specialityEntity : result[position].getSpeciality()){
-            sb.append(specialityEntity.getName());
-            sb.append(", ");
-        }
-        sb.delete(sb.length()-1,sb.length());
-
-        holder.speciality.setText(sb.toString());
-        holder.raiting.setRating((float) result[position].getRating());
+        holder.name.setText(result.get(position).getName());
+        holder.speciality.setText(getSpecialityString(position));
+        holder.raiting.setRating((float) result.get(position).getRating());
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Toast.makeText(context, "You Clicked " + result[position], Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "You Clicked " + result.get(position), Toast.LENGTH_LONG).show();
             }
         });
         return rowView;
+    }
+
+    @NonNull
+    private String getSpecialityString(int position) {
+        StringBuilder sb = new StringBuilder();
+        for (SpecialityEntity specialityEntity : result.get(position).getSpeciality()) {
+            sb.append(specialityEntity.getName());
+            sb.append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        if (sb.length() > 50) {
+            sb.replace(50, sb.length(), "...");
+            sb.trimToSize();
+        }
+        return sb.toString();
     }
 
 }
