@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.entity.SpecialityEntity;
+import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
@@ -80,7 +81,7 @@ public class DoctorListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Toast.makeText(context, "You Clicked " + result.get(position), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "You Clicked " + EntityToJsonConverter.convertEntityToJson(result.get(position)).toString(), Toast.LENGTH_LONG).show();
             }
         });
         return rowView;

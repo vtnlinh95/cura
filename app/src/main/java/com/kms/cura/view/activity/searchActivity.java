@@ -1,7 +1,10 @@
 package com.kms.cura.view.activity;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -11,8 +14,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.UserController;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.view.UpdateSpinner;
@@ -24,12 +29,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class searchActivity extends AppCompatActivity implements OnItemSelectedListener {
+public class searchActivity extends AppCompatActivity implements OnItemSelectedListener, View.OnClickListener {
+    private static final String ACTIVITY_NAME = "Results";
     private UpdateSpinner updateSpinner;
     private int checkedSort;
     private ArrayAdapter<CharSequence> adapter;
     private ListView lv;
     private Spinner spinner;
+    private Toolbar toolbar;
 
     List<SpecialityEntity> list1 = new ArrayList<SpecialityEntity>();
     List<SpecialityEntity> list2 = new ArrayList<SpecialityEntity>();
@@ -39,6 +46,9 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
     DoctorUserEntity u3 = new DoctorUserEntity("3", "Linh", "linh123@yahoo.com", "123456", null, null, list2, 2, 1, 15, 15, null, null, null, null, null);
     DoctorUserEntity u4 = new DoctorUserEntity("4", "Toan", "toan123@yahoo.com", "123456", null, null, list3, 3.5, 1, 20, 26, null, null, null, null, null);
     DoctorUserEntity u5 = new DoctorUserEntity("5", "Jenny", "Jenny123@yahoo.com", "123456", null, null, list1, 2.5, 1, 10, 13, null, null, null, null, null);
+    DoctorUserEntity u6 = new DoctorUserEntity("5", "An", "An123@yahoo.com", "123456", null, null, list3, 4.5, 1, 3, 13, null, null, null, null, null);
+    DoctorUserEntity u7 = new DoctorUserEntity("5", "Hieu", "Hieu123@yahoo.com", "123456", null, null, list3, 1, 1, 12, 13, null, null, null, null, null);
+    DoctorUserEntity u8 = new DoctorUserEntity("5", "Phuc", "Phuc123@yahoo.com", "123456", null, null, list2, 0.5, 1, 43, 13, null, null, null, null, null);
     private List<DoctorUserEntity> users;
 
     @Override
@@ -57,14 +67,12 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
         list3.add(new SpecialityEntity(null, "Dewewerqwerwerqwerntxcvist"));
         list3.add(new SpecialityEntity(null, "Dentis22222t"));
 
-        users = initArray();
-
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.menu_search);
+        initToolbar();
+        users = initArray();
         lv = (ListView) findViewById(R.id.listView1);
         lv.setAdapter(new DoctorListViewAdapter(this, users));
 
@@ -74,10 +82,23 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
 
     }
 
+    private void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.search_toolbar);
+        toolbar.setNavigationIcon(R.drawable.back);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(ACTIVITY_NAME);
+        toolbar.setNavigationOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        onBackPressed();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search, menu);
+        getMenuInflater().inflate(R.menu.menu_hello_world, menu);
         return true;
     }
 
@@ -88,6 +109,9 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
         array.add(u3);
         array.add(u4);
         array.add(u5);
+        array.add(u6);
+        array.add(u7);
+        array.add(u8);
         return array;
     }
 
@@ -106,7 +130,6 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
                         this));
         spinner.setOnItemSelectedListener(this);
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
