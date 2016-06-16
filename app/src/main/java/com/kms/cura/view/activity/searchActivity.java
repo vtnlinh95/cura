@@ -1,37 +1,29 @@
 package com.kms.cura.view.activity;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
-import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura.view.UpdateSpinner;
-import com.kms.cura.view.adapter.CheckBoxAdapter;
 import com.kms.cura.view.adapter.DoctorListViewAdapter;
 import com.kms.cura.view.adapter.SpinnerHintAdapter;
 
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.widget.AdapterView.OnItemSelectedListener;
-
-public class searchActivity extends Activity implements OnItemSelectedListener {
+public class searchActivity extends AppCompatActivity implements OnItemSelectedListener {
     private UpdateSpinner updateSpinner;
     private int checkedSort;
     private ArrayAdapter<CharSequence> adapter;
@@ -67,19 +59,24 @@ public class searchActivity extends Activity implements OnItemSelectedListener {
         users = initArray();
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search);
+
+
+
         lv = (ListView) findViewById(R.id.listView1);
         lv.setAdapter(new DoctorListViewAdapter(this, users));
 
-
         initAdapter();
         initSpinner();
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_hello_world, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
     }
 
