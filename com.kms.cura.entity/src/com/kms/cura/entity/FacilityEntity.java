@@ -22,11 +22,11 @@ public class FacilityEntity extends Entity {
 		this.openingHours = openingHours;
 	}
 
-	public String getLocation() {
+	public String getCity() {
 		return city;
 	}
 
-	public void setLocation(String city) {
+	public void setCity(String city) {
 		this.city = city;
 	}
 

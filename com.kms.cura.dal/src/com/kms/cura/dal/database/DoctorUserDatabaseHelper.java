@@ -15,6 +15,7 @@ import com.kms.cura.dal.exception.DALException;
 import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.dal.mapping.Doctor_FacilityColumn;
 import com.kms.cura.dal.mapping.Doctor_SpecialityColumn;
+import com.kms.cura.dal.mapping.FacilityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.entity.FacilityEntity;
@@ -246,16 +247,18 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		}
 		stmt.setString(count, "%" + name + "%");
 		count++;
+		
 		if (doctor.getSpeciality() != null) {
 			int specialityId = Integer.parseInt(doctor.getSpeciality().get(0).getId());
 			stmt.setInt(count, specialityId);
 			count++;
 		}
-		if (doctor.getLocation() != null) {
-			String location = doctor.getLocation();
-			stmt.setString(count, "%" + location + "%");
+		if (doctor.getFacility().get(0).getCity() != null) {
+			String city = doctor.getFacility().get(0).getCity();
+			stmt.setString(count, "%" + city + "%");
 			count++;
 		}
+
 		return stmt;
 	}
 
@@ -263,7 +266,23 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT * FROM ");
 		sb.append(DoctorColumn.TABLE_NAME);
+		
+		sb.append(" JOIN ");
+		sb.append(Doctor_FacilityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(DoctorColumn.USER_ID);
+		sb.append(" = ");
+		sb.append(Doctor_FacilityColumn.DOCTOR_ID);
+		sb.append(" JOIN ");
+		sb.append(FacilityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(Doctor_FacilityColumn.FACILITY_ID);
+		sb.append(" = ");
+		sb.append(FacilityColumn.ID);
+		
 		sb.append(" WHERE ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
 		sb.append(DoctorColumn.NAME);
 		sb.append(" LIKE ?");
 		if (doctor.getSpeciality() != null) {
@@ -278,9 +297,9 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 			sb.append(" = ?)");
 		}
 
-		if (doctor.getLocation() != null) {
+		if (doctor.getFacility().get(0).getCity() != null) {
 			sb.append(" AND ");
-			sb.append(DoctorColumn.LOCATION);
+			sb.append(FacilityColumn.CITY);
 			sb.append(" LIKE ? ");
 		}
 		return sb.toString();
