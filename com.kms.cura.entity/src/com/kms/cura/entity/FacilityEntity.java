@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
-import com.kms.cura.entity.user.DoctorUserEntity;
 
 public class FacilityEntity extends Entity {
 	public final static String FACILITY_LIST = "facility_list";

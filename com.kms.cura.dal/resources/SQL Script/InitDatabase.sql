@@ -258,8 +258,7 @@ CREATE TABLE Rating (
  
  INSERT INTO Users (email,password) VALUE ('awruck@yahoo.com','annabellewruck');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'awruck@yahoo.com'),'Annabelle Wruck', (SELECT id FROM Degree WHERE name = 'DDS
-'), 'F', '19700311', 14,4.5,100,250,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'awruck@yahoo.com'),'Annabelle Wruck', (SELECT id FROM Degree WHERE name = 'DDS'), 'F', '19700311', 14,4.5,100,250,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'awruck@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Dentist'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'awruck@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Orthodontist'));
@@ -271,8 +270,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('mitrak@gmail.com','mitchellrakes');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'mitrak@gmail.com'),'Mitchell Rakes', (SELECT id FROM Degree WHERE name = 'DDS
-'), 'M', '19801212', 6,4.0,100,250,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'mitrak@gmail.com'),'Mitchell Rakes', (SELECT id FROM Degree WHERE name = 'DDS'), 'M', '19801212', 6,4.0,100,250,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'mitrak@gmail.com'), (SELECT id FROM specialties WHERE name = 'Dentist'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'mitrak@gmail.com'), (SELECT id FROM specialties WHERE name = 'Pediatric Dentist'));
@@ -284,8 +282,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('gmac@gmail.com','glorianamacneil');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'gmac@gmail.com'),'Gloriana Macneil', (SELECT id FROM Degree WHERE name = 'PsyD
-'), 'F', '19760402', 10,4.0,100,350,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'gmac@gmail.com'),'Gloriana Macneil', (SELECT id FROM Degree WHERE name = 'PsyD'), 'F', '19760402', 10,4.0,100,350,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'gmac@gmail.com'), (SELECT id FROM specialties WHERE name = 'Psychiatrist'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'gmac@gmail.com'), (SELECT id FROM specialties WHERE name = 'Psychologist'));
@@ -298,8 +295,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('nguminh@yahoo.com','minhnguyen');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'nguminh@yahoo.com'),'Minh Nguyen', (SELECT id FROM Degree WHERE name = 'DDS
-'), 'M', '19660716', 16,4.0,100,4000,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'nguminh@yahoo.com'),'Minh Nguyen', (SELECT id FROM Degree WHERE name = 'DDS'), 'M', '19660716', 16,4.0,100,4000,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'nguminh@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Dentist'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'nguminh@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Oral Surgeon'));
@@ -310,8 +306,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('owenpar@yahoo.com','parvinowen');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'owenpar@yahoo.com'),'Parvin Owen', (SELECT id FROM Degree WHERE name = 'OD
-'), 'M', '19660716', 6,3.5,50,75,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'owenpar@yahoo.com'),'Parvin Owen', (SELECT id FROM Degree WHERE name = 'OD'), 'M', '19660716', 6,3.5,50,75,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'owenpar@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Optometrist'));
 
@@ -323,8 +318,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('catwhitney@gmail.com','cathrinwhitney');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'catwhitney@gmail.com'),'Cathrin Whitney', (SELECT id FROM Degree WHERE name = 'MD
-'), 'F', '19720518', 15,4.5,100,200,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'catwhitney@gmail.com'),'Cathrin Whitney', (SELECT id FROM Degree WHERE name = 'MD'), 'F', '19720518', 15,4.5,100,200,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'catwhitney@gmail.com'), (SELECT id FROM specialties WHERE name = 'Primary Care Doctor'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'catwhitney@gmail.com'), (SELECT id FROM specialties WHERE name = 'Urologist'));
@@ -335,8 +329,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('jonjon@yahoo.com','jonasjonker');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'jonjon@yahoo.com'),'Jonas Jonker', (SELECT id FROM Degree WHERE name = 'DMD
-'), 'F', '19720518', 6,3.5,100,200,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'jonjon@yahoo.com'),'Jonas Jonker', (SELECT id FROM Degree WHERE name = 'DMD'), 'F', '19720518', 6,3.5,100,200,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'jonjon@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Dentist'));
 
@@ -345,8 +338,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('vanhuong@gmail.com','huongvan');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'vanhuong@gmail.com'),'Huong Van', (SELECT id FROM Degree WHERE name = 'DMD
-'), 'F', '19781229', 10,4.0,200,300,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'vanhuong@gmail.com'),'Huong Van', (SELECT id FROM Degree WHERE name = 'DMD'), 'F', '19781229', 10,4.0,200,300,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'vanhuong@gmail.com'), (SELECT id FROM specialties WHERE name = 'Dentist'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'vanhuong@gmail.com'), (SELECT id FROM specialties WHERE name = 'Orthodontist'));
@@ -358,8 +350,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('armendoza@gmail.com','armenmendoza');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'armendoza@gmail.com'),'Armen Mendoza', (SELECT id FROM Degree WHERE name = 'DDS
-'), 'M', '19781229', 3,3.0,200,300,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'armendoza@gmail.com'),'Armen Mendoza', (SELECT id FROM Degree WHERE name = 'DDS'), 'M', '19781229', 3,3.0,200,300,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'armendoza@gmail.com'), (SELECT id FROM specialties WHERE name = 'Dentist'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'armendoza@gmail.com'), (SELECT id FROM specialties WHERE name = 'Orthodontist'));
@@ -372,8 +363,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
  
 INSERT INTO Users (email,password) VALUE ('reigun@gmail.com','reigunnarson');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'reigun@gmail.com'),'Rei Gunnarson', (SELECT id FROM Degree WHERE name = 'DDS
-'), 'M', '19781229', 20,3.0,200,600,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'reigun@gmail.com'),'Rei Gunnarson', (SELECT id FROM Degree WHERE name = 'DDS'), 'M', '19781229', 20,3.0,200,600,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'reigun@gmail.com'), (SELECT id FROM specialties WHERE name = 'Primary Care Doctor'));
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'reigun@gmail.com'), (SELECT id FROM specialties WHERE name = 'Oncologist'));
