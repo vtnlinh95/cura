@@ -166,7 +166,7 @@ INSERT INTO Degree(name) VALUES ('MBchB');
 INSERT INTO Degree(name) VALUES ('DMD');
 INSERT INTO Degree(name) VALUES ('DDS');
 INSERT INTO Degree(name) VALUES ('DPM');
-INSERT INTO Degree(name) VALUES ('EdD');
+INSERT INTO Degree(name) VALUES ('OD');
 INSERT INTO Degree(name) VALUES ('PsyD');
 INSERT INTO Degree(name) VALUES ('PhD');
 
