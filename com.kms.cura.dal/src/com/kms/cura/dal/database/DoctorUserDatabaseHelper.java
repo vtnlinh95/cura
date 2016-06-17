@@ -231,32 +231,34 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 			while (rs.next()) {
 				result.add((DoctorUserEntity) getEntityFromResultSet(rs));
 			}
+			return result;
 		} finally {
 			if (stmt != null) {
 				stmt.close();
 			}
 		}
-
-		return result;
 	}
 
 	protected PreparedStatement getSearchStatement(DoctorUserEntity doctor) throws SQLException {
 		PreparedStatement stmt = null;
-
+		int count = 1;
 		stmt = con.prepareStatement(getSearchQuery(doctor));
 
 		String name = doctor.getName();
 		if (name == null) {
 			name = "";
 		}
-		stmt.setString(1, "%" + name + "%");
+		stmt.setString(count, "%" + name + "%");
+		count++;
 		if (doctor.getSpeciality() != null) {
 			int specialityId = Integer.parseInt(doctor.getSpeciality().get(0).getId());
-			stmt.setInt(2, specialityId);
+			stmt.setInt(count, specialityId);
+			count++;
 		}
 		if (doctor.getLocation() != null) {
 			String location = doctor.getLocation();
-			stmt.setString(3, "%" + location + "%");
+			stmt.setString(count, "%" + location + "%");
+			count++;
 		}
 		return stmt;
 	}
