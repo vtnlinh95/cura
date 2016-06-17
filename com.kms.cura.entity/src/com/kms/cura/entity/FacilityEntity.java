@@ -4,19 +4,29 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
-import com.kms.cura.entity.user.DoctorUserEntity;
 
 public class FacilityEntity extends Entity {
 	public final static String FACILITY_LIST = "facility_list";
 	private String address;
 	private String phone;
+	private String city;
 	private List<OpeningHour> openingHours;
 
-	public FacilityEntity(String id, String name, String address, String phone, List<OpeningHour> openingHours) {
+	public FacilityEntity(String id, String name, String address, String phone, String city,
+			List<OpeningHour> openingHours) {
 		super(id, name);
 		this.address = address;
 		this.phone = phone;
+		this.city = city;
 		this.openingHours = openingHours;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	public String getAddress() {
