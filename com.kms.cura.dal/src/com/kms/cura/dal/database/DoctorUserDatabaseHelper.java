@@ -253,7 +253,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 			stmt.setInt(count, specialityId);
 			count++;
 		}
-		if (doctor.getFacility().get(0).getCity() != null) {
+		if (doctor.getFacility() != null) {
 			String city = doctor.getFacility().get(0).getCity();
 			stmt.setString(count, "%" + city + "%");
 			count++;
@@ -297,7 +297,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 			sb.append(" = ?)");
 		}
 
-		if (doctor.getFacility().get(0).getCity() != null) {
+		if (doctor.getFacility() != null) {
 			sb.append(" AND ");
 			sb.append(FacilityColumn.CITY);
 			sb.append(" LIKE ? ");
