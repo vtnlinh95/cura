@@ -216,4 +216,75 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 				entity.getEmail(), entity.getPassword(), DoctorColumn.USER_ID.getColumnName(),
 				UserColumn.ID.getColumnName());
 	}
+
+	public List<DoctorUserEntity> searchDoctorFunction(DoctorUserEntity doctor)
+			throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<DoctorUserEntity> result = new ArrayList<DoctorUserEntity>();
+
+		try {
+			stmt = getSearchStatement(doctor);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				result.add((DoctorUserEntity) getEntityFromResultSet(rs));
+			}
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+
+		return result;
+	}
+
+	protected PreparedStatement getSearchStatement(DoctorUserEntity doctor) throws SQLException {
+		PreparedStatement stmt = null;
+
+		stmt = con.prepareStatement(getSearchQuery(doctor));
+
+		String name = doctor.getName();
+		if (name == null) {
+			name = "";
+		}
+		stmt.setString(1, "%" + name + "%");
+		if (doctor.getSpeciality() != null) {
+			int specialityId = Integer.parseInt(doctor.getSpeciality().get(0).getId());
+			stmt.setInt(2, specialityId);
+		}
+		if (doctor.getLocation() != null) {
+			String location = doctor.getLocation();
+			stmt.setString(3, "%" + location + "%");
+		}
+		return stmt;
+	}
+
+	protected String getSearchQuery(DoctorUserEntity doctor) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(" WHERE ");
+		sb.append(DoctorColumn.NAME);
+		sb.append(" LIKE ?");
+		if (doctor.getSpeciality() != null) {
+			sb.append(" AND ");
+			sb.append(DoctorColumn.USER_ID);
+			sb.append(" IN (SELECT ");
+			sb.append(Doctor_SpecialityColumn.DOCTOR_ID);
+			sb.append(" FROM ");
+			sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+			sb.append(" WHERE ");
+			sb.append(Doctor_SpecialityColumn.SPECIALITY_ID);
+			sb.append(" = ?)");
+		}
+
+		if (doctor.getLocation() != null) {
+			sb.append(" AND ");
+			sb.append(DoctorColumn.LOCATION);
+			sb.append(" LIKE ? ");
+		}
+		return sb.toString();
+	}
 }

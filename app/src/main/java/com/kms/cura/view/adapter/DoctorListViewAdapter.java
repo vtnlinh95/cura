@@ -33,7 +33,6 @@ public class DoctorListViewAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     public DoctorListViewAdapter(Activity activity, List<DoctorUserEntity> users) {
-        // TODO Auto-generated constructor stub
         result = users;
         context = activity;
         inflater = (LayoutInflater) context.
@@ -42,19 +41,16 @@ public class DoctorListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return result.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
@@ -66,7 +62,6 @@ public class DoctorListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
         Holder holder = new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.list_row, null);
@@ -80,7 +75,6 @@ public class DoctorListViewAdapter extends BaseAdapter {
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 Toast.makeText(context, "You Clicked " + EntityToJsonConverter.convertEntityToJson(result.get(position)).toString(), Toast.LENGTH_LONG).show();
             }
         });

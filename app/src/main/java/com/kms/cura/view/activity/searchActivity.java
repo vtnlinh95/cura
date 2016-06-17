@@ -112,6 +112,8 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
         array.add(u6);
         array.add(u7);
         array.add(u8);
+        
+        Collections.sort(users, new NameComparator());
         return array;
     }
 
