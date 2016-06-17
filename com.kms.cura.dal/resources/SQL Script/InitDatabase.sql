@@ -306,8 +306,7 @@ INSERT INTO Doctor_Facilities(doctor_id,facility_id) VALUES ((SELECT id FROM Use
 
 INSERT INTO Users (email,password) VALUE ('owenpar@yahoo.com','parvinowen');
     
-INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'owenpar@yahoo.com'),'Parvin Owen', (SELECT id FROM Degree WHERE name = 'OD
-'), 'M', '19660716', 6,3.5,50,75,'123456789');
+INSERT INTO Doctor(user_id,name, degree_id,gender,birth,experience,rating,price_min,price_max,phone) VALUES ((SELECT id FROM Users WHERE email = 'owenpar@yahoo.com'),'Parvin Owen', (SELECT id FROM Degree WHERE name = 'OD'), 'M', '19660716', 6,3.5,50,75,'123456789');
 
 INSERT INTO Doctor_Specialties(doctor_id,speciality_id) VALUES ((SELECT id FROM Users WHERE email = 'owenpar@yahoo.com'), (SELECT id FROM specialties WHERE name = 'Optometrist'));
 
