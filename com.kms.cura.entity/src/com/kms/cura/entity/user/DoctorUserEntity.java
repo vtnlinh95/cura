@@ -11,6 +11,7 @@ import com.kms.cura.entity.SpecialityEntity;
 
 public class DoctorUserEntity extends UserEntity {
     public static int DOCTOR_TYPE = 1;
+    public final static String GENDER_MALE = "M";
     private String phone;
     private DegreeEntity degree;
     private List<SpecialityEntity> speciality;
@@ -144,9 +145,9 @@ public class DoctorUserEntity extends UserEntity {
         return DOCTOR_TYPE;
     }
 
-    public static Type getDoctorUserType() {
-        Type type = new TypeToken<DoctorUserEntity>() {
+    public static Type getDoctorEntityType() {
+        return new TypeToken<DoctorUserEntity>() {
         }.getType();
-        return type;
     }
 }
+
