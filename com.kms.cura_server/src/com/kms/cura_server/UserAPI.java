@@ -84,7 +84,7 @@ public final class UserAPI {
 		try {
 			PatientUserEntity entity = JsonToEntityConverter.convertJsonStringToEntity(jsonData, getPatientUserType());
 			PatientUserEntity user = PatientUserDAL.getInstance().createUser(entity);
-			return new UserAPIResponse().successResponse(entity);
+			return new UserAPIResponse().successResponsewithType(entity);
 		} catch (ClassNotFoundException | SQLException | DALException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}
@@ -96,7 +96,7 @@ public final class UserAPI {
 		try {
 			DoctorUserEntity entity = JsonToEntityConverter.convertJsonStringToEntity(jsonData, getDoctorEntityType());
 			DoctorUserEntity user = DoctorUserDAL.getInstance().createUser(entity);
-			return new UserAPIResponse().successResponse(entity);
+			return new UserAPIResponse().successResponsewithType(entity);
 		} catch (ClassNotFoundException | SQLException | DALException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());
 

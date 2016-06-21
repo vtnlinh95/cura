@@ -13,4 +13,7 @@ public interface EventConstant {
     public static final String LOGIN_FAILED = "LOGIN_FAILED";
     public static final String REGISTER_SUCCESS = "REGISTER_SUCCESS";
     public static final String REGISTER_FAILED = "REGISTER_FAILED";
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.kms.cura.utils;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.kms.cura.model.request.EntityModelResponse;
 
@@ -16,7 +17,7 @@ public class RequestUtils {
     }
 
     public static StringRequest createRequest(String url, int type, final String data, EntityModelResponse modelResponse){
-        return new StringRequest(type, url, modelResponse, modelResponse){
+        return new StringRequest(type, url, modelResponse , modelResponse){
             @Override
             public byte[] getBody() throws AuthFailureError {
                 return data.getBytes();
@@ -27,6 +28,10 @@ public class RequestUtils {
                 return RAW_TYPE;
             }
         };
+    }
+
+    public static StringRequest createRequestGET(String url, EntityModelResponse modelResponse){
+        return new StringRequest(Request.Method.GET,url,modelResponse,modelResponse);
     }
 
 }
