@@ -40,6 +40,10 @@
     <string name="DoctorSearch">Doctor Search</string>
     <string name="Name">Name :</string>
     <string name="Location">Location :</string>
+    <string name="current">Current</string>
+    <string name="past">Past</string>
+    <string name="add_health_tracker">Add Condition/Symptom</string>
+    <string name="health_tracker">Health tracker</string>
     <string name="Speciality">Speciality :</string>
     <string name="Search">Search</string>
     <string name="CurrentLocation">Current Location</string>
