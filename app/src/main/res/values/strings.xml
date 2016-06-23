@@ -36,8 +36,7 @@
     <string name="re_pwd">Re-enter Password*</string>
     <string name="register">Register</string>
     <string name="name">Name*</string>
-
-
+    <string name="encrypt_key">enfldsgbnlsngdlksdsgm</string>
     <string name="DoctorSearch">Doctor Search</string>
     <string name="Name">Name :</string>
     <string name="Location">Location :</string>

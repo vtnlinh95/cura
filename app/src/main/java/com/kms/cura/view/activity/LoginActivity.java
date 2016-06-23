@@ -19,11 +19,7 @@ import com.kms.cura.controller.UserController;
 import com.kms.cura.event.EventBroker;
 import com.kms.cura.event.EventHandler;
 import com.kms.cura.utils.InputUtils;
-import com.kms.cura.view.activity.AccountTypeSelectionActivity;
 import com.kms.cura.view.PatientHomeActivity;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener, EventHandler {
 
@@ -40,6 +36,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
         registerEvent();
         createAccountButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
+        if (UserController.checkSignIn(this)) {
+            UserController.autoSignIn(this);
+        }
     }
 
     /**
@@ -151,8 +150,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
             startActivity(intent);
         } else if (v.getId() == R.id.button_LoginUI_Login) {
             UserController.userLogin(email.getText().toString(), password.getText().toString());
-
-
         }
     }
 
@@ -160,6 +157,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     public void handleEvent(String event, String data) {
         switch (event) {
             case EventConstant.LOGIN_SUCCESS:
+                if (!UserController.checkSignIn(this)) {
+                    UserController.saveLoginInfo(this, email.getText().toString(), password.getText().toString());
+                }
                 switch (data) {
                     case EventConstant.TYPE_PATIENT:
                         Intent toHomePatient = new Intent(this, PatientHomeActivity.class);
@@ -195,4 +195,5 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
         registerEvent();
         super.onResume();
     }
+
 }
