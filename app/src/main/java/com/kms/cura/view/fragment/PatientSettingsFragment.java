@@ -10,7 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.kms.cura.R;
+import com.kms.cura.view.activity.ChangePasswordActivity;
 import com.kms.cura.view.activity.PatientBasicSettingsActivity;
+import com.kms.cura.view.activity.ProfilePictureActivity;
 
 
 public class PatientSettingsFragment extends ListFragment implements AdapterView.OnItemClickListener {
@@ -38,12 +40,19 @@ public class PatientSettingsFragment extends ListFragment implements AdapterView
         getListView().setOnItemClickListener(this);
     }
 
+    private void changeActivity(Class className) {
+        Intent intent = new Intent(getActivity(), className);
+        startActivity(intent);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        if (position == 1) {
-            Intent intent = new Intent(getActivity(), PatientBasicSettingsActivity.class);
-            startActivity(intent);
+        if (position == 0) {
+            changeActivity(ProfilePictureActivity.class);
+        } else if (position == 1) {
+            changeActivity(PatientBasicSettingsActivity.class);
+        }else if (position == 2) {
+            changeActivity(ChangePasswordActivity.class);
         }
 
     }

@@ -26,8 +26,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import com.kms.cura.R;
+import com.kms.cura.constant.EventConstant;
 import com.kms.cura.controller.ErrorController;
 import com.kms.cura.controller.SpecialityController;
+import com.kms.cura.controller.UserController;
+import com.kms.cura.event.EventBroker;
+import com.kms.cura.event.EventHandler;
 import com.kms.cura.model.Settings;
 import com.kms.cura.model.SpecialityModel;
 import com.kms.cura.utils.DataUtils;
@@ -42,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PatientHomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, UpdateSpinner, ReloadData {
+public class PatientHomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, UpdateSpinner, ReloadData, EventHandler {
     private static final String FRAGMENT_NAME = "Home";
     private EditText edtName, edtLocation;
     private RadioGroup rdbtngroupLocation;
@@ -63,6 +67,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
     private ProgressDialog pDialog;
     private ReloadData reloadData;
     private String HINT_TEXT = "Please choose";
+    private EventBroker broker;
 
 
     public PatientHomeFragment() {
@@ -77,16 +82,18 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
     }
 
     private void setContext(Context src) {
-        this.mContext = src;
+        this.mContext = this.getContext();
     }
 
     private void setActivity(Activity src) {
-        this.activity = src;
+        this.activity = this.getActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        broker = EventBroker.getInstance();
+        registerEvent();
     }
 
     @Override
@@ -127,8 +134,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                 if (!checked) {
                     currentLocation = edtLocation.getText().toString();
                 }
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
+                UserController.doctorSearch(edtName.getText().toString(), currentLocation, specialityAdapter.getSelectedString());
             }
         });
     }
@@ -285,5 +291,56 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         setUpSpnSpeciality();
     }
 
+    @Override
+    public void handleEvent(String event, String data) {
+        switch (event) {
+            case EventConstant.SEARCH_SUCCESS:
+                System.out.println("Success");
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra("name", edtName.getText().toString());
+                intent.putExtra("location", currentLocation);
+                intent.putStringArrayListExtra("specialty", specialityAdapter.getSelectedString());
+                startActivity(intent);
+                break;
+            case EventConstant.LOGIN_FAILED:
+                ErrorController.showDialog(getActivity(), "Login failed :" + data);
+                break;
+            case EventConstant.CONNECTION_ERROR:
+                if (data != null) {
+                    ErrorController.showDialog(getActivity(), "Error " + data);
+                } else {
+                    ErrorController.showDialog(getActivity(), "Error " + getResources().getString(R.string.ConnectionError));
+                }
+                break;
+            case EventConstant.INTERNAL_ERROR:
+                String internalError = getResources().getString(R.string.InternalError);
+                ErrorController.showDialog(getActivity(), internalError + " : " + data);
+        }
+    }
 
+    public void registerEvent() {
+        broker.register(this, EventConstant.SEARCH_SUCCESS);
+        broker.register(this, EventConstant.LOGIN_FAILED);
+        broker.register(this, EventConstant.CONNECTION_ERROR);
+        broker.register(this, EventConstant.INTERNAL_ERROR);
+    }
+
+    public void unregisterEvent() {
+        broker.unRegister(this, EventConstant.SEARCH_SUCCESS);
+        broker.unRegister(this, EventConstant.LOGIN_FAILED);
+        broker.unRegister(this, EventConstant.CONNECTION_ERROR);
+        broker.unRegister(this, EventConstant.INTERNAL_ERROR);
+    }
+
+    @Override
+    public void onPause() {
+        unregisterEvent();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        registerEvent();
+        super.onResume();
+    }
 }

@@ -14,6 +14,7 @@ import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura_server.resources.Strings;
+import com.kms.cura_server.response.UserAPIResponse;
 
 @Path("/search")
 public class SearchAPI {
@@ -24,8 +25,7 @@ public class SearchAPI {
 			List<DoctorUserEntity> doctors = DoctorUserDAL.getInstance()
 					.searchDoctorFunction((DoctorUserEntity) JsonToEntityConverter.convertJsonStringToEntity(jsonData,
 							getDoctorEntityType()));
-			JsonElement element = EntityToJsonConverter.convertEntityListToJson(doctors);
-			return element.toString();
+			return new UserAPIResponse().successResponse(doctors);
 		} catch (ClassNotFoundException | SQLException e) {
 			return Strings.error_internal + e.toString();
 		}

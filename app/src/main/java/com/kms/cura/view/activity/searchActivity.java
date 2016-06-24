@@ -20,6 +20,7 @@ import com.kms.cura.R;
 import com.kms.cura.controller.UserController;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.utils.DoctorSearchResults;
 import com.kms.cura.view.UpdateSpinner;
 import com.kms.cura.view.adapter.DoctorListViewAdapter;
 import com.kms.cura.view.adapter.SpinnerHintAdapter;
@@ -38,36 +39,24 @@ public class SearchActivity extends AppCompatActivity implements OnItemSelectedL
     private Spinner spinner;
     private Toolbar toolbar;
 
-    List<SpecialityEntity> list1 = new ArrayList<SpecialityEntity>();
-    List<SpecialityEntity> list2 = new ArrayList<SpecialityEntity>();
-    List<SpecialityEntity> list3 = new ArrayList<SpecialityEntity>();
-    DoctorUserEntity u1 = new DoctorUserEntity("1", "Duy", "duy123@yahoo.com", "123456", null, null, list1, 5.0, 1, 5, 6, null, null, null, null);
-    DoctorUserEntity u2 = new DoctorUserEntity("2", "Dung", "dung123@yahoo.com", "123456", null, null, list2, 4, 5, 10, 50, null, null, null, null);
-    DoctorUserEntity u3 = new DoctorUserEntity("3", "Linh", "linh123@yahoo.com", "123456", null, null, list2, 2, 1, 15, 15, null, null, null, null);
-    DoctorUserEntity u4 = new DoctorUserEntity("4", "Toan", "toan123@yahoo.com", "123456", null, null, list3, 3.5, 1, 20, 26, null, null, null, null);
-    DoctorUserEntity u5 = new DoctorUserEntity("5", "Jenny", "Jenny123@yahoo.com", "123456", null, null, list1, 2.5, 1, 10, 13, null, null, null, null);
-    DoctorUserEntity u6 = new DoctorUserEntity("5", "An", "An123@yahoo.com", "123456", null, null, list3, 4.5, 1, 3, 13, null, null, null, null);
-    DoctorUserEntity u7 = new DoctorUserEntity("5", "Hieu", "Hieu123@yahoo.com", "123456", null, null, list3, 1, 1, 12, 13, null, null, null, null);
-    DoctorUserEntity u8 = new DoctorUserEntity("5", "Phuc", "Phuc123@yahoo.com", "123456", null, null, list2, 0.5, 1, 43, 13, null, null, null, null);
+
     private List<DoctorUserEntity> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        list1.add(new SpecialityEntity(null, "Dentist"));
-        list2.add(new SpecialityEntity(null, "Surgeion"));
-        list2.add(new SpecialityEntity(null, "Dentist"));
-        list2.add(new SpecialityEntity(null, "abv"));
-        list2.add(new SpecialityEntity(null, "sdf"));
-        list2.add(new SpecialityEntity(null, "czasdfadfxv"));
-        list3.add(new SpecialityEntity(null, "ertcggdfgarasdfasdfasdfeerzxcvzxcvert"));
-        list3.add(new SpecialityEntity(null, "Denterist"));
-        list3.add(new SpecialityEntity(null, "sdfs"));
-        list3.add(new SpecialityEntity(null, "sdf"));
-        list3.add(new SpecialityEntity(null, "Dewewerqwerwerqwerntxcvist"));
-        list3.add(new SpecialityEntity(null, "Dentis22222t"));
+
 
         super.onCreate(savedInstanceState);
+        Bundle bundle = getIntent().getExtras();
+        String name = bundle.getString("name");
+        String location = bundle.getString("location");
+        ArrayList<String> specialities = new ArrayList<String>();
+        specialities = bundle.getStringArrayList("specialty");
+        if(specialities == null){
+            specialities.add("");
+        }
+        System.out.println(specialities.toString());
 
         setContentView(R.layout.activity_search);
 
@@ -103,15 +92,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemSelectedL
     }
 
     private List<DoctorUserEntity> initArray() {
-        List<DoctorUserEntity> array = new ArrayList<DoctorUserEntity>();
-        array.add(u1);
-        array.add(u2);
-        array.add(u3);
-        array.add(u4);
-        array.add(u5);
-        array.add(u6);
-        array.add(u7);
-        array.add(u8);
+        List<DoctorUserEntity> array = DoctorSearchResults.getInstance().getResult();
 
         Collections.sort(array, new NameComparator());
         return array;

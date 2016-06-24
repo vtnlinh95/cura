@@ -12,10 +12,12 @@ import com.kms.cura.dal.DegreeDAL;
 import com.kms.cura.dal.FacilityDAL;
 import com.kms.cura.dal.SpecialityDAL;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.mapping.DegreeColumn;
 import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.dal.mapping.Doctor_FacilityColumn;
 import com.kms.cura.dal.mapping.Doctor_SpecialityColumn;
 import com.kms.cura.dal.mapping.FacilityColumn;
+import com.kms.cura.dal.mapping.SpecialityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.entity.FacilityEntity;
@@ -249,8 +251,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		count++;
 		
 		if (doctor.getSpeciality() != null) {
-			int specialityId = Integer.parseInt(doctor.getSpeciality().get(0).getId());
-			stmt.setInt(count, specialityId);
+			stmt.setString(count, doctor.getSpeciality().get(0).getName());
 			count++;
 		}
 		if (doctor.getFacility() != null) {
@@ -280,6 +281,29 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		sb.append(" = ");
 		sb.append(FacilityColumn.ID);
 		
+		sb.append(" JOIN ");
+		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(DoctorColumn.USER_ID);
+		sb.append(" = ");
+		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(Doctor_SpecialityColumn.DOCTOR_ID);
+		
+		sb.append(" JOIN ");
+		sb.append(SpecialityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(Doctor_SpecialityColumn.SPECIALITY_ID);
+		sb.append(" = ");
+		sb.append(SpecialityColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(SpecialityColumn.ID);
+		
+		
 		sb.append(" WHERE ");
 		sb.append(DoctorColumn.TABLE_NAME);
 		sb.append(".");
@@ -287,14 +311,11 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		sb.append(" LIKE ?");
 		if (doctor.getSpeciality() != null) {
 			sb.append(" AND ");
-			sb.append(DoctorColumn.USER_ID);
-			sb.append(" IN (SELECT ");
-			sb.append(Doctor_SpecialityColumn.DOCTOR_ID);
-			sb.append(" FROM ");
-			sb.append(Doctor_SpecialityColumn.TABLE_NAME);
-			sb.append(" WHERE ");
-			sb.append(Doctor_SpecialityColumn.SPECIALITY_ID);
-			sb.append(" = ?)");
+			sb.append(SpecialityColumn.TABLE_NAME);
+			sb.append(".");
+			sb.append(SpecialityColumn.NAME);
+			sb.append(" LIKE ");
+			sb.append(" ? ");
 		}
 
 		if (doctor.getFacility() != null) {

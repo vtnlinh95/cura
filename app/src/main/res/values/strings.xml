@@ -41,6 +41,8 @@
     <string name="register">Register</string>
     <string name="name">Name*</string>
     <string name="encrypt_key">enfldsgbnlsngdlksdsgm</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
 
     <string name="title_activity_navigation_drawer">navigationDrawer</string>
 
@@ -98,4 +100,5 @@
     </string-array>
 
     <string name="title_activity_navi">navi</string>
+    <string name="upload">Upload</string>
 </resources>
