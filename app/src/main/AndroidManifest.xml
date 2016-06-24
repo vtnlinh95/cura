@@ -45,10 +45,12 @@
         <activity android:name=".view.activity.PatientHomeActivity"></activity>
         <activity android:name=".view.activity.ConditionSymptomSearchActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".view.activity.BookAppointmentActivity" />
+        <activity android:name=".view.activity.ChooseTimeActivity"></activity>
 
 
-        </activity>
     </application>
 
 </manifest>
