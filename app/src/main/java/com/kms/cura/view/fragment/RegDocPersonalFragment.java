@@ -31,7 +31,7 @@ import com.kms.cura.view.adapter.StringSexListAdapter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RegDoc_PersonalFragment extends Fragment implements View.OnClickListener {
+public class RegDocPersonalFragment extends Fragment implements View.OnClickListener {
 
     private EditText edtFName, edtLName;
     private String fName, lName;
@@ -43,7 +43,7 @@ public class RegDoc_PersonalFragment extends Fragment implements View.OnClickLis
     private Spinner spnSex;
     private ProgressDialog pDialog;
 
-    public RegDoc_PersonalFragment() {
+    public RegDocPersonalFragment() {
         setCurrentDate();
     }
 

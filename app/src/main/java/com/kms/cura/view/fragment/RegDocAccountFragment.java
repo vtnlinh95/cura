@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class RegDoc_AccountFragment extends Fragment implements View.OnClickListener, TextWatcher, EventHandler {
+public class RegDocAccountFragment extends Fragment implements View.OnClickListener, TextWatcher, EventHandler {
 
     private EditText edtPhone, edtEmail, edtPwd, edtRePwd;
     private Button btnRegister;
@@ -49,7 +49,7 @@ public class RegDoc_AccountFragment extends Fragment implements View.OnClickList
     private EventBroker broker;
     boolean edittedPhone, edittedEmail, edittedPwd, edittedRePwd;
 
-    public RegDoc_AccountFragment() {
+    public RegDocAccountFragment() {
 
     }
 

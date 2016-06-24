@@ -1,6 +1,5 @@
 package com.kms.cura.view.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -16,9 +15,9 @@ import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.view.fragment.HealthTrackerFragment;
-import com.kms.cura.view.fragment.Patient_Home_Fragment;
+import com.kms.cura.view.fragment.PatientHomeFragment;
 import com.kms.cura.view.fragment.Patient_Profile_Fragment;
-import com.kms.cura.view.fragment.Patient_Settings_Fragment;
+import com.kms.cura.view.fragment.PatientSettingsFragment;
 
 public class PatientViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar patientToolbar;
@@ -35,9 +34,9 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
     }
 
     private void initFragments() {
-        patientHomeFragment = new Patient_Home_Fragment();
+        patientHomeFragment = new PatientHomeFragment();
         patientProfileFragment = new Patient_Profile_Fragment();
-        patientSettingsFragment = new Patient_Settings_Fragment();
+        patientSettingsFragment = new PatientSettingsFragment();
         patientHealthTrachkerFragment = new HealthTrackerFragment();
         changeFragment(patientHomeFragment);
     }

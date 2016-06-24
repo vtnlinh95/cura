@@ -13,7 +13,7 @@ import com.kms.cura.R;
 import com.kms.cura.view.activity.PatientBasicSettingsActivity;
 
 
-public class Patient_Settings_Fragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class PatientSettingsFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
