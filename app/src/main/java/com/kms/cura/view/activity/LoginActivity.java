@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Paint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -19,10 +20,6 @@ import com.kms.cura.controller.UserController;
 import com.kms.cura.event.EventBroker;
 import com.kms.cura.event.EventHandler;
 import com.kms.cura.utils.InputUtils;
-import com.kms.cura.view.activity.AccountTypeSelectionActivity;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener, EventHandler {
 
@@ -34,9 +31,15 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         broker = EventBroker.getInstance();
         initView();
         registerEvent();
+        createAccountButton.setOnClickListener(this);
+        loginButton.setOnClickListener(this);
+        if (UserController.checkSignIn(this)) {
+            UserController.autoSignIn(this);
+        }
     }
 
     /**
@@ -80,7 +83,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     private void initLoginButton() {
         loginButton = initButton(R.id.button_LoginUI_Login);
         loginButton.setEnabled(false);
-        loginButton.setOnClickListener(this);
     }
 
     private void initAccountButton() {
@@ -149,8 +151,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
             startActivity(intent);
         } else if (v.getId() == R.id.button_LoginUI_Login) {
             UserController.userLogin(email.getText().toString(), password.getText().toString());
-
-
         }
     }
 
@@ -158,7 +158,15 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     public void handleEvent(String event, String data) {
         switch (event) {
             case EventConstant.LOGIN_SUCCESS:
-                ErrorController.showDialog(this, "Login success");
+                if (!UserController.checkSignIn(this)) {
+                    UserController.saveLoginInfo(this, email.getText().toString(), password.getText().toString());
+                }
+                switch (data) {
+                    case EventConstant.TYPE_PATIENT:
+                        Intent toHomePatient = new Intent(this, PatientViewActivity.class);
+                        startActivity(toHomePatient);
+                        break;
+                }
                 break;
             case EventConstant.LOGIN_FAILED:
                 ErrorController.showDialog(this, "Login failed :" + data);
@@ -188,4 +196,5 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
         registerEvent();
         super.onResume();
     }
+
 }

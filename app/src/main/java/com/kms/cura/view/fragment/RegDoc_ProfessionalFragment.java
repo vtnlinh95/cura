@@ -1,15 +1,22 @@
 package com.kms.cura.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.ErrorController;
+import com.kms.cura.model.DegreeModel;
+import com.kms.cura.model.FacilityModel;
+import com.kms.cura.model.SpecialityModel;
+import com.kms.cura.utils.DataUtils;
 import com.kms.cura.view.UpdateSpinner;
 import com.kms.cura.view.adapter.CheckBoxAdapter;
 import com.kms.cura.view.adapter.StringListAdapter;
@@ -17,7 +24,7 @@ import com.kms.cura.view.activity.RegisterDoctorActivity;
 
 import java.util.ArrayList;
 
-public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClickListener, UpdateSpinner {
+public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClickListener, UpdateSpinner, AdapterView.OnItemSelectedListener {
 
     private ArrayList<String> degree, speciality, facility;
     private ArrayList<String> userSpeciality, userFacility;
@@ -29,41 +36,29 @@ public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClic
     private StringListAdapter adapterDegree;
     private ImageButton btnNext, btnBack;
     private UpdateSpinner updateSpinner;
+    private View myFragmentView = null;
     private String spnText[] = {"Degree Types", "Areas of Speciality", "Facilities"};
+
 
     public RegDoc_ProfessionalFragment() {
 
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View myFragmentView = inflater.inflate(R.layout.fragment_reg_doc__professional, container, false);
-        // get data from server
-        // ...
-        // init dummy data
-        degree = new ArrayList<>();
-        degree.add("A");
-        degree.add("B");
-        degree.add("C");
-
-        speciality = new ArrayList<>();
-        speciality.add("A");
-        speciality.add("B");
-        speciality.add("C");
-
-        facility = new ArrayList<>();
-        facility.add("A");
-        facility.add("B");
-        facility.add("C");
-        facility.add("D");
-        facility.add("E");
-        facility.add("F");
-        facility.add("G");
-        facility.add("H");
-        // ---------------------------------------
         updateSpinner = this;
+        degree = (ArrayList<String>) DataUtils.getListName(DegreeModel.getInstace().getDegrees());
+        speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
+        facility = (ArrayList<String>) DataUtils.getListName(FacilityModel.getInstace().getFacilities());
         addHintText();
         initButton(myFragmentView);
         reformData();
@@ -93,6 +88,7 @@ public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClic
         spnDegree = (Spinner) myFragmentView.findViewById(R.id.spnDegree);
         spnDegree.setAdapter(adapterDegree);
         spnDegree.setSelection(checkedDegree);
+        spnDegree.setOnItemSelectedListener(this);
         spnSpeciality = setupSpinner(myFragmentView, R.id.spnSpeciality, adapterSpeciality);
         spnFacility = setupSpinner(myFragmentView, R.id.spnFacility, adapterFacility);
     }
@@ -158,15 +154,16 @@ public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClic
         }
         return flag;
     }
-        
+
     private void buildErrorMessage(StringBuilder error_mes, int count, int curSpinner) {
         if (count > 1) {
             error_mes.append(spnText[curSpinner] + ", ");
             count--;
-        }  else {
+        } else {
             error_mes.append(spnText[curSpinner] + " ");
         }
     }
+
     private boolean checkDegree() {
         userDegree = degree.get(spnDegree.getSelectedItemPosition());
         return !(spnDegree.getSelectedItemPosition() == degree.size() - 1);
@@ -181,6 +178,7 @@ public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClic
         userFacility = adapterFacility.getSelectedString();
         return !userFacility.isEmpty();
     }
+
 
     private Bundle createBundle() {
         Bundle bundle = getArguments();
@@ -215,4 +213,15 @@ public class RegDoc_ProfessionalFragment extends Fragment implements View.OnClic
         spnSpeciality.setAdapter(adapterSpeciality);
         spnSpeciality.setSelection(adapterSpeciality.getCount());
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        checkedDegree = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
 }
