@@ -39,6 +39,7 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         patientSettingsFragment = new PatientSettingsFragment();
         patientHealthTrachkerFragment = new HealthTrackerFragment();
         changeFragment(patientHomeFragment);
+        patientToolbar.setTitle(getResources().getString(R.string.home));
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -114,16 +115,22 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
 
         if (id == R.id.nav_home) {
             changeFragment(patientHomeFragment);
+            patientToolbar.setTitle(getResources().getString(R.string.home));
         } else if (id == R.id.nav_profile) {
             changeFragment(patientProfileFragment);
+            patientToolbar.setTitle(getResources().getString(R.string.profile));
         } else if (id == R.id.nav_appointment) {
             Toast.makeText(this, "appointment", Toast.LENGTH_SHORT).show();
+            patientToolbar.setTitle(getResources().getString(R.string.appointment));
         } else if (id == R.id.nav_health) {
             changeFragment(patientHealthTrachkerFragment);
+            patientToolbar.setTitle(getResources().getString(R.string.health_tracker));
         } else if (id == R.id.nav_messages) {
             Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
+            patientToolbar.setTitle(getResources().getString(R.string.message));
         } else if (id == R.id.nav_settings) {
             changeFragment(patientSettingsFragment);
+            patientToolbar.setTitle(getResources().getString(R.string.settings));
         } else if (id == R.id.nav_signOut) {
             Toast.makeText(this, "signOut", Toast.LENGTH_SHORT).show();
         }

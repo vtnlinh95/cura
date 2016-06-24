@@ -58,7 +58,6 @@ public class PatientBasicSettingsActivity extends AppCompatActivity implements V
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "back", Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });

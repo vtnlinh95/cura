@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PatientHomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, UpdateSpinner, ReloadData {
-
+    private static final String FRAGMENT_NAME = "Home";
     private EditText edtName, edtLocation;
     private RadioGroup rdbtngroupLocation;
     private RadioButton rdbtnCurrentLocation, rdbtnManualEnter;
@@ -97,6 +98,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         initView(root);
         setUpSpnSpeciality();
         initButton(root);
+        getActivity().setTitle(FRAGMENT_NAME);
         return root;
     }
 
