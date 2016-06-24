@@ -1,7 +1,7 @@
 package com.kms.cura.view.fragment;
 
-import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.kms.cura.R;
+import com.kms.cura.view.activity.PatientBasicSettingsActivity;
 
 
 public class Patient_Settings_Fragment extends ListFragment implements AdapterView.OnItemClickListener {
@@ -39,13 +40,12 @@ public class Patient_Settings_Fragment extends ListFragment implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         if (position == 1) {
-            transaction.replace(R.id.Fragment_UserView, new Patient_BasicSettings_Fragment());
+            Intent intent = new Intent(getActivity(), PatientBasicSettingsActivity.class);
+            startActivity(intent);
         }
-        transaction.addToBackStack(null);
-        transaction.commit();
+
     }
 
 

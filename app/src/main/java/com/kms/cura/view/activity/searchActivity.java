@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class searchActivity extends AppCompatActivity implements OnItemSelectedListener, View.OnClickListener {
+public class SearchActivity extends AppCompatActivity implements OnItemSelectedListener, View.OnClickListener {
     private static final String ACTIVITY_NAME = "Results";
     private UpdateSpinner updateSpinner;
     private int checkedSort;
@@ -41,14 +41,14 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
     List<SpecialityEntity> list1 = new ArrayList<SpecialityEntity>();
     List<SpecialityEntity> list2 = new ArrayList<SpecialityEntity>();
     List<SpecialityEntity> list3 = new ArrayList<SpecialityEntity>();
-    DoctorUserEntity u1 = new DoctorUserEntity("1", "Duy", "duy123@yahoo.com", "123456", null, null, list1, 5, 1, 5, 6, null, null, null, null, null);
-    DoctorUserEntity u2 = new DoctorUserEntity("2", "Dung", "dung123@yahoo.com", "123456", null, null, list2, 4, 5, 10, 50, null, null, null, null, null);
-    DoctorUserEntity u3 = new DoctorUserEntity("3", "Linh", "linh123@yahoo.com", "123456", null, null, list2, 2, 1, 15, 15, null, null, null, null, null);
-    DoctorUserEntity u4 = new DoctorUserEntity("4", "Toan", "toan123@yahoo.com", "123456", null, null, list3, 3.5, 1, 20, 26, null, null, null, null, null);
-    DoctorUserEntity u5 = new DoctorUserEntity("5", "Jenny", "Jenny123@yahoo.com", "123456", null, null, list1, 2.5, 1, 10, 13, null, null, null, null, null);
-    DoctorUserEntity u6 = new DoctorUserEntity("5", "An", "An123@yahoo.com", "123456", null, null, list3, 4.5, 1, 3, 13, null, null, null, null, null);
-    DoctorUserEntity u7 = new DoctorUserEntity("5", "Hieu", "Hieu123@yahoo.com", "123456", null, null, list3, 1, 1, 12, 13, null, null, null, null, null);
-    DoctorUserEntity u8 = new DoctorUserEntity("5", "Phuc", "Phuc123@yahoo.com", "123456", null, null, list2, 0.5, 1, 43, 13, null, null, null, null, null);
+    DoctorUserEntity u1 = new DoctorUserEntity("1", "Duy", "duy123@yahoo.com", "123456", null, null, list1, 5.0, 1, 5, 6, null, null, null, null);
+    DoctorUserEntity u2 = new DoctorUserEntity("2", "Dung", "dung123@yahoo.com", "123456", null, null, list2, 4, 5, 10, 50, null, null, null, null);
+    DoctorUserEntity u3 = new DoctorUserEntity("3", "Linh", "linh123@yahoo.com", "123456", null, null, list2, 2, 1, 15, 15, null, null, null, null);
+    DoctorUserEntity u4 = new DoctorUserEntity("4", "Toan", "toan123@yahoo.com", "123456", null, null, list3, 3.5, 1, 20, 26, null, null, null, null);
+    DoctorUserEntity u5 = new DoctorUserEntity("5", "Jenny", "Jenny123@yahoo.com", "123456", null, null, list1, 2.5, 1, 10, 13, null, null, null, null);
+    DoctorUserEntity u6 = new DoctorUserEntity("5", "An", "An123@yahoo.com", "123456", null, null, list3, 4.5, 1, 3, 13, null, null, null, null);
+    DoctorUserEntity u7 = new DoctorUserEntity("5", "Hieu", "Hieu123@yahoo.com", "123456", null, null, list3, 1, 1, 12, 13, null, null, null, null);
+    DoctorUserEntity u8 = new DoctorUserEntity("5", "Phuc", "Phuc123@yahoo.com", "123456", null, null, list2, 0.5, 1, 43, 13, null, null, null, null);
     private List<DoctorUserEntity> users;
 
     @Override
@@ -113,7 +113,7 @@ public class searchActivity extends AppCompatActivity implements OnItemSelectedL
         array.add(u7);
         array.add(u8);
 
-        Collections.sort(users, new NameComparator());
+        Collections.sort(array, new NameComparator());
         return array;
     }
 

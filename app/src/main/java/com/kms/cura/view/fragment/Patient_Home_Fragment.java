@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -32,6 +33,7 @@ import com.kms.cura.utils.DataUtils;
 import com.kms.cura.utils.GPSTracker;
 import com.kms.cura.view.ReloadData;
 import com.kms.cura.view.UpdateSpinner;
+import com.kms.cura.view.activity.SearchActivity;
 import com.kms.cura.view.adapter.CheckBoxAdapter;
 
 import java.io.IOException;
@@ -45,7 +47,7 @@ public class Patient_Home_Fragment extends Fragment implements RadioGroup.OnChec
     private RadioGroup rdbtngroupLocation;
     private RadioButton rdbtnCurrentLocation, rdbtnManualEnter;
     private Spinner spnSpeciality;
-    private Button btnRegister;
+    private Button btnSearch;
     private Context mContext;
     private Activity activity;
     private String currentLocation = null;
@@ -94,6 +96,7 @@ public class Patient_Home_Fragment extends Fragment implements RadioGroup.OnChec
         reloadData = this;
         initView(root);
         setUpSpnSpeciality();
+        initButton(root);
         return root;
     }
 
@@ -115,14 +118,15 @@ public class Patient_Home_Fragment extends Fragment implements RadioGroup.OnChec
     }
 
     public void initButton(View root) {
-        btnRegister = (Button) root.findViewById(R.id.btnRegister);
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnSearch = (Button) root.findViewById(R.id.button_search);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!checked) {
                     currentLocation = edtLocation.getText().toString();
                 }
-                //Search Function implement here
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -97,7 +97,5 @@
         <item>Price</item>
     </string-array>
 
-    <string name="title_activity_navigation_drawer">navigationDrawer</string>
-
     <string name="title_activity_navi">navi</string>
 </resources>

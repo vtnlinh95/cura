@@ -36,9 +36,12 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".view.activity.PatientViewActivity"></activity>
         <activity
-            android:name=".view.activity.searchActivity"
+            android:name=".view.activity.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.activity.PatientBasicSettingsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
     </application>
 
 </manifest>
