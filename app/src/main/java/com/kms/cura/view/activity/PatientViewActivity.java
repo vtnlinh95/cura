@@ -1,8 +1,8 @@
 package com.kms.cura.view.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,14 +34,14 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
     }
 
     private void initFragments() {
-        patientHomeFragment = new PatientHomeFragment();
+        patientHomeFragment = PatientHomeFragment.newInstance(getApplicationContext(),this);
         patientProfileFragment = new PatientProfileFragment();
         patientHealthTrachkerFragment = new HealthTrackerFragment();
         changeFragment(patientHomeFragment);
     }
 
     private void changeFragment(Fragment newFragment) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.Fragment_UserView, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -78,8 +78,6 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
@@ -111,7 +109,7 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
+        if (id == R.id.nav_search) {
             changeFragment(patientHomeFragment);
         } else if (id == R.id.nav_profile) {
             changeFragment(patientProfileFragment);

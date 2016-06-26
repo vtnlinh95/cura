@@ -1,7 +1,7 @@
 package com.kms.cura.view.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +13,12 @@ import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.utils.CurrentUserProfile;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 public class PatientProfileFragment extends Fragment {
     private TextView txtName, txtGender, txtDOB, txtLocation, txtInsurance, txtHealthConcerns;
     private ImageView profile;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,13 +33,20 @@ public class PatientProfileFragment extends Fragment {
 
     public void loadData() {
         PatientUserEntity entity = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
-        profile = loadImage(R.drawable.profile_anon128,R.id.ivAccountAvatar);
+        profile = loadImage(R.drawable.profile_anon128, R.id.ivAccountAvatar);
         txtName = loadText(entity.getName(), R.id.txtName);
         txtGender = loadText(getGender(entity), R.id.txtGender);
         if (entity.getBirth() == null) {
             txtDOB = loadText(null, R.id.txtDOB);
         } else {
-            txtDOB = loadText(entity.getBirth().toString(), R.id.txtDOB);
+            Date date = entity.getBirth();
+            StringBuilder sb = new StringBuilder();
+            sb.append(date.getDay());
+            sb.append("/");
+            sb.append(date.getMonth() + 1);
+            sb.append("/");
+            sb.append(date.getYear() + 1900);
+            txtDOB = loadText(sb.toString(), R.id.txtDOB);
         }
         txtLocation = loadText(entity.getLocation(), R.id.txtLocation);
         txtInsurance = loadText(entity.getInsurance(), R.id.txtInsurance);
@@ -69,7 +78,8 @@ public class PatientProfileFragment extends Fragment {
         }
         return textView;
     }
-    public ImageView loadImage(int src, int id){
+
+    public ImageView loadImage(int src, int id) {
         ImageView imageView = (ImageView) getActivity().findViewById(id);
         imageView.setBackgroundResource(src);
         return imageView;

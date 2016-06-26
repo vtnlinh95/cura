@@ -1,7 +1,7 @@
 package com.kms.cura.view.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,7 +36,7 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
     }
 
     private void changeFragment(Fragment newFragment) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.Fragment_UserView, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
@@ -106,9 +106,7 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            changeFragment(doctorHomeFragment);
-        } else if (id == R.id.nav_profile) {
+        if (id == R.id.nav_profile) {
             changeFragment(doctorProfileFragment);
         } else if (id == R.id.nav_appointment) {
             Toast.makeText(this, "appointment", Toast.LENGTH_SHORT).show();
