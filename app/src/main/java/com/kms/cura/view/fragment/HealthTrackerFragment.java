@@ -39,6 +39,7 @@ public class HealthTrackerFragment extends Fragment {
         View myFragmentView = inflater.inflate(R.layout.fragment_health_tracker, container, false);
         // get data from somewhere
         // just dummy data for now
+        System.out.println("Health tracker onCreateView");
         currentHealth = new ArrayList<>();
         currentHealth.add("Condition 1");
         currentHealth.add("Condition 2");
@@ -68,13 +69,13 @@ public class HealthTrackerFragment extends Fragment {
         pastHealth.add("Symptom 10");
         // ---------------------------------------
         getActivity().setTitle(getString(R.string.health_tracker));
-        setHasOptionsMenu(true);
+
         setupTabView(myFragmentView);
         return myFragmentView;
     }
 
     private void setupTabView(View parent) {
-        adapter = new HealthTrackerTabAdapter(getFragmentManager(), currentHealth, pastHealth);
+        adapter = new HealthTrackerTabAdapter(getChildFragmentManager(), currentHealth, pastHealth);
         viewPager = (ViewPager) parent.findViewById(R.id.tab_view);
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout) parent.findViewById(R.id.tab_layout);

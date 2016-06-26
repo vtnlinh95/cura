@@ -43,6 +43,7 @@ public class HealthTrackerTabFragment extends Fragment implements AdapterView.On
     private void setupListView(View parent) {
         lvHealth = (ListView) parent.findViewById(R.id.lvHealth);
         adapter = new HealthListAdapter(getActivity(), R.layout.health_list_item, healthList);
+        System.out.println(healthList.toString());
         lvHealth.setAdapter(adapter);
         lvHealth.setOnItemClickListener(this);
     }
