@@ -2,7 +2,7 @@ package com.kms.cura.view.fragment;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;

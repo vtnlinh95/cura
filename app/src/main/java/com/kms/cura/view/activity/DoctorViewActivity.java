@@ -1,6 +1,5 @@
 package com.kms.cura.view.activity;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -15,13 +14,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.kms.cura.R;
-import com.kms.cura.view.fragment.HealthTrackerFragment;
-import com.kms.cura.view.fragment.PatientHomeFragment;
-import com.kms.cura.view.fragment.PatientProfileFragment;
+import com.kms.cura.view.fragment.DoctorHomeFragment;
 
-public class PatientViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private Toolbar patientToolbar;
-    private Fragment patientHomeFragment, patientProfileFragment, patientSettingsFragment, patientHealthTrachkerFragment;
+public class DoctorViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private Toolbar doctorToolbar;
+    private Fragment doctorHomeFragment, doctorProfileFragment, doctorSettingsFragment, doctorHealthTrachkerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +31,8 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
     }
 
     private void initFragments() {
-        patientHomeFragment = PatientHomeFragment.newInstance(getApplicationContext(),this);
-        patientProfileFragment = new PatientProfileFragment();
-        patientHealthTrachkerFragment = new HealthTrackerFragment();
-        changeFragment(patientHomeFragment);
+        doctorHomeFragment = new DoctorHomeFragment();
+        changeFragment(doctorHomeFragment);
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -49,7 +44,7 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
 
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.inflateMenu(R.menu.patient_navigation_drawer_drawer);
+        navigationView.inflateMenu(R.menu.doctor_navigation_drawer_drawer);
         navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -57,14 +52,14 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
     private void initDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, patientToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, doctorToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
     }
 
     public void initToolBar() {
 //        patientToolbar = (Toolbar) findViewById(R.id.patientToolbar);
-        patientToolbar = (Toolbar) findViewById(R.id.toolbar);
+        doctorToolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(patientToolbar);
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        View content_toolbar = getLayoutInflater().inflate(R.layout.content_toolbar_patient_profile_view, null);
@@ -78,6 +73,8 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -109,14 +106,12 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_search) {
-            changeFragment(patientHomeFragment);
-        } else if (id == R.id.nav_profile) {
-            changeFragment(patientProfileFragment);
+        if (id == R.id.nav_profile) {
+            changeFragment(doctorProfileFragment);
         } else if (id == R.id.nav_appointment) {
             Toast.makeText(this, "appointment", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_health) {
-            changeFragment(patientHealthTrachkerFragment);
+        } else if (id == R.id.nav_request) {
+            Toast.makeText(this, "Request", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_messages) {
             Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {

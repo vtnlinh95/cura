@@ -14,13 +14,11 @@ public class Countries {
         ArrayList<String> countries = new ArrayList<String>();
         for (Locale locale : locales) {
             String country = locale.getDisplayCountry();
-            if (country.trim().length()>0 && !countries.contains(country)) {
+            if (country.trim().length() > 0 && !countries.contains(country)) {
                 countries.add(country);
             }
         }
         Collections.sort(countries);
-        for (String country : countries) {
-        }
         return countries;
     }
 }
