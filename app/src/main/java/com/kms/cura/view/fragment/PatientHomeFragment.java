@@ -92,7 +92,6 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        System.out.println("Patient home onCreateView");
         View root = inflater.inflate(R.layout.fragment_patient_home, container, false);
         updateSpinner = this;
         reloadData = this;

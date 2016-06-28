@@ -39,7 +39,6 @@ public class HealthTrackerFragment extends Fragment {
         View myFragmentView = inflater.inflate(R.layout.fragment_health_tracker, container, false);
         // get data from somewhere
         // just dummy data for now
-        System.out.println("Health tracker onCreateView");
         currentHealth = new ArrayList<>();
         currentHealth.add("Condition 1");
         currentHealth.add("Condition 2");
