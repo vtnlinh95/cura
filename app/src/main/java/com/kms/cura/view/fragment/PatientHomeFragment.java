@@ -171,6 +171,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialitySelected, updateSpinner);
         spnSpeciality.setAdapter(specialityAdapter);
         spnSpeciality.setSelection(specialityAdapter.getCount());
+
     }
 
     @Override
@@ -282,9 +283,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
     private void reformData() {
         Bundle bundle = getArguments();
-        System.out.println("Called reform data");
         if (bundle != null) {
-            System.out.println("get data");
             specialitySelected = bundle.getBooleanArray(PatientViewActivity.PATIENT);
         } else {
             specialitySelected = null;
