@@ -1,5 +1,6 @@
 package com.kms.cura.view.activity;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.kms.cura.view.fragment.PatientProfileFragment;
 public class PatientViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar patientToolbar;
     private Fragment patientHomeFragment, patientProfileFragment, patientSettingsFragment, patientHealthTrachkerFragment;
+    static final public String PATIENT = "500";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +122,7 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         } else if (id == R.id.nav_messages) {
             Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_signOut) {
             Toast.makeText(this, "signOut", Toast.LENGTH_SHORT).show();
         }
@@ -128,4 +131,6 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

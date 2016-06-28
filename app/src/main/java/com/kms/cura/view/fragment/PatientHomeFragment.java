@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import com.kms.cura.utils.DataUtils;
 import com.kms.cura.utils.GPSTracker;
 import com.kms.cura.view.ReloadData;
 import com.kms.cura.view.UpdateSpinner;
+import com.kms.cura.view.activity.PatientViewActivity;
 import com.kms.cura.view.activity.SearchActivity;
 import com.kms.cura.view.adapter.CheckBoxAdapter;
 
@@ -65,6 +67,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
     private final int MANUALLY_ENTER = 2;
     private GPSTracker gpsTracker;
     private ProgressDialog pDialog;
+    private boolean[] checkedSpeciality;
     private ReloadData reloadData;
     private String HINT_TEXT = "Please choose";
     private EventBroker broker;
@@ -72,6 +75,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
     public PatientHomeFragment() {
         // Required empty public constructor
+        setArguments(new Bundle());
     }
 
     public static PatientHomeFragment newInstance(Context mContext, Activity activity) {
@@ -142,47 +146,45 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
     public void setUpSpnSpeciality() {
         //Place holder for speciality
-        if (SpecialityModel.getInstace().getSpecialities().size() == 0) {
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading...");
-            pDialog.setCancelable(false);
-            showProgressDialog();
-            AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
-                private Exception exception = null;
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        showProgressDialog();
+        AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
+            private Exception exception = null;
 
-                @Override
-                protected Void doInBackground(Object[] params) {
-                    try {
-                        SpecialityController.initData();
-                    } catch (Exception e) {
-                        exception = e;
-                    }
-                    return null;
+            @Override
+            protected Void doInBackground(Object[] params) {
+                try {
+                    SpecialityController.initData();
+                } catch (Exception e) {
+                    exception = e;
                 }
+                return null;
+            }
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    hideProgressDialog();
-                    if (exception != null) {
-                        ErrorController.showDialogRefresh(getActivity(), "Error : " + exception.getMessage(), reloadData);
-                        return;
-                    }
-                    setAdapter();
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                hideProgressDialog();
+                if (exception != null) {
+                    ErrorController.showDialogRefresh(getActivity(), "Error : " + exception.getMessage(), reloadData);
+                    return;
                 }
-            };
-            task.execute();
-        } else {
-            setAdapter();
-        }
-
+                setAdapter();
+            }
+        };
+        task.execute();
     }
 
     public void setAdapter() {
+
         speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
         speciality.add(HINT_TEXT);
+        reformData();
         specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialitySelected, updateSpinner);
         spnSpeciality.setAdapter(specialityAdapter);
         spnSpeciality.setSelection(specialityAdapter.getCount());
+
     }
 
     @Override
@@ -322,6 +324,14 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                 ErrorController.showDialog(getActivity(), internalError + " : " + data);
         }
     }
+    private void reformData() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            specialitySelected = bundle.getBooleanArray(PatientViewActivity.PATIENT);
+        } else {
+            specialitySelected = null;
+        }
+    }
 
     public void registerEvent() {
         broker.register(this, EventConstant.SEARCH_SUCCESS);
@@ -348,4 +358,17 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         registerEvent();
         super.onResume();
     }
+    private Bundle createBundle() {
+        Bundle bundle = getArguments();
+        bundle.putBooleanArray(PatientViewActivity.PATIENT, specialityAdapter.getSelectedBoolean());
+
+        return bundle;
+    }
+
+    @Override
+    public void onDestroyView() {
+        createBundle();
+        super.onDestroyView();
+    }
+
 }
