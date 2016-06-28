@@ -135,6 +135,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                     currentLocation = edtLocation.getText().toString();
                 }
                 UserController.doctorSearch(edtName.getText().toString(), currentLocation, specialityAdapter.getSelectedString());
+                showProgressDialog();
             }
         });
     }
@@ -300,12 +301,15 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                 intent.putExtra("name", edtName.getText().toString());
                 intent.putExtra("location", currentLocation);
                 intent.putStringArrayListExtra("specialty", specialityAdapter.getSelectedString());
+                hideProgressDialog();
                 startActivity(intent);
                 break;
             case EventConstant.LOGIN_FAILED:
+                hideProgressDialog();
                 ErrorController.showDialog(getActivity(), "Login failed :" + data);
                 break;
             case EventConstant.CONNECTION_ERROR:
+                hideProgressDialog();
                 if (data != null) {
                     ErrorController.showDialog(getActivity(), "Error " + data);
                 } else {
@@ -313,6 +317,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                 }
                 break;
             case EventConstant.INTERNAL_ERROR:
+                hideProgressDialog();
                 String internalError = getResources().getString(R.string.InternalError);
                 ErrorController.showDialog(getActivity(), internalError + " : " + data);
         }

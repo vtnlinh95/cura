@@ -19,6 +19,7 @@ import com.kms.cura.dal.mapping.FacilityColumn;
 import com.kms.cura.dal.mapping.SpecialityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.DegreeEntity;
+import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
@@ -215,14 +216,14 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 				UserColumn.ID.getColumnName());
 	}
 
-	public List<DoctorUserEntity> searchDoctorFunction(DoctorUserEntity doctor)
+	public List<DoctorUserEntity> searchDoctorFunction(DoctorSearchEntity search)
 			throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		List<DoctorUserEntity> result = new ArrayList<DoctorUserEntity>();
 
 		try {
-			stmt = getSearchStatement(doctor);
+			stmt = getSearchStatement(search);
 
 			rs = stmt.executeQuery();
 
@@ -237,10 +238,11 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		}
 	}
 
-	protected PreparedStatement getSearchStatement(DoctorUserEntity doctor) throws SQLException {
+	protected PreparedStatement getSearchStatement(DoctorSearchEntity search) throws SQLException {
+		DoctorUserEntity doctor = search.getDoctor();
 		PreparedStatement stmt = null;
 		int count = 1;
-		stmt = con.prepareStatement(getSearchQuery(doctor));
+		stmt = con.prepareStatement(getSearchQuery(search));
 
 		String name = doctor.getName();
 		if (name == null) {
@@ -249,7 +251,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		stmt.setString(count, "%" + name + "%");
 		count++;
 
-		if (doctor.getSpeciality() != null && !doctor.getSpeciality().get(0).equals("")) {
+		if (doctor.getSpeciality() != null && doctor.getSpeciality().size() > 0
+				&& !doctor.getSpeciality().get(0).equals("")) {
 			for (SpecialityEntity specialty : doctor.getSpeciality()) {
 				stmt.setString(count, specialty.getName());
 				count++;
@@ -264,7 +267,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		return stmt;
 	}
 
-	protected String getSearchQuery(DoctorUserEntity doctor) {
+	protected String getSearchQuery(DoctorSearchEntity search) {
+		DoctorUserEntity doctor = search.getDoctor();
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT");
 		sb.append(
@@ -313,7 +317,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		sb.append(DoctorColumn.NAME);
 		sb.append(" LIKE ?");
 
-		if (doctor.getSpeciality() != null && !doctor.getSpeciality().get(0).equals("")) {
+		if (doctor.getSpeciality() != null && doctor.getSpeciality().size() > 0
+				&& !doctor.getSpeciality().get(0).equals("")) {
 			for (int i = 0; i < doctor.getSpeciality().size(); i++) {
 				if (i == 0) {
 					sb.append(" AND ( ");

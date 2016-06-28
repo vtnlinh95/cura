@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.R;
+import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
@@ -70,7 +71,8 @@ public class UserController {
             specialityEntities.add(new SpecialityEntity(null,specialty));
         }
         DoctorUserEntity doctor = new DoctorUserEntity(null,name,null,null,null,null,specialityEntities,0,0,0,0,facilityEntities,null,null,null);
-        UserModel.getInstace().doctorSearch(doctor);
+        DoctorSearchEntity search = new DoctorSearchEntity(doctor);
+        UserModel.getInstace().doctorSearch(search);
     }
 
     public static boolean saveNewUser(String email, String password) {
