@@ -1,8 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.fragment.RegDocPersonalFragment">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,47 +9,45 @@
         android:orientation="vertical"
         android:layout_marginRight="20sp"
         android:layout_marginLeft="20sp">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_doc"
-            android:textSize="@dimen/textSizeTitle_25"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:layout_marginTop="30sp"
-            android:layout_marginBottom="10sp"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30sp"
-            android:hint="@string/FirstName"
-            android:fontFamily="sans-serif"
-            android:id="@+id/edtDocReg_FirstName"
-            android:maxLines="1"
-            android:textSize="@dimen/docText_18"
-            android:singleLine="true"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:hint="@string/LastName"
-            android:fontFamily="sans-serif"
-            android:id="@+id/edtDocReg_LastName"
-            android:maxLines="1"
-            android:textSize="@dimen/docText_18"
-            android:singleLine="true"/>
+            android:layout_height="@dimen/spinner_60"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_20"
+            android:padding="5sp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nameSettings"
+                android:gravity="center"
+                android:fontFamily="sans-serif"
+                android:textSize="@dimen/docText_18"
+                android:textColor="@color/black"
+                android:layout_marginBottom="@dimen/padding_8"
+                android:paddingBottom="2sp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:gravity="center"
+                android:fontFamily="sans-serif"
+                android:id="@+id/editText_settings_name"
+                android:maxLines="1"
+                android:textSize="@dimen/docText_18"
+                android:singleLine="true"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/spinner_60"
             android:orientation="horizontal"
-            android:layout_marginTop="@dimen/margin_10"
-            android:padding="5sp">
+            android:layout_marginTop="@dimen/margin_20"
+            android:padding="5sp"
+            android:weightSum="1">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/sex"
+                android:text="@string/sexSettings"
                 android:gravity="center"
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/docText_18"
@@ -61,16 +58,16 @@
             <Spinner
                 android:layout_width="@dimen/spinner_150"
                 android:layout_height="@dimen/spinner_50"
-                android:id="@+id/spnSex"
-                android:layout_gravity="center"
-                android:gravity="bottom"
+                android:id="@+id/spnSex_Settings"
+                android:gravity="center"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:layout_weight="1.10" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/spinner_60"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center|start"
             android:padding="5sp">
@@ -78,37 +75,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="sans-serif"
-                android:text="@string/birthday"
+                android:text="@string/birthdaySettings"
                 android:textSize="@dimen/docText_18"
                 android:textColor="@color/black"
                 android:gravity="center" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/tvBDate"
+                android:layout_height="@dimen/spinner_60"
+                android:id="@+id/setting_birthday"
                 android:textSize="@dimen/docText_18"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/black"
                 android:gravity="center"/>
+
             <ImageButton
                 android:layout_width="@dimen/spinner_40"
                 android:layout_height="@dimen/spinner_40"
                 android:background="@drawable/calendar_icon"
-                android:id="@+id/btnChooseDate"/>
+                android:id="@+id/button_settings_calendar"/>
 
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="end|bottom">
-            <ImageButton
-                android:layout_width="@dimen/arrow_60"
-                android:layout_height="@dimen/arrow_60"
-                android:background="@drawable/arrow_right"
-                android:id="@+id/btnRegisterNext"/>
-        </LinearLayout>
+            android:gravity="end|bottom"></LinearLayout>
     </LinearLayout>
 
 

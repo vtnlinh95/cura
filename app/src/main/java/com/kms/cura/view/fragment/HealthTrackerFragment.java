@@ -1,20 +1,15 @@
 package com.kms.cura.view.fragment;
 
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
@@ -73,13 +68,13 @@ public class HealthTrackerFragment extends Fragment {
         pastHealth.add("Symptom 10");
         // ---------------------------------------
         getActivity().setTitle(getString(R.string.health_tracker));
-        setHasOptionsMenu(true);
+
         setupTabView(myFragmentView);
         return myFragmentView;
     }
 
     private void setupTabView(View parent) {
-        adapter = new HealthTrackerTabAdapter(getFragmentManager(), currentHealth, pastHealth);
+        adapter = new HealthTrackerTabAdapter(getChildFragmentManager(), currentHealth, pastHealth);
         viewPager = (ViewPager) parent.findViewById(R.id.tab_view);
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout) parent.findViewById(R.id.tab_layout);
