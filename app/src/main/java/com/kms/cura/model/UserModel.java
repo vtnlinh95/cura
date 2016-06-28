@@ -16,7 +16,7 @@ public class UserModel extends EntityModel {
     private UserModel() {
     }
 
-    public static UserModel getInstace() {
+    public static UserModel getInstance() {
         if (instance == null) {
             instance = new UserModel();
         }
@@ -63,4 +63,5 @@ public class UserModel extends EntityModel {
                 EntityToJsonConverter.convertEntityToJson(entity).toString(), new LoginUserModelResponse());
         VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
     }
+
 }
