@@ -12,6 +12,7 @@ import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura.model.UserModel;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.io.File;
@@ -59,6 +60,19 @@ public class UserController {
         UserEntity entity = new UserEntity(null, null, email, password);
         UserModel.getInstance().userLogin(entity);
     }
+
+    public static void doctorSearch(String name, String city, ArrayList<String> specialities){
+        FacilityEntity facility = new FacilityEntity(null,null,null,null,city,null);
+        List<FacilityEntity> facilityEntities = new ArrayList<FacilityEntity>();
+        facilityEntities.add(facility);
+        List<SpecialityEntity> specialityEntities = new ArrayList<SpecialityEntity>();
+        for(String specialty : specialities){
+            specialityEntities.add(new SpecialityEntity(null,specialty));
+        }
+        DoctorUserEntity doctor = new DoctorUserEntity(null,name,null,null,null,null,specialityEntities,0,0,0,0,facilityEntities,null,null,null);
+        UserModel.getInstance().doctorSearch(doctor);
+    }
+
 
     public static boolean saveNewUser(String email, String password) {
         return UserModel.getInstance().save(new UserEntity(null, null, email, password));
