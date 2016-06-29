@@ -182,7 +182,8 @@
         <item>Price</item>
     </string-array>
 
+    <string name="sort_by_prompt">Sort by: </string>
     <string name="title_activity_navi">navi</string>
     <string name="upload">Upload</string>
-    <string name="sort_by_prompt">Sort by: </string>
+    <string name="pick_image">Pick Image</string>
 </resources>

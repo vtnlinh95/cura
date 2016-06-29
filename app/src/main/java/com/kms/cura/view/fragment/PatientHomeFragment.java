@@ -71,9 +71,9 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
     private ProgressDialog pDialog;
     private boolean[] checkedSpeciality;
     private ReloadData reloadData;
-    private EventBroker broker;
     private String HINT_TEXT = "Please choose";
     public static String SEARCH_RESULT = "SearchResult";
+    private EventBroker broker;
 
 
     public PatientHomeFragment() {
@@ -92,14 +92,16 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         this.mContext = getContext();
     }
 
+
     private void setActivity(Activity src) {
-        this.activity = getActivity();
+        this.activity = this.getActivity();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        broker = EventBroker.getInstance();
     }
 
     @Override
@@ -184,7 +186,6 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
         speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
         speciality.add(HINT_TEXT);
-        reformData();
         specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialitySelected, updateSpinner);
         spnSpeciality.setAdapter(specialityAdapter);
         spnSpeciality.setSelection(specialityAdapter.getCount());

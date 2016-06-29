@@ -13,6 +13,7 @@ public class Settings {
     public static final String GET_ALL_DEGREE = "/degree/getAll";
     public static final String CREATE_DOCTOR_API = "/user/createDoctor";
     public static final String SEARCH_DOCTOR_API = "/search/searchDoctor";
+
     public static final String GET_ALL_CONDITION = "/condition/getAll";
     public static final String GET_ALL_SYMPTOM = "/symptom/getAll";
 }
