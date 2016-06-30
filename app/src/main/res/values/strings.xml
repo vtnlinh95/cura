@@ -90,4 +90,8 @@
     <string name="Search">Search</string>
     <string name="CurrentLocation">Current Location</string>
     <string name="ManuallyEnter">Manually Enter</string>
+    <string name="logOut">Log out</string>
+    <string name="logOutMes">Are you sure to log out this account?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

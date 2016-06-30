@@ -130,4 +130,11 @@ public class UserController {
             e.printStackTrace();
         }
     }
+
+    public static void userSignOut(Context context) {
+        File file = new File(context.getFilesDir(), SIGNED_IN_INFO);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 }
