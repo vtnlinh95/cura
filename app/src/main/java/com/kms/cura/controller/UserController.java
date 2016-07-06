@@ -5,13 +5,16 @@ import android.util.Base64;
 
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.R;
+import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.SpecialityEntity;
+import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura.model.UserModel;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.io.File;
@@ -58,6 +61,21 @@ public class UserController {
     public static void userLogin(String email, String password) {
         UserEntity entity = new UserEntity(null, null, email, password);
         UserModel.getInstance().userLogin(entity);
+    }
+
+    public static void doctorSearch(String name, String city, ArrayList<String> specialities) {
+        FacilityEntity facility = new FacilityEntity(null, null, null, null, city, null);
+        List<WorkingHourEntity> workingHourEntities = new ArrayList<WorkingHourEntity>();
+        WorkingHourEntity workingHourEntity = new WorkingHourEntity(facility);
+        workingHourEntities.add(workingHourEntity);
+        List<SpecialityEntity> specialityEntities = new ArrayList<SpecialityEntity>();
+        for (String specialty : specialities) {
+            specialityEntities.add(new SpecialityEntity(null, specialty));
+        }
+
+        DoctorUserEntity doctor = new DoctorUserEntity(null, name, null, null, null, null, specialityEntities, 0, 0, 0, 0, workingHourEntities, null, null, null);
+        DoctorSearchEntity search = new DoctorSearchEntity(doctor);
+        UserModel.getInstance().doctorSearch(search);
     }
 
     public static boolean saveNewUser(String email, String password) {
