@@ -36,5 +36,4 @@
     <dimen name="CommentHeight">120sp</dimen>
     <dimen name="timeHeight">80sp</dimen>
     <dimen name="topPadding">55sp</dimen>
->>>>>>> 3681de2... KATI-67[Settings] Patient Settings UI
 </resources>

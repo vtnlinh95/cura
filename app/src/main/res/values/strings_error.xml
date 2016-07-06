@@ -24,5 +24,4 @@
     <string name="BookAptDayError">The date to book the appointment can not be in the past</string>
     <string name="ImageSizeError">Image size is too large</string>
     <string name="NoImageError">Image does not exist</string>
->>>>>>> 3681de2... KATI-67[Settings] Patient Settings UI
 </resources>
