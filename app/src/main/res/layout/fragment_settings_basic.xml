@@ -50,8 +50,6 @@
                 android:fontFamily="sans-serif"
                 android:textSize="@dimen/docText_18"
                 android:textColor="@color/black"
-                android:layout_marginBottom="@dimen/padding_8"
-                android:paddingBottom="2sp"
                 android:layout_gravity="center" />
 
             <Spinner

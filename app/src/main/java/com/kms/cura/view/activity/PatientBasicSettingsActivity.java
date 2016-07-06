@@ -108,6 +108,7 @@ public class PatientBasicSettingsActivity extends AppCompatActivity implements V
         spnInsurance_settings.setSelection(position);
     }
 
+
     private void initSexSpinner() {
         ArrayList<String> sex = new ArrayList<>();
         sex.add(getString(R.string.male));

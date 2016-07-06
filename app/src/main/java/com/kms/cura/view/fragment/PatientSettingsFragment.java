@@ -3,6 +3,7 @@ package com.kms.cura.view.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +31,7 @@ public class PatientSettingsFragment extends ListFragment implements AdapterView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_patient_settings, container, false);
-
-
+        modifyToolbar();
         return view;
     }
 
@@ -60,5 +60,10 @@ public class PatientSettingsFragment extends ListFragment implements AdapterView
 
     }
 
-
+    private void modifyToolbar() {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.getMenu().clear();
+        toolbar.setTitle(getString(R.string.settings));
+        toolbar.inflateMenu(R.menu.menu_blank);
+    }
 }
