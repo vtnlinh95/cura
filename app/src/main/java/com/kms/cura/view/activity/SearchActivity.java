@@ -37,6 +37,9 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements OnItemSelectedListener, View.OnClickListener {
     private static final String ACTIVITY_NAME = "Results";
+    private static final int NAME = 1;
+    private static final int RAITING = 2;
+    private static final int PRICE = 3;
     private UpdateSpinner updateSpinner;
     private int checkedSort;
     private ArrayAdapter<CharSequence> adapter;
@@ -110,11 +113,11 @@ public class SearchActivity extends AppCompatActivity implements OnItemSelectedL
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
-        if (position == 1) {
+        if (position == NAME) {
             Collections.sort(doctors, new NameComparator());
-        } else if (position == 2) {
+        } else if (position == RAITING) {
             Collections.sort(doctors, new RatingComparator());
-        } else if (position == 3) {
+        } else if (position == PRICE) {
             Collections.sort(doctors, new PriceComparator());
         }
         lv.setAdapter(new DoctorListViewAdapter(this, doctors));
