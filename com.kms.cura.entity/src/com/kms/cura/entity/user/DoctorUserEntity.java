@@ -2,6 +2,7 @@ package com.kms.cura.entity.user;
 
 import java.lang.reflect.Type;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.WorkingHourEntity;
 
 public class DoctorUserEntity extends UserEntity {
+    public final static String DOCTOR_LIST = "doctor_list";
     public static int DOCTOR_TYPE = 1;
     public final static String GENDER_MALE = "M";
     private String phone;
@@ -152,8 +154,9 @@ public class DoctorUserEntity extends UserEntity {
         }.getType();
     }
 
-	
-    
-    
+    public static Type getDoctorEntityListType() {
+        return new TypeToken<Collection<DoctorUserEntity>>() {
+        }.getType();
+    }
 }
 

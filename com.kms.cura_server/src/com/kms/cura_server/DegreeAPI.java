@@ -10,8 +10,6 @@ import com.kms.cura.dal.DegreeDAL;
 import com.kms.cura.dal.database.DegreeDatabaseHelper;
 import com.kms.cura.entity.Entity;
 import com.kms.cura_server.response.APIResponse;
-
-import com.kms.cura_server.response.APIResponse;
 import com.kms.cura_server.response.DegreeAPIResponse;
 
 @Path("/degree")

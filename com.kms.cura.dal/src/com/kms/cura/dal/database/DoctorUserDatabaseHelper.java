@@ -3,13 +3,10 @@ package com.kms.cura.dal.database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.kms.cura.dal.DegreeDAL;
 import com.kms.cura.dal.FacilityDAL;
@@ -18,9 +15,11 @@ import com.kms.cura.dal.exception.DALException;
 import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.dal.mapping.Doctor_FacilityColumn;
 import com.kms.cura.dal.mapping.Doctor_SpecialityColumn;
+import com.kms.cura.dal.mapping.FacilityColumn;
+import com.kms.cura.dal.mapping.SpecialityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
-import com.kms.cura.entity.DayOfTheWeek;
 import com.kms.cura.entity.DegreeEntity;
+import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.OpeningHour;
@@ -253,6 +252,155 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		return (DoctorUserEntity) queryUserEntitybyEmailPassword(DoctorColumn.TABLE_NAME, UserColumn.TABLE_NAME,
 				entity.getEmail(), entity.getPassword(), DoctorColumn.USER_ID.getColumnName(),
 				UserColumn.ID.getColumnName());
+	}
+
+	public List<DoctorUserEntity> searchDoctorFunction(DoctorSearchEntity search)
+			throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<DoctorUserEntity> result = new ArrayList<DoctorUserEntity>();
+
+		try {
+			stmt = getSearchStatement(search);
+
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				result.add((DoctorUserEntity) getEntityFromResultSet(rs));
+			}
+			return result;
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+	}
+
+	protected PreparedStatement getSearchStatement(DoctorSearchEntity search) throws SQLException {
+		DoctorUserEntity doctor = search.getDoctor();
+		PreparedStatement stmt = null;
+		int count = 1;
+		stmt = con.prepareStatement(getSearchQuery(search));
+
+		String name = doctor.getName();
+		if (name == null) {
+			name = "";
+		}
+		stmt.setString(count, "%" + name + "%");
+		count++;
+
+		List<SpecialityEntity> specialities = doctor.getSpeciality();
+		if (specialities != null && specialities.size() > 0 && !doctor.getSpeciality().get(0).equals("")) {
+			for (SpecialityEntity specialty : doctor.getSpeciality()) {
+				stmt.setString(count, specialty.getName());
+				count++;
+			}
+		}
+
+		String city = doctor.getWorkingTime().get(0).getFacilityEntity().getCity();
+		stmt.setString(count, "%" + city + "%");
+		count++;
+
+		return stmt;
+	}
+
+	protected String getSearchQuery(DoctorSearchEntity search) {
+		DoctorUserEntity doctor = search.getDoctor();
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT DISTINCT ");
+
+		sb.append(DoctorColumn.USER_ID.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(DoctorColumn.NAME.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(DoctorColumn.PHONE.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.DEGREE_ID.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.EXPERIENCE.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.MIN_PRICE.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.MAX_PRICE.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.RATING.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.GENDER.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.BIRTH.getColumnName());
+		sb.append(", ");
+		sb.append(DoctorColumn.INSURANCE.getColumnName());
+
+		sb.append(" FROM ");
+		sb.append(DoctorColumn.TABLE_NAME);
+
+		sb.append(" JOIN ");
+		sb.append(Doctor_FacilityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(DoctorColumn.USER_ID.getColumnName());
+		sb.append(" = ");
+		sb.append(Doctor_FacilityColumn.DOCTOR_ID.getColumnName());
+		sb.append(" JOIN ");
+		sb.append(FacilityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(Doctor_FacilityColumn.FACILITY_ID.getColumnName());
+		sb.append(" = ");
+		sb.append(FacilityColumn.ID.getColumnName());
+
+		sb.append(" JOIN ");
+		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(DoctorColumn.USER_ID.getColumnName());
+		sb.append(" = ");
+		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(Doctor_SpecialityColumn.DOCTOR_ID.getColumnName());
+
+		sb.append(" JOIN ");
+		sb.append(SpecialityColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(Doctor_SpecialityColumn.SPECIALITY_ID.getColumnName());
+		sb.append(" = ");
+		sb.append(SpecialityColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(SpecialityColumn.ID.getColumnName());
+
+		sb.append(" WHERE ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(DoctorColumn.NAME.getColumnName());
+		sb.append(" LIKE ?");
+
+		List<SpecialityEntity> specialities = doctor.getSpeciality();
+		if (specialities != null && specialities.size() > 0 && !doctor.getSpeciality().get(0).equals("")) {
+			for (int i = 0; i < doctor.getSpeciality().size(); i++) {
+				if (i == 0) {
+					sb.append(" AND ( ");
+				} else {
+					sb.append(" OR ");
+				}
+
+				sb.append(SpecialityColumn.TABLE_NAME);
+				sb.append(".");
+				sb.append(SpecialityColumn.NAME.getColumnName());
+				sb.append(" LIKE ");
+				sb.append(" ? ");
+			}
+			sb.append(")");
+		}
+
+		sb.append(" AND ");
+		sb.append(FacilityColumn.CITY_KEYWORD.getColumnName());
+		sb.append(" LIKE ? ");
+		return sb.toString();
 	}
 
 	private List<Integer> getAllFacilityIDfromDoctorID(int doctorID) throws SQLException {
