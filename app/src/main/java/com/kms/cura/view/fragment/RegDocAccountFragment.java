@@ -24,7 +24,6 @@ import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.event.EventBroker;
 import com.kms.cura.event.EventHandler;
-import com.kms.cura.model.DegreeModel;
 import com.kms.cura.utils.InputUtils;
 import com.kms.cura.view.activity.RegisterDoctorActivity;
 
@@ -249,14 +248,8 @@ public class RegDocAccountFragment extends Fragment implements View.OnClickListe
         return true;
     }
 
-
-    private DegreeEntity getDegreeSelected() {
-        int degree = bundle.getInt(RegisterDoctorActivity.DEGREE);
-        return DegreeModel.getInstace().getDegrees().get(degree);
-    }
-
     @Override
-    public void handleEvent(String event, String data) {
+    public void handleEvent(String event, Object data) {
         switch (event) {
             case EventConstant.REGISTER_SUCCESS:
                 ErrorController.showDialog(getActivity(), "Register success");

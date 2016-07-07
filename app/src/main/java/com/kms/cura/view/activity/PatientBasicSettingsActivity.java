@@ -30,7 +30,7 @@ import java.util.Arrays;
 public class PatientBasicSettingsActivity extends AppCompatActivity implements View.OnClickListener {
     private static String ACTIVITY_NAME = "Basic";
     private int day, month, year;
-    private Spinner spnSex_settings, spnCountry_settings, spnInsurance_settings;
+    private Spinner spnSex_settings, spnInsurance_settings;
     private EditText name, city;
     private ImageButton calendar;
     private Button save;
@@ -86,6 +86,30 @@ public class PatientBasicSettingsActivity extends AppCompatActivity implements V
     }
 
     private void initSpinner() {
+        initSexSpinner();
+
+        initInsuranceSpinner();
+    }
+
+    private void initInsuranceSpinner() {
+        ArrayList<String> insurances = new ArrayList<String>(Arrays.asList(this.getResources().getStringArray(R.array.Insurance)));
+        String currentInsurance = entity.getInsurance();
+        int position = 0;
+        for (int i = 0; i < insurances.size(); i++) {
+            if (currentInsurance == null) {
+                position = insurances.size() - 1;
+            } else if (currentInsurance.equals(insurances.get(i))) {
+                position = i;
+            }
+        }
+        StringListAdapter insuranceAdapter = new StringListAdapter(this, R.layout.string_list_item2, insurances, 0);
+        spnInsurance_settings = (Spinner) findViewById(R.id.spnInsurance_Settings);
+        spnInsurance_settings.setAdapter(insuranceAdapter);
+        spnInsurance_settings.setSelection(position);
+    }
+
+
+    private void initSexSpinner() {
         ArrayList<String> sex = new ArrayList<>();
         sex.add(getString(R.string.male));
         sex.add(getString(R.string.female));
@@ -97,24 +121,6 @@ public class PatientBasicSettingsActivity extends AppCompatActivity implements V
         } else {
             spnSex_settings.setSelection(0);
         }
-
-        ArrayList<String> countries = Countries.getAllCountries();
-        StringListAdapter countryAdapter = new StringListAdapter(this, R.layout.string_list_item2, countries, 0);
-        spnCountry_settings = (Spinner) findViewById(R.id.spnCountry_Settings);
-        spnCountry_settings.setAdapter(countryAdapter);
-
-        ArrayList<String> insurances = new ArrayList<String>(Arrays.asList(this.getResources().getStringArray(R.array.Insurance)));
-        String currentInsurance = entity.getInsurance();
-        int position = 0;
-        for (int i = 0; i < insurances.size(); i++) {
-            if (currentInsurance.equals(insurances.get(i))) {
-                position = i;
-            }
-        }
-        StringListAdapter insuranceAdapter = new StringListAdapter(this, R.layout.string_list_item2, insurances, 0);
-        spnInsurance_settings = (Spinner) findViewById(R.id.spnInsurance_Settings);
-        spnInsurance_settings.setAdapter(insuranceAdapter);
-        spnInsurance_settings.setSelection(position);
     }
 
     private void initEditText() {
@@ -122,13 +128,18 @@ public class PatientBasicSettingsActivity extends AppCompatActivity implements V
         name.setText(entity.getName());
 
         city = (EditText) findViewById(R.id.editText_settings_city);
+        String formatedCity = getFormatedCityString();
+        city.setText(formatedCity);
+    }
+
+    private String getFormatedCityString() {
         String formatedCity = null;
         try {
             formatedCity = new String(entity.getLocation().getBytes("ISO-8859-1"), "UTF-8");
-            city.setText(formatedCity);
         } catch (UnsupportedEncodingException e) {
             city.setText("");
         }
+        return formatedCity;
     }
 
     @Override

@@ -17,6 +17,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements TextWat
     private Toolbar toolbar;
     private EditText password, newPassword, confirmPassword;
     private Button save;
+    boolean edittedPwd, edittedNewPwd, edittedRePwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,35 +67,88 @@ public class ChangePasswordActivity extends AppCompatActivity implements TextWat
            *   Disable the login button if either condition is invalid nad display an error message accordingly*/
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        boolean flag = setErrorMessagePwd();
+        flag &= setErrorMessagePwd();
+        flag &= setErrorMessageNewPwd();
+        flag &= setErrorMessageRePwd();
+        save.setEnabled(flag);
+    }
 
-        if (!InputUtils.isPasswordValid(password.getText().toString())) {
-            password.setError(getResources().getString(R.string.pwd_error));
-            save.setEnabled(false);
-        }
-        if (!InputUtils.isPasswordValid(newPassword.getText().toString())) {
-            newPassword.setError(getResources().getString(R.string.pwd_error));
-            save.setEnabled(false);
-        }
-        if (!InputUtils.isPasswordValid(confirmPassword.getText().toString())) {
-            confirmPassword.setError(getResources().getString(R.string.pwd_error));
-            save.setEnabled(false);
-        }
+    private String getStringFromEditText(EditText editText) {
+        return editText.getText().toString();
     }
 
     /* Check email and password after the user done entering information and re-enable the login button if both conditions are valid */
     @Override
     public void afterTextChanged(Editable s) {
-        if (InputUtils.isPasswordValid(password.getText().toString()) && !password.getText().toString().equals(newPassword.getText().toString()) && newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-            save.setEnabled(true);
-        } else if (newPassword.getText().toString().isEmpty()) {
-            newPassword.setError(getResources().getString(R.string.required_field));
-        } else if (newPassword.getText().toString().equals(password.getText().toString())) {
-            newPassword.setError(getResources().getString(R.string.DuplicateNewPasswordError));
-        } else if (!confirmPassword.getText().toString().equals(newPassword.getText().toString())) {
-            confirmPassword.setError(getResources().getString(R.string.repwd_error));
-        }
 
     }
 
+    private void checkIfRequiredFieldIsEmpty(boolean isEditTextEdited, EditText editText) {
+        if (isEditTextEdited) {
+            editText.setError(getString(R.string.required_field));
+        }
+    }
+
+    private boolean setErrorMessagePwd() {
+        if (getStringFromEditText(password).equals("")) {
+            checkIfRequiredFieldIsEmpty(edittedPwd, password);
+            edittedPwd = false;
+            return false;
+        }
+        edittedPwd = true;
+        if (!checkPwd() && edittedPwd) {
+            password.setError(getString(R.string.pwd_error));
+            return false;
+        }
+        return true;
+    }
+
+    private boolean setErrorMessageNewPwd() {
+        if (getStringFromEditText(newPassword).equals("")) {
+            checkIfRequiredFieldIsEmpty(edittedNewPwd, newPassword);
+            edittedNewPwd = false;
+            return false;
+        }
+        edittedNewPwd = true;
+        if (!checkNewPwd() && edittedNewPwd) {
+            newPassword.setError(getString(R.string.pwd_error));
+            return false;
+        }
+
+        if (getStringFromEditText(newPassword).equals(getStringFromEditText(password))) {
+            newPassword.setError(getString(R.string.NewPasswordError));
+        }
+        return true;
+    }
+
+    private boolean setErrorMessageRePwd() {
+        if (getStringFromEditText(confirmPassword).equals("")) {
+            checkIfRequiredFieldIsEmpty(edittedRePwd, confirmPassword);
+            edittedRePwd = false;
+            return false;
+        }
+        edittedRePwd = true;
+        if (edittedRePwd) {
+            if (!checkRePwd()) {
+                confirmPassword.setError(getString(R.string.repwd_error));
+                return false;
+            }
+            confirmPassword.setError(null);
+        }
+        return true;
+    }
+
+    private boolean checkPwd() {
+        return InputUtils.isPasswordValid(getStringFromEditText(password));
+    }
+
+    private boolean checkRePwd() {
+        return getStringFromEditText(newPassword).equals(getStringFromEditText(confirmPassword));
+    }
+
+    private boolean checkNewPwd() {
+        return InputUtils.isPasswordValid(getStringFromEditText(newPassword));
+    }
 
 }

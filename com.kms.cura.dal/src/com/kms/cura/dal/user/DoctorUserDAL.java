@@ -6,6 +6,7 @@ import java.util.List;
 import com.kms.cura.dal.database.DatabaseHelper;
 import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
@@ -47,9 +48,16 @@ public class DoctorUserDAL extends UserDAL {
 		DoctorUserDatabaseHelper dbh = new DoctorUserDatabaseHelper();
 		return dbh.searchDoctor(entity);
 	}
-	
-	public List<DoctorUserEntity> searchDoctorFunction (DoctorUserEntity doctor) throws SQLException, ClassNotFoundException{
+
+	public DoctorUserEntity updateDoctor(DoctorUserEntity doctorUserEntity) throws NumberFormatException, Exception {
 		DoctorUserDatabaseHelper dbh = new DoctorUserDatabaseHelper();
-		return dbh.searchDoctorFunction(doctor);
+		return (DoctorUserEntity) dbh.updateDoctor(doctorUserEntity);
 	}
+
+	public List<DoctorUserEntity> searchDoctorFunction(DoctorSearchEntity search)
+			throws SQLException, ClassNotFoundException {
+		DoctorUserDatabaseHelper dbh = new DoctorUserDatabaseHelper();
+		return dbh.searchDoctorFunction(search);
+	}
+
 }

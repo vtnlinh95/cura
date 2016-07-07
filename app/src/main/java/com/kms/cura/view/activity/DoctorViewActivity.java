@@ -1,5 +1,7 @@
 package com.kms.cura.view.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,9 +17,10 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.UserController;
 import com.kms.cura.view.fragment.DoctorHomeFragment;
 
-public class DoctorViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DoctorViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DialogInterface.OnClickListener {
     private Toolbar doctorToolbar;
     private Fragment doctorHomeFragment, doctorProfileFragment, doctorSettingsFragment, doctorHealthTrachkerFragment;
 
@@ -117,11 +121,37 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_settings) {
             Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_signOut) {
-            Toast.makeText(this, "signOut", Toast.LENGTH_SHORT).show();
+            showDialogSignOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void signOut() {
+        UserController.userSignOut(this);
+        Intent i = new Intent(this, LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+    }
+
+    private void showDialogSignOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.logOut));
+        builder.setMessage(getString(R.string.logOutMes));
+        builder.setCancelable(true);
+        builder.setPositiveButton(getString(R.string.yes), this);
+        builder.setNegativeButton(getString(R.string.no), this);
+        builder.show();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            signOut();
+        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
+            dialog.dismiss();
+        }
     }
 }

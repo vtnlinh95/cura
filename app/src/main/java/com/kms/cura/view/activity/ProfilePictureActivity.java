@@ -62,7 +62,7 @@ public class ProfilePictureActivity extends AppCompatActivity implements View.On
             case PICK_IMAGE:
                 Bitmap bitmap = ImagePicker.getImageFromResult(this, resultCode, data);
                 if (bitmap != null && bitmap.getByteCount() > MAX_IMAGE_SIZE) {
-                    Toast.makeText(this, "Image size is too large", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.ImageSizeError, Toast.LENGTH_SHORT).show();
                 } else if (bitmap != null && bitmap.getByteCount() != 0) {
                     profile.setImageBitmap(bitmap);
                     save.setEnabled(true);

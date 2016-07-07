@@ -36,6 +36,7 @@
     <string name="CreatePatientAccount">Create Patient Account</string>
     <string name="speciality">Speciality(ies)</string>
     <string name="facility">Facility(ies)</string>
+    <string name="DoctorFacility">FACILITIES :</string>
     <string name="phone">Phone number*</string>
     <string name="re_pwd">Re-enter Password*</string>
     <string name="register">Register</string>
@@ -78,13 +79,20 @@
         <item>Molina</item>
         <item>Kaiser</item>
         <item>Fidelis Care</item>
+        <item>N/A</item>
     </string-array>
 
 
     <string name="DoctorSearch">Doctor Search</string>
+    <string name="ProfileView">Profile View</string>
     <string name="Name">Name :</string>
     <string name="Location">Location :</string>
     <string name="current">Current</string>
+    <string name="WorkingTime">WORKING TIME</string>
+    <string name="Gender">GENDER</string>
+    <string name="SpecialityU">SPECIALITY</string>
+    <string name="Experience">YEARS EXPERIENCE</string>
+    <string name="PriceRange">PRICE RANGES</string>
     <string name="past">Past</string>
     <string name="add_health_tracker">Add Condition/Symptom</string>
     <string name="health_tracker">Health tracker</string>
@@ -92,13 +100,89 @@
     <string name="Search">Search</string>
     <string name="CurrentLocation">Current Location</string>
     <string name="ManuallyEnter">Manually Enter</string>
-    <string name="sort_by_prompt">Sort by: </string>
+    <string name="logOut">Log out</string>
+    <string name="logOutMes">Are you sure to log out this account?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="searchSymptom">Symptom </string>
+    <string name="searchCondition">Condition </string>
+    <string name="condition">Condition</string>
+    <string name="symptom">Symptom</string>
+    <string name="back">Back</string>
+    <string name="filter_name">Search</string>
+    <string name="BookAppointment">Book Appointment</string>
+    <string name="Date">Date</string>
+    <string name="AppointmentLength">Appointment Length :</string>
+    <string name="Time">Time</string>
+    <string name="ChooseTime">Choose Time</string>
+    <string name="Comment">Comment</string>
+    <string name="RequestAppointment">Request Appointment</string>
+    <string name="HintText">Please choose</string>
+    <string-array name="ApptLength">
+        <item>0.5 hour</item>
+        <item>1 hour</item>
+        <item>1.5 hours</item>
+        <item>2 hours</item>
+    </string-array>
+    <string name="Availability">Availability</string>
+    <string-array name="TimeFrame48">
+        <item>12am</item>
+        <item>12:30am</item>
+        <item>1am</item>
+        <item>1:30am</item>
+        <item>2am</item>
+        <item>2:30am</item>
+        <item>3am</item>
+        <item>3:30am</item>
+        <item>4am</item>
+        <item>4:30am</item>
+        <item>5am</item>
+        <item>5:30am</item>
+        <item>6am</item>
+        <item>6:30am</item>
+        <item>7am</item>
+        <item>7:30am</item>
+        <item>8am</item>
+        <item>8:30am</item>
+        <item>9am</item>
+        <item>9:30am</item>
+        <item>10am</item>
+        <item>10:30am</item>
+        <item>11am</item>
+        <item>11:30am</item>
+        <item>12pm</item>
+        <item>12:30pm</item>
+        <item>1pm</item>
+        <item>1:30pm</item>
+        <item>2pm</item>
+        <item>2:30pm</item>
+        <item>3pm</item>
+        <item>3:30pm</item>
+        <item>4pm</item>
+        <item>4:30pm</item>
+        <item>5pm</item>
+        <item>5:30pm</item>
+        <item>6pm</item>
+        <item>6:30pm</item>
+        <item>7pm</item>
+        <item>7:30pm</item>
+        <item>8pm</item>
+        <item>8:30pm</item>
+        <item>9pm</item>
+        <item>9:30pm</item>
+        <item>10pm</item>
+        <item>10:30pm</item>
+        <item>11pm</item>
+        <item>11:30pm</item>
+    </string-array>
+    <string name="Facility">Facility</string>
     <string-array name="sort_by">
         <item>Name</item>
         <item>Rating</item>
         <item>Price</item>
     </string-array>
 
+    <string name="sort_by_prompt">Sort by: </string>
     <string name="title_activity_navi">navi</string>
     <string name="upload">Upload</string>
     <string name="pick_image">Pick Image</string>

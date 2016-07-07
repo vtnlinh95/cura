@@ -3,10 +3,12 @@ package com.kms.cura.controller;
 import android.content.Context;
 import android.util.Base64;
 
-import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.R;
+import com.kms.cura.entity.DegreeEntity;
+import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.SpecialityEntity;
+import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura.model.UserModel;
@@ -26,6 +28,9 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.crypto.BadPaddingException;
@@ -52,7 +57,7 @@ public class UserController {
 
     public static void registerDoctor(String id, String name, String email, String password, String phone, DegreeEntity degree,
                                       List<SpecialityEntity> speciality, List<FacilityEntity> facility, String gender, Date birth) {
-        DoctorUserEntity entity = new DoctorUserEntity(id, name, email, password, phone, degree, speciality, facility, gender, birth);
+        DoctorUserEntity entity = new DoctorUserEntity(id, name, email, password, phone, degree, speciality, FacilityEntity.getWorkingHourFromFacility(facility), gender, birth);
         UserModel.getInstance().registerDoctor(entity);
     }
 
@@ -61,18 +66,20 @@ public class UserController {
         UserModel.getInstance().userLogin(entity);
     }
 
-    public static void doctorSearch(String name, String city, ArrayList<String> specialities){
-        FacilityEntity facility = new FacilityEntity(null,null,null,null,city,null);
-        List<FacilityEntity> facilityEntities = new ArrayList<FacilityEntity>();
-        facilityEntities.add(facility);
+    public static void doctorSearch(String name, String city, ArrayList<String> specialities) {
+        FacilityEntity facility = new FacilityEntity(null, null, null, null, city, null);
+        List<WorkingHourEntity> workingHourEntities = new ArrayList<WorkingHourEntity>();
+        WorkingHourEntity workingHourEntity = new WorkingHourEntity(facility);
+        workingHourEntities.add(workingHourEntity);
         List<SpecialityEntity> specialityEntities = new ArrayList<SpecialityEntity>();
-        for(String specialty : specialities){
-            specialityEntities.add(new SpecialityEntity(null,specialty));
+        for (String specialty : specialities) {
+            specialityEntities.add(new SpecialityEntity(null, specialty));
         }
-        DoctorUserEntity doctor = new DoctorUserEntity(null,name,null,null,null,null,specialityEntities,0,0,0,0,facilityEntities,null,null,null);
-        UserModel.getInstance().doctorSearch(doctor);
-    }
 
+        DoctorUserEntity doctor = new DoctorUserEntity(null, name, null, null, null, null, specialityEntities, 0, 0, 0, 0, workingHourEntities, null, null, null);
+        DoctorSearchEntity search = new DoctorSearchEntity(doctor);
+        UserModel.getInstance().doctorSearch(search);
+    }
 
     public static boolean saveNewUser(String email, String password) {
         return UserModel.getInstance().save(new UserEntity(null, null, email, password));
@@ -142,6 +149,13 @@ public class UserController {
             writer.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void userSignOut(Context context) {
+        File file = new File(context.getFilesDir(), SIGNED_IN_INFO);
+        if (file.exists()) {
+            file.delete();
         }
     }
 }

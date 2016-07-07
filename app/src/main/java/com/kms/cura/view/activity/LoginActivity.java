@@ -95,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     private void initPasswordButton() {
         forgotPasswordButton = initButton(R.id.button_LoginUI_ForgotPassword);
         forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        forgotPasswordButton.setOnClickListener(this);
     }
 
     private Button initButton(int id) {
@@ -154,16 +155,21 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
         } else if (v.getId() == R.id.button_LoginUI_Login) {
             UserController.userLogin(email.getText().toString(), password.getText().toString());
         }
+        else{
+            Intent intent = new Intent(this, BookAppointmentActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
-    public void handleEvent(String event, String data) {
+    public void handleEvent(String event, Object data) {
         switch (event) {
             case EventConstant.LOGIN_SUCCESS:
                 if (!UserController.checkSignIn(this)) {
                     UserController.saveLoginInfo(this, email.getText().toString(), password.getText().toString());
+                    unregisterEvent();
                 }
-                switch (data) {
+                switch ((String) data) {
                     case EventConstant.TYPE_PATIENT:
                         Intent toHomePatient = new Intent(this, PatientViewActivity.class);
                         startActivity(toHomePatient);

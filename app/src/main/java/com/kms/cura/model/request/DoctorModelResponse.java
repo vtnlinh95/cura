@@ -3,10 +3,10 @@ package com.kms.cura.model.request;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.kms.cura.constant.EventConstant;
+import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura.event.EventBroker;
-import com.kms.cura.utils.DoctorSearchResults;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,20 +19,19 @@ import java.util.List;
  * Created by duyhnguyen on 6/24/2016.
  */
 public class DoctorModelResponse implements EntityModelResponse {
-    List<DoctorUserEntity> entityList;
+    List<DoctorUserEntity> entityList = new ArrayList<DoctorUserEntity>();
     boolean gotResponse;
     boolean responseError = false;
     String error;
 
-    public DoctorModelResponse(List<DoctorUserEntity> entityList) {
-        this.entityList = entityList;
+    public DoctorModelResponse() {
+
     }
 
     @Override
     public void onResponse(String response) {
         JSONObject jsonObject = null;
         Gson gson = new Gson();
-        System.out.println(response.toString());
         try {
             jsonObject = new JSONObject(response);
             boolean status = jsonObject.getBoolean(UserEntity.STATUS_KEY);
@@ -45,9 +44,8 @@ public class DoctorModelResponse implements EntityModelResponse {
                     doctors.add(entity);
                 }
                 entityList.addAll(doctors);
-                DoctorSearchResults.getInstance().setData(entityList);
 
-                EventBroker.getInstance().pusblish(EventConstant.SEARCH_SUCCESS, EventConstant.TYPE_DOCTOR);
+                EventBroker.getInstance().pusblish(EventConstant.SEARCH_SUCCESS, entityList);
             } else {
                 error = jsonObject.getString(UserEntity.MESSAGE);
                 responseError = true;
@@ -56,7 +54,6 @@ public class DoctorModelResponse implements EntityModelResponse {
         } catch (JSONException e) {
             responseError = true;
             error = e.getMessage();
-            System.out.println(error.toString());
         }
 
 
@@ -64,12 +61,10 @@ public class DoctorModelResponse implements EntityModelResponse {
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("error");
         if (error.getMessage() == null) {
             EventBroker.getInstance().pusblish(EventConstant.CONNECTION_ERROR, null);
             return;
         }
-        System.out.println(error.getMessage().toString());
         EventBroker.getInstance().pusblish(EventConstant.CONNECTION_ERROR, error.getMessage());
     }
 }

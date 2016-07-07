@@ -14,8 +14,11 @@ import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.kms.cura.R;
+import com.kms.cura.controller.ErrorController;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +30,7 @@ public class ImagePicker {
     private static final int DEFAULT_MIN_WIDTH_QUALITY = 400;        // min pixels
     private static final String TAG = "ImagePicker";
     private static final String TEMP_IMAGE_NAME = "tempImage";
+    private static final String RETURN_DATA = "return-data";
 
     public static int minWidthQuality = DEFAULT_MIN_WIDTH_QUALITY;
 
@@ -39,7 +43,7 @@ public class ImagePicker {
         Intent pickIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePhotoIntent.putExtra("return-data", true);
+        takePhotoIntent.putExtra(RETURN_DATA, true);
         takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
         intentList = addIntentsToList(context, intentList, pickIntent);
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
@@ -74,7 +78,7 @@ public class ImagePicker {
         if (resultCode == Activity.RESULT_OK) {
             Uri selectedImage;
             boolean isCamera = (imageReturnedIntent == null ||
-                    imageReturnedIntent.getData() == null  ||
+                    imageReturnedIntent.getData() == null ||
                     imageReturnedIntent.getData().toString().contains(imageFile.toString()));
             if (isCamera) {     /** CAMERA **/
                 selectedImage = Uri.fromFile(imageFile);
@@ -105,7 +109,7 @@ public class ImagePicker {
         try {
             fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Toast.makeText(context,R.string.NoImageError,Toast.LENGTH_SHORT).show();
         }
 
         Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
@@ -166,7 +170,7 @@ public class ImagePicker {
                     break;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorController.showDialog(context, e.getMessage());
         }
         return rotate;
     }
