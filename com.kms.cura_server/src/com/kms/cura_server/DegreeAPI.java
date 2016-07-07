@@ -7,7 +7,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import com.kms.cura.dal.DegreeDAL;
-import com.kms.cura.dal.database.DegreeDatabaseHelper;
 import com.kms.cura.entity.Entity;
 import com.kms.cura_server.response.APIResponse;
 import com.kms.cura_server.response.DegreeAPIResponse;
@@ -18,7 +17,7 @@ public class DegreeAPI {
 	@Path("/getAll")
 	public String getAllDegree() {
 		try {
-			List<Entity> degree = DegreeDAL.getInstance().getAll(new DegreeDatabaseHelper());
+			List<Entity> degree = DegreeDAL.getInstance().getAll();
 			return new DegreeAPIResponse().successResponse(degree);
 		} catch (ClassNotFoundException | SQLException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());

@@ -1,6 +1,5 @@
 package com.kms.cura.dal.database;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +10,6 @@ import com.kms.cura.dal.mapping.ConditionColumn;
 import com.kms.cura.dal.mapping.PatientHealthColumn;
 import com.kms.cura.dal.mapping.SymptomColumn;
 import com.kms.cura.entity.ConditionEntity;
-import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.HealthEntity;
 import com.kms.cura.entity.SymptomEntity;
 

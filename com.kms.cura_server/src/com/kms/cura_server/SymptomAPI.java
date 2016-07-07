@@ -7,7 +7,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import com.kms.cura.dal.SymptomDAL;
-import com.kms.cura.dal.database.SymptomDatabaseHelper;
 import com.kms.cura.entity.Entity;
 import com.kms.cura_server.response.APIResponse;
 import com.kms.cura_server.response.SymptonAPIResponse;
@@ -18,7 +17,7 @@ public class SymptomAPI {
 	@Path("/getAll")
 	public String getAllSymptom() {
 		try {
-			List<Entity> symptom = SymptomDAL.getInstance().getAll(new SymptomDatabaseHelper());
+			List<Entity> symptom = SymptomDAL.getInstance().getAll();
 			return new SymptonAPIResponse().successResponse(symptom);
 		} catch (ClassNotFoundException | SQLException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());

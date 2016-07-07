@@ -3,7 +3,7 @@ package com.kms.cura.dal;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.kms.cura.dal.database.DatabaseHelper;
+import com.kms.cura.dal.database.FacilityDatabaseHelper;
 import com.kms.cura.dal.mapping.FacilityColumn;
 import com.kms.cura.entity.Entity;
 
@@ -21,16 +21,7 @@ public class FacilityDAL extends EntityDAL {
 		return _instance;
 	}
 
-	public List<Entity> getAll(DatabaseHelper dbh) throws ClassNotFoundException, SQLException {
-		return super.getAll(FacilityColumn.TABLE_NAME, dbh);
+	public List<Entity> getAll() throws ClassNotFoundException, SQLException {
+		return super.getAll(FacilityColumn.TABLE_NAME, new FacilityDatabaseHelper());
 	}
-
-	public Entity getByName(String name, DatabaseHelper dbh) throws SQLException, ClassNotFoundException {
-		return super.getByName(FacilityColumn.TABLE_NAME, name, dbh);
-	}
-
-	public Entity getByID(int id, DatabaseHelper dbh) throws SQLException, ClassNotFoundException {
-		return super.getByID(FacilityColumn.TABLE_NAME, id, dbh);
-	}
-
 }

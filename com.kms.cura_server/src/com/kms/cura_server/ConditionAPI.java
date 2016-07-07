@@ -7,7 +7,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import com.kms.cura.dal.ConditionDAL;
-import com.kms.cura.dal.database.ConditionDatabaseHelper;
 import com.kms.cura.entity.Entity;
 import com.kms.cura_server.response.APIResponse;
 import com.kms.cura_server.response.ConditionAPIResponse;
@@ -18,7 +17,7 @@ public class ConditionAPI {
 	@Path("/getAll")
 	public String getAllCondition() {
 		try {
-			List<Entity> condition = ConditionDAL.getInstance().getAll(new ConditionDatabaseHelper());
+			List<Entity> condition = ConditionDAL.getInstance().getAll();
 			return new ConditionAPIResponse().successResponse(condition);
 		} catch (ClassNotFoundException | SQLException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());

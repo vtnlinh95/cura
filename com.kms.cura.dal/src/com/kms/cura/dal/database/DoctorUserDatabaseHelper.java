@@ -8,24 +8,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.kms.cura.dal.DegreeDAL;
-import com.kms.cura.dal.FacilityDAL;
-import com.kms.cura.dal.SpecialityDAL;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.exception.DuplicatedUserEmailException;
 import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.dal.mapping.Doctor_FacilityColumn;
 import com.kms.cura.dal.mapping.Doctor_SpecialityColumn;
 import com.kms.cura.dal.mapping.FacilityColumn;
+import com.kms.cura.dal.mapping.PatientColumn;
 import com.kms.cura.dal.mapping.SpecialityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.Entity;
-import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
@@ -34,39 +33,27 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		super();
 	}
 
-	@Override
-	public UserEntity insertUser(UserEntity entity) throws SQLException, DALException, ClassNotFoundException {
+	public DoctorUserEntity insertDoctorUser(UserEntity entity)
+			throws SQLException, DALException, ClassNotFoundException {
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
-		UserEntity userEntity = super.insertUser(entity);
-		ResultSet rs = null;
-
 		if (!(entity instanceof DoctorUserEntity)) {
 			return null;
 		}
+		if (queryByEmail(entity.getEmail()) != null) {
+			throw new DuplicatedUserEmailException(entity.getEmail());
+		}
 		try {
 			con.setAutoCommit(false);
-			int userId = Integer.parseInt(userEntity.getId());
-			entity.setId(String.valueOf(userId));
+			super.insertUser(entity);
+			UserEntity newlyInsertedUser = queryByEmail(entity.getEmail());
+			entity.setId(newlyInsertedUser.getId());
 			stmt = getInsertStatementForUser((DoctorUserEntity) entity);
 			stmt.executeUpdate();
-
 			insertToDoctorReferenceTables((DoctorUserEntity) entity);
 			con.commit();
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("SELECT * FROM ");
-			sb.append(DoctorColumn.TABLE_NAME);
-			sb.append(" WHERE ");
-			sb.append(DoctorColumn.USER_ID.getColumnName());
-			sb.append(" = ?");
-
-			stmt2 = con.prepareStatement(sb.toString());
-			stmt2.setInt(1, userId);
-			rs = stmt2.executeQuery();
-			con.commit();
-			rs.next();
-			return getEntityFromResultSet(rs);
+			return queryDoctorByID(newlyInsertedUser.getId());
 		} catch (SQLException e) {
 			if (con != null) {
 				System.err.print("Transaction is being rolled back");
@@ -136,8 +123,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 	public PreparedStatement getInsertStatementForUser(DoctorUserEntity entity) throws SQLException {
 		Map<String, Object> doctorValueMap = getColumnValueMapForEntity(entity);
 		String databaseName = DoctorColumn.TABLE_NAME;
-		String databaseMethod = "INSERT INTO";
-		return createPreparedStatement(doctorValueMap, databaseName, databaseMethod);
+		return createInsertPreparedStatement(doctorValueMap, databaseName);
 	}
 
 	protected void insertToDoctorReferenceTables(DoctorUserEntity entity) throws SQLException {
@@ -191,50 +177,58 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 	}
 
 	@Override
-	protected UserEntity getEntityFromResultSet(ResultSet resultSet) throws SQLException, ClassNotFoundException {
-		UserDatabaseHelper dbh = new UserDatabaseHelper();
-		UserEntity userEntity = (UserEntity) dbh.queryByID(UserColumn.TABLE_NAME,
-				resultSet.getInt(UserColumn.USER_ID.getColumnName()));
+	protected DoctorUserEntity getEntityFromResultSet(ResultSet resultSet) throws SQLException, ClassNotFoundException {
 		ResultSet doctorSpecialityRS = null;
 		ResultSet workingHourRS = null;
 		try {
-			doctorSpecialityRS = dbh.queryByReferenceID(Doctor_SpecialityColumn.TABLE_NAME,
+			doctorSpecialityRS = queryByReferenceID(Doctor_SpecialityColumn.TABLE_NAME,
 					Doctor_SpecialityColumn.DOCTOR_ID.getColumnName(),
 					resultSet.getInt(DoctorColumn.USER_ID.getColumnName()));
 			List<SpecialityEntity> specialties = new ArrayList<SpecialityEntity>();
 			while (doctorSpecialityRS.next()) {
-				SpecialityEntity temp = (SpecialityEntity) SpecialityDAL.getInstance().getByID(
-						doctorSpecialityRS.getInt(Doctor_SpecialityColumn.SPECIALITY_ID.getColumnName()),
-						new SpecialityDatabaseHelper());
-				specialties.add(temp);
+				SpecialityDatabaseHelper specialityDatabaseHelper = new SpecialityDatabaseHelper();
+				try {
+					SpecialityEntity specialityEntity = specialityDatabaseHelper.queryByID(
+							doctorSpecialityRS.getInt(Doctor_SpecialityColumn.SPECIALITY_ID.getColumnName()));
+					specialties.add(specialityEntity);
+				} finally {
+					specialityDatabaseHelper.closeConnection();
+				}
 			}
 			WorkingHourDatabaseHelper dbhWorkingHour = new WorkingHourDatabaseHelper();
-			int doctorID = resultSet.getInt(DoctorColumn.USER_ID.getColumnName());
-			List<Integer> allFacilityID = getAllFacilityIDfromDoctorID(
-					resultSet.getInt(DoctorColumn.USER_ID.getColumnName()));
+			FacilityDatabaseHelper facilityDBHelper = new FacilityDatabaseHelper();
 			List<WorkingHourEntity> workingTime = new ArrayList<>();
-			for (int id : allFacilityID) {
-				workingTime.add(new WorkingHourEntity(dbhWorkingHour.querybyID(doctorID, id),
-						(FacilityEntity) FacilityDAL.getInstance().getByID(id, new FacilityDatabaseHelper())));
-
+			try {
+				int doctorID = resultSet.getInt(DoctorColumn.USER_ID.getColumnName());
+				List<Integer> allFacilityID = getAllFacilityIDfromDoctorID(
+						resultSet.getInt(DoctorColumn.USER_ID.getColumnName()));
+				for (int facilityId : allFacilityID) {
+					workingTime.add(new WorkingHourEntity(dbhWorkingHour.querybyID(doctorID, facilityId),
+							facilityDBHelper.queryByID(facilityId)));
+				}
+			} finally {
+				dbhWorkingHour.closeConnection();
+				facilityDBHelper.closeConnection();
 			}
-			if (userEntity != null) {
-				DoctorUserEntity doctor = new DoctorUserEntity(
-						resultSet.getString(DoctorColumn.USER_ID.getColumnName()),
-						resultSet.getString(DoctorColumn.NAME.getColumnName()), userEntity.getEmail(),
-						userEntity.getPassword(), resultSet.getString(DoctorColumn.PHONE.getColumnName()),
-						(DegreeEntity) DegreeDAL.getInstance().getByID(
-								resultSet.getInt(DoctorColumn.DEGREE_ID.getColumnName()), new DegreeDatabaseHelper()),
-						specialties, resultSet.getDouble(DoctorColumn.RATING.getColumnName()),
-						resultSet.getInt(DoctorColumn.EXPERIENCE.getColumnName()),
-						resultSet.getDouble(DoctorColumn.MIN_PRICE.getColumnName()),
-						resultSet.getDouble(DoctorColumn.MAX_PRICE.getColumnName()), workingTime,
-						resultSet.getString(DoctorColumn.GENDER.getColumnName()),
-						resultSet.getDate(DoctorColumn.BIRTH.getColumnName()),
-						resultSet.getString(DoctorColumn.INSURANCE.getColumnName()));
-				return doctor;
+			DegreeDatabaseHelper degreeDatabaseHelper = new DegreeDatabaseHelper();
+			DegreeEntity degree = null;
+			try {
+				degree = degreeDatabaseHelper.queryByID(resultSet.getInt(DoctorColumn.DEGREE_ID.getColumnName()));
+			} finally {
+				degreeDatabaseHelper.closeConnection();
 			}
-			return null;
+			DoctorUserEntity doctor = new DoctorUserEntity(resultSet.getString(DoctorColumn.USER_ID.getColumnName()),
+					resultSet.getString(DoctorColumn.NAME.getColumnName()),
+					resultSet.getString(UserColumn.EMAIL.getColumnName()), UserColumn.PASSWORD.getColumnName(),
+					resultSet.getString(DoctorColumn.PHONE.getColumnName()), degree, specialties,
+					resultSet.getDouble(DoctorColumn.RATING.getColumnName()),
+					resultSet.getInt(DoctorColumn.EXPERIENCE.getColumnName()),
+					resultSet.getDouble(DoctorColumn.MIN_PRICE.getColumnName()),
+					resultSet.getDouble(DoctorColumn.MAX_PRICE.getColumnName()), workingTime,
+					resultSet.getString(DoctorColumn.GENDER.getColumnName()),
+					resultSet.getDate(DoctorColumn.BIRTH.getColumnName()),
+					resultSet.getString(DoctorColumn.INSURANCE.getColumnName()));
+			return doctor;
 		} finally {
 			if (resultSet.isAfterLast()) {
 				resultSet.close();
@@ -249,9 +243,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 	}
 
 	public DoctorUserEntity searchDoctor(UserEntity entity) throws ClassNotFoundException, SQLException {
-		return (DoctorUserEntity) queryUserEntitybyEmailPassword(DoctorColumn.TABLE_NAME, UserColumn.TABLE_NAME,
-				entity.getEmail(), entity.getPassword(), DoctorColumn.USER_ID.getColumnName(),
-				UserColumn.ID.getColumnName());
+		return (DoctorUserEntity) queryUserEntitybyEmailPassword(DoctorColumn.TABLE_NAME, entity.getEmail(),
+				entity.getPassword(), DoctorColumn.USER_ID.getColumnName());
 	}
 
 	public List<DoctorUserEntity> searchDoctorFunction(DoctorSearchEntity search)
@@ -308,8 +301,16 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		DoctorUserEntity doctor = search.getDoctor();
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT DISTINCT ");
-
+		
 		sb.append(DoctorColumn.USER_ID.getColumnName());
+		sb.append(", ");
+		sb.append(UserColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(UserColumn.EMAIL.getColumnName());
+		sb.append(", ");
+		sb.append(UserColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(UserColumn.PASSWORD.getColumnName());
 		sb.append(", ");
 		sb.append(DoctorColumn.TABLE_NAME);
 		sb.append(".");
@@ -350,7 +351,18 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		sb.append(Doctor_FacilityColumn.FACILITY_ID.getColumnName());
 		sb.append(" = ");
 		sb.append(FacilityColumn.ID.getColumnName());
-
+		
+		sb.append(" JOIN ");
+		sb.append(UserColumn.TABLE_NAME);
+		sb.append(" ON ");
+		sb.append(UserColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(UserColumn.ID.getColumnName());
+		sb.append(" = ");
+		sb.append(DoctorColumn.TABLE_NAME);
+		sb.append(".");
+		sb.append(DoctorColumn.USER_ID.getColumnName());
+		
 		sb.append(" JOIN ");
 		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
 		sb.append(" ON ");
@@ -531,6 +543,47 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		} finally {
 			con.setAutoCommit(true);
 		}
+	}
+
+	public DoctorUserEntity queryDoctorByID(String id) throws SQLException, ClassNotFoundException {
+		return (DoctorUserEntity) queryUserEntitybyId(DoctorColumn.TABLE_NAME, id,
+				DoctorColumn.USER_ID.getColumnName());
+	}
+	
+	public List<DoctorUserEntity> getAllDoctor() throws SQLException, ClassNotFoundException{
+		List<DoctorUserEntity> list = new ArrayList<>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT * FROM ");
+		builder.append(DoctorColumn.TABLE_NAME);
+		builder.append(" LEFT JOIN ");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(" ON ");
+		builder.append(DoctorColumn.TABLE_NAME);
+		builder.append(".");
+		builder.append(DoctorColumn.USER_ID.getColumnName());
+		builder.append(" = ");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(".");
+		builder.append(UserColumn.ID.getColumnName());
+		try{
+			stmt = con.prepareStatement(builder.toString());
+			rs = stmt.executeQuery();
+			if(rs != null){
+				while(rs.next()){
+					list.add(getEntityFromResultSet(rs));
+				}
+			}
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(stmt != null){
+				stmt.close();
+			}
+		}
+		return list;
 	}
 
 }

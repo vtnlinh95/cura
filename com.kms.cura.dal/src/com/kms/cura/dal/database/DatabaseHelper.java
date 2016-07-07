@@ -1,13 +1,17 @@
 package com.kms.cura.dal.database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import com.kms.cura.dal.mapping.AppointmentColumn;
 import com.kms.cura.dal.mapping.EntityColumn;
 import com.kms.cura.entity.Entity;
 
@@ -32,10 +36,12 @@ public abstract class DatabaseHelper {
 	}
 
 	public void closeConnection() throws SQLException {
-		con.close();
+		if (con != null) {
+	 		con.close();
+		}
 	}
 
-	public List<Entity> queryAll(String tableName, DatabaseHelper dbh) throws SQLException, ClassNotFoundException {
+	public List<Entity> queryAll(String tableName) throws SQLException, ClassNotFoundException {
 		ResultSet rs = null;
 		PreparedStatement stmt = null;
 		List<Entity> result = new ArrayList<Entity>();
@@ -56,19 +62,27 @@ public abstract class DatabaseHelper {
 	}
 
 	public Entity queryByID(String tableName, int id) throws SQLException, ClassNotFoundException {
+		return queryByID(tableName, EntityColumn.ID.getColumnName(), id);
+	}
+	
+	public Entity queryByID(String tableName, String idColumnName, int id) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			stmt = con.prepareStatement(
-					"SELECT * FROM " + tableName + " WHERE " + EntityColumn.ID.getColumnName() + " = ?");
+					"SELECT * FROM " + tableName + " WHERE " + idColumnName + " = ?");
 			stmt.setInt(1, id);
 			rs = stmt.executeQuery();
 			rs.next();
 			Entity result = getEntityFromResultSet(rs);
 			return result;
 		} finally {
-			rs.close();
-			stmt.close();
+			if(rs != null){
+				rs.close();
+			}
+			if(stmt != null){
+				stmt.close();
+			}
 		}
 	}
 
@@ -99,28 +113,6 @@ public abstract class DatabaseHelper {
 		return rs;
 	}
 
-	public Entity insert(String tableName, Entity entity) throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt = null;
-		PreparedStatement stmt2 = null;
-		ResultSet rs = null;
-		try {
-			stmt = con.prepareStatement("INSERT INTO " + tableName + " (" + EntityColumn.NAME.getColumnName()
-					+ ") VALUES (" + entity.getName() + ")");
-			stmt.executeUpdate();
-
-			stmt2 = con.prepareStatement("SELECT FROM " + tableName + " WHERE " + EntityColumn.NAME.getColumnName()
-					+ " =" + entity.getName());
-			rs = stmt2.executeQuery();
-			rs.next();
-			Entity result = getEntityFromResultSet(rs);
-			return result;
-		} finally {
-			rs.close();
-			stmt.close();
-			stmt2.close();
-		}
-	}
-
 	protected abstract Entity getEntityFromResultSet(ResultSet resultSet) throws SQLException, ClassNotFoundException;
 
 	public void insertReferenceRowsToReferenceTable(String database, List<ReferenceTableRow> referenceRows)
@@ -138,5 +130,66 @@ public abstract class DatabaseHelper {
 			}
 		}
 	}
+
+	protected PreparedStatement createInsertPreparedStatement(Map<String, Object> valueMap, String databaseName) throws SQLException {
+		StringBuilder insertString = new StringBuilder("INSERT INTO " + databaseName + " (");
+		StringBuilder valueString = new StringBuilder(") VALUES (");
+		boolean isFirst = true;
+		for (Entry<String, Object> entry : valueMap.entrySet()) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				insertString.append(",");
+				valueString.append(",");
+			}
+			insertString.append(entry.getKey());
+			valueString.append("?");
+		}
+		valueString.append(")");
+		String statementString = insertString.toString() + valueString.toString();
+		PreparedStatement stmt = con.prepareStatement(statementString);
+		setPreparedStatementValue(valueMap, stmt);
+		return stmt;
+	}
+	
+	protected PreparedStatement createSelectWherePreparedStatement(Map<String, Object> valueMap, String databaseName) throws SQLException {
+		StringBuilder whereString = new StringBuilder("SELECT * FROM ");
+		whereString.append(databaseName);
+		whereString.append(" WHERE ");
+		boolean isFirst = true;
+		for (Entry<String, Object> entry : valueMap.entrySet()) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				whereString.append(" AND ");
+			}
+			whereString.append(entry.getKey());
+			whereString.append(" = ");
+			whereString.append("?");
+		}
+		PreparedStatement stmt = con.prepareStatement(whereString.toString());
+		setPreparedStatementValue(valueMap, stmt);
+		return stmt;
+	}
+
+	protected void setPreparedStatementValue(Map<String, Object> valueMap, PreparedStatement stmt) throws SQLException {
+		int count = 1;
+		for (Entry<String, Object> valueEntry : valueMap.entrySet()) {
+			if (valueEntry.getValue() instanceof Integer) {
+				stmt.setInt(count, (Integer) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof String) {
+				stmt.setString(count, (String) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof Date) {
+				stmt.setDate(count, (Date) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof Double) {
+				stmt.setDouble(count, (Double) valueEntry.getValue());
+			} else {
+				// handle for null
+				stmt.setString(count, null);
+			}
+			count++;
+		}
+	}
+
 	
 }

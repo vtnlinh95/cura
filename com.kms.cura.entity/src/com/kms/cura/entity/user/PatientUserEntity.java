@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.HealthEntity;
 
 public class PatientUserEntity extends UserEntity {
 	public static int PATIENT_TYPE = 2;
+	public final static String PATIENT_LIST = "patient_list";
 	public final static String GENDER_MALE = "M";
 	private String gender;
 	private Date birth;
@@ -17,6 +19,7 @@ public class PatientUserEntity extends UserEntity {
 	private String insurance;
 	private String healthConcern;
 	private List<HealthEntity> healthEntities;
+	private List<AppointmentEntity> appointmentList = new ArrayList<>();
 
 	public PatientUserEntity(UserEntity entity) {
 		super(entity.getId(), entity.getName(), entity.getEmail(), entity.getPassword());
@@ -33,7 +36,7 @@ public class PatientUserEntity extends UserEntity {
 	}
 
 	public PatientUserEntity(String id, String name, String email, String password, String gender, Date birth,
-							 String location, String insurance, String healthConcern, List<HealthEntity> healthEntities) {
+							 String location, String insurance, String healthConcern, List<HealthEntity> healthEntities, List<AppointmentEntity> appointmentList) {
 		super(id, name, email, password);
 		this.gender = gender;
 		this.birth = birth;
@@ -41,6 +44,7 @@ public class PatientUserEntity extends UserEntity {
 		this.insurance = insurance;
 		this.healthConcern = healthConcern;
 		this.healthEntities = healthEntities;
+		this.appointmentList = appointmentList;
 	}
 
 	public String getGender() {
@@ -89,6 +93,18 @@ public class PatientUserEntity extends UserEntity {
 
 	public void setHealthEntities(List<HealthEntity> healthEntities) {
 		this.healthEntities = healthEntities;
+	}
+	
+	public List<AppointmentEntity> getAppointmentList() {
+		return appointmentList;
+	}
+
+	public void setAppointmentList(List<AppointmentEntity> appointmentList) {
+		this.appointmentList = appointmentList;
+	}
+	
+	public void addAllAppointmentList(List<AppointmentEntity> appointmentList){
+		this.appointmentList.addAll(appointmentList);
 	}
 
 	@Override

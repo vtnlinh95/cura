@@ -15,6 +15,7 @@ import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class UserAPIResponse extends APIResponse {
@@ -32,6 +33,14 @@ public class UserAPIResponse extends APIResponse {
 		JsonElement jsonElement = EntityToJsonConverter.convertEntityListToJson(entity);
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.add(DoctorUserEntity.DOCTOR_LIST, jsonElement);
+		jsonObject.addProperty(Entity.STATUS_KEY, true);
+		return jsonObject.toString();
+	}
+	
+	public String successResponsePatient(List<? extends Entity> entity) {
+		JsonElement jsonElement = EntityToJsonConverter.convertEntityListToJson(entity);
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.add(PatientUserEntity.PATIENT_LIST, jsonElement);
 		jsonObject.addProperty(Entity.STATUS_KEY, true);
 		return jsonObject.toString();
 	}
