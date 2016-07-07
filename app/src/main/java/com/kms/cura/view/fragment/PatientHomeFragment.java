@@ -300,31 +300,6 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         }
     }
 
-
-    private Bundle createBundle() {
-        Bundle bundle = getArguments();
-        bundle.putBooleanArray(PatientViewActivity.PATIENT, specialityAdapter.getSelectedBoolean());
-
-    public void registerEvent() {
-        broker.register(this, EventConstant.SEARCH_SUCCESS);
-        broker.register(this, EventConstant.LOGIN_FAILED);
-        broker.register(this, EventConstant.CONNECTION_ERROR);
-        broker.register(this, EventConstant.INTERNAL_ERROR);
-    }
-
-    public void unregisterEvent() {
-        broker.unRegister(this, EventConstant.SEARCH_SUCCESS);
-        broker.unRegister(this, EventConstant.LOGIN_FAILED);
-        broker.unRegister(this, EventConstant.CONNECTION_ERROR);
-        broker.unRegister(this, EventConstant.INTERNAL_ERROR);
-    }
-
-    @Override
-    public void onPause() {
-        unregisterEvent();
-        super.onPause();
-    }
-
     private void modifyToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.getMenu().clear();
@@ -402,8 +377,8 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         List<String> list = new ArrayList<String>(Arrays.asList(location.split(",")));
         data = list.get(0).replaceAll("City", "");
         data = data.replaceAll("city", "");
-        data = data.replaceAll("Hanoi","Ha Noi");
-        data = data.replaceAll("Danang","Da Nang");
+        data = data.replaceAll("Hanoi", "Ha Noi");
+        data = data.replaceAll("Danang", "Da Nang");
         data = data.trim();
         return data;
     }

@@ -67,6 +67,13 @@
         <item>Password</item>
     </string-array>
 
+    <string-array name="DoctorSettings">
+        <item>Picture</item>
+        <item>Basic Information</item>
+        <item>Professional Information</item>
+        <item>Password</item>
+    </string-array>
+
     <string-array name="Insurance">
         <item>Aetna</item>
         <item>Altius</item>

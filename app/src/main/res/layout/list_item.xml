@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spinner_60"
+    android:gravity="left"
+    android:layoutDirection="ltr"
+    android:orientation="horizontal"
+    android:padding="5sp">
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="@dimen/docText_20"
+        android:layout_height="@dimen/docText_20"
+        android:background="@mipmap/ic_clear_black"
+        android:padding="10sp" />
+
+    <TextView
+        android:id="@+id/lblListItem"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/docText_18" />
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+

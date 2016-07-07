@@ -55,5 +55,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".view.activity.ProfilePictureActivity" />
         <activity android:name=".view.activity.ChangePasswordActivity"></activity>
+        <activity android:name=".view.activity.DoctorBasicSettingsActivity"></activity>
+        <activity android:name=".view.activity.DoctorProfessionalSettingsActivity"></activity>
     </application>
 </manifest>

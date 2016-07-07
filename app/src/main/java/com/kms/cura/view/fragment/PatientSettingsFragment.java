@@ -30,7 +30,7 @@ public class PatientSettingsFragment extends ListFragment implements AdapterView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_patient_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings_list, container, false);
         modifyToolbar();
         return view;
     }
