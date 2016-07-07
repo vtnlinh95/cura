@@ -18,7 +18,7 @@ public class PatientUserEntity extends UserEntity {
 	private String insurance;
 	private String healthConcern;
 	private List<HealthEntity> healthEntities;
-	private List<AppointmentEntity> apptList;
+	private List<AppointmentEntity> appointmentList;
 
 	public PatientUserEntity(UserEntity entity) {
 		super(entity.getId(), entity.getName(), entity.getEmail(), entity.getPassword());
@@ -35,7 +35,7 @@ public class PatientUserEntity extends UserEntity {
 	}
 
 	public PatientUserEntity(String id, String name, String email, String password, String gender, Date birth,
-							 String location, String insurance, String healthConcern, List<HealthEntity> healthEntities, List<AppointmentEntity> appointmentEntities) {
+							 String location, String insurance, String healthConcern, List<HealthEntity> healthEntities, List<AppointmentEntity> appointmentList) {
 		super(id, name, email, password);
 		this.gender = gender;
 		this.birth = birth;
@@ -43,7 +43,7 @@ public class PatientUserEntity extends UserEntity {
 		this.insurance = insurance;
 		this.healthConcern = healthConcern;
 		this.healthEntities = healthEntities;
-		this.apptList = appointmentEntities;
+		this.appointmentList = appointmentList;
 	}
 
 	public String getGender() {
@@ -94,12 +94,12 @@ public class PatientUserEntity extends UserEntity {
 		this.healthEntities = healthEntities;
 	}
 	
-	public List<AppointmentEntity> getApptList() {
-		return apptList;
+	public List<AppointmentEntity> getAppointmentList() {
+		return appointmentList;
 	}
 
-	public void setApptList(List<AppointmentEntity> apptList) {
-		this.apptList = apptList;
+	public void setAppointmentList(List<AppointmentEntity> appointmentList) {
+		this.appointmentList = appointmentList;
 	}
 
 	@Override

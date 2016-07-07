@@ -34,7 +34,6 @@ import com.kms.cura_server.response.UserAPIResponse;
 @Path("/user")
 public final class UserAPI {
 	private static String LIST_OF_CHANGES = "list_of_changes";
-	private static String CRITERIA = "criteria";
 
 	@GET
 	@Path("/getAllUser")
@@ -141,24 +140,6 @@ public final class UserAPI {
 			DoctorUserEntity newDoctor = DoctorUserDAL.getInstance().updateDoctor(doctorUserEntity);
 			return new UserAPIResponse().successResponse(newDoctor);
 		} catch (Exception e) {
-			return APIResponse.unsuccessResponse(e.getMessage());
-		}
-	}
-	
-	
-	@POST
-	@Path("/getBookAppts")
-	public String getBookAppts(String jsonData){
-		JSONObject jsonObject = new JSONObject(jsonData);
-		JSONObject object = jsonObject.getJSONObject(CRITERIA);
-		Set<String> keySet = object.keySet();
-		HashMap<String, Integer> criteria = new HashMap<>();
-		for(String key : keySet){
-			criteria.put(key, object.getInt(key));
-		}
-		try {
-			return new AppointmentAPIResponse().successListApptsResponse(UserDAL.getInstance().getAppointment(criteria));
-		} catch (ClassNotFoundException | SQLException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}
 	}

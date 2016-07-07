@@ -28,7 +28,7 @@ public class DoctorUserEntity extends UserEntity {
     private String gender;
     private Date birth;
     private String insurance;
-    private List<AppointmentEntity> apptList;
+    private List<AppointmentEntity> appointmentList;
 
     public DoctorUserEntity(String id, String name, String email, String password, String phone, DegreeEntity degree,
                             List<SpecialityEntity> speciality, double rating, int experience, double minPrice, double maxPrice,
@@ -146,12 +146,13 @@ public class DoctorUserEntity extends UserEntity {
         this.insurance = insurance;
     }
     
-    public List<AppointmentEntity> getApptList() {
-		return apptList;
+
+	public List<AppointmentEntity> getAppointmentList() {
+		return appointmentList;
 	}
 
-	public void setApptList(List<AppointmentEntity> apptList) {
-		this.apptList = apptList;
+	public void setAppointmentList(List<AppointmentEntity> appointmentList) {
+		this.appointmentList = appointmentList;
 	}
 
 	@Override
