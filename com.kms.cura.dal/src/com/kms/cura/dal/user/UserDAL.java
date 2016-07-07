@@ -52,9 +52,6 @@ public class UserDAL extends EntityDAL {
 		return entity;
 	}
 	
-	public List<AppointmentEntity> getAppointment(HashMap<String, Integer> criteria) throws ClassNotFoundException, SQLException{
-		UserDatabaseHelper dbh = new UserDatabaseHelper();
-		return dbh.getAppointment(criteria,null, null);
-	}
+	
 
 }

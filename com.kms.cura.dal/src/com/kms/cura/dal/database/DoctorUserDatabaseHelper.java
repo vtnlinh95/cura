@@ -237,10 +237,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 						resultSet.getString(DoctorColumn.GENDER.getColumnName()),
 						resultSet.getDate(DoctorColumn.BIRTH.getColumnName()),
 						resultSet.getString(DoctorColumn.INSURANCE.getColumnName()));
-				doctor.setApptList(dbh.getAppointment(map, null, doctor));
 				return doctor;
 			}
-			return null;
 		} finally {
 			if (resultSet.isAfterLast()) {
 				resultSet.close();
@@ -252,6 +250,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 				doctorSpecialityRS.close();
 			}
 		}
+		return null;
 	}
 
 	public DoctorUserEntity searchDoctor(UserEntity entity) throws ClassNotFoundException, SQLException {

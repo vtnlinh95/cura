@@ -154,7 +154,6 @@ public class PatientUserDatabaseHelper extends UserDatabaseHelper {
 			patient.setHealthEntities(new ArrayList<>(healthDbh.queryHealthByPatientID(userEntity.getId())));
 			map.put(AppointmentColumn.PATIENT_ID.getColumnName(),
 					Integer.parseInt(resultSet.getString(PatientColumn.USER_ID.getColumnName())));
-			patient.setApptList(dbh.getAppointment(map, patient, null));
 			return patient;
 		}
 		return null;

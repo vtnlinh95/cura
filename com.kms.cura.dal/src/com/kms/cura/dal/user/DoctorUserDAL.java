@@ -1,13 +1,25 @@
 package com.kms.cura.dal.user;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import com.kms.cura.dal.DegreeDAL;
+import com.kms.cura.dal.FacilityDAL;
 import com.kms.cura.dal.database.DatabaseHelper;
+import com.kms.cura.dal.database.DegreeDatabaseHelper;
 import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
+import com.kms.cura.dal.database.FacilityDatabaseHelper;
+import com.kms.cura.dal.database.WorkingHourDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.mapping.AppointmentColumn;
+import com.kms.cura.dal.mapping.DoctorColumn;
+import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.Entity;
+import com.kms.cura.entity.FacilityEntity;
+import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
@@ -24,6 +36,15 @@ public class DoctorUserDAL extends UserDAL {
 			_instance = new DoctorUserDAL();
 		}
 		return _instance;
+	}
+
+	@Override
+	protected DoctorUserEntity getByID(String tableName, int id, DatabaseHelper dbh)
+			throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		DoctorUserEntity doctor = (DoctorUserEntity) super.getByID(tableName, id, dbh);
+		// set appointment
+		return doctor;
 	}
 
 	public List<Entity> getAll(DatabaseHelper dbh) throws ClassNotFoundException, SQLException {

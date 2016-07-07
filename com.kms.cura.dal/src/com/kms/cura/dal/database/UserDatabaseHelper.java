@@ -168,55 +168,20 @@ public class UserDatabaseHelper extends DatabaseHelper {
 				return getEntityFromResultSet(rs);
 			}
 		} finally {
-			if (stmt != null) {
-				stmt.close();
-			}
-		}
-		return null;
-
-	}
-	
-	public List<AppointmentEntity> getAppointment(HashMap<String, Integer> criteria, PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity) throws SQLException, ClassNotFoundException{
-		List<AppointmentEntity> listAppts = new ArrayList<>();
-		int count = 0 ;
-		Set<String> set = criteria.keySet();
-		StringBuilder builder = new StringBuilder();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		builder.append("SELECT * FROM ");
-		builder.append(AppointmentColumn.TABLE_NAME);
-		builder.append(" WHERE ");
-		for (String key : set){
-			builder.append(key);
-			builder.append(" = ");
-			builder.append(criteria.get(key));
-			if(count != set.size()-1){
-				builder.append(" AND ");
-			}
-			++count;
-		}
-		try{
-			stmt = con.prepareStatement(builder.toString());
-			rs = stmt.executeQuery();
-			if(rs != null){
-				AppointmentDatabaseHelper appointmentDatabaseHelper = new AppointmentDatabaseHelper();
-				while(rs.next()){
-					listAppts.add(appointmentDatabaseHelper.geAppointmentEntityFromResultSet(rs,patientUserEntity,doctorUserEntity));
-				}
-			}
-			return listAppts;
-		}
-		finally{
 			if(rs != null){
 				rs.close();
 			}
-			if(stmt != null){
+			if (stmt != null) {
 				stmt.close();
 			}
 			if(con != null){
 				closeConnection();
 			}
 		}
+		return null;
+
 	}
+	
+	
 	
 }
