@@ -26,6 +26,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     // child data in format of header title, child title
     private HashMap<String, List<String>> _listDataChild;
     private List<String> buttonText;
+    boolean expanded;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
                                  HashMap<String, List<String>> listChildData) {
@@ -53,12 +54,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         final String childText = (String) getChild(groupPosition, childPosition);
 
-        if (convertView == null) {
+        if (convertView == null || expanded == true) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_item, null);
         }
-
+        if (childPosition % 2 == 0) {
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.light_grey_2));
+        }
         TextView txtListChild = (TextView) convertView
                 .findViewById(R.id.lblListItem);
 
@@ -69,6 +72,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_item_footer, null);
             Button button = (Button) convertView.findViewById(R.id.button_list_item_button);
             button.setText(buttonText.get(groupPosition));
+            expanded = true;
         }
         return convertView;
     }
