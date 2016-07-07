@@ -93,7 +93,7 @@ public abstract class DatabaseHelper {
 			throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		stmt = con.prepareStatement("SELECT * FROM " + tableName + " WHERE " + referenceID + " = ?");
+		stmt = con.prepareStatement("SELECT DISTINCT * FROM " + tableName + " WHERE " + referenceID + " = ?");
 		stmt.setInt(1, referenceValue);
 		rs = stmt.executeQuery();
 		return rs;
