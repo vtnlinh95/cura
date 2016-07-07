@@ -33,17 +33,11 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.activity.PatientProfileViewActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".view.activity.PatientSignUpActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity android:name=".view.activity.PatientViewActivity" />
         <activity android:name=".view.activity.DoctorViewActivity"></activity>
-        <activity android:name=".view.activity.PatientHomeActivity"></activity>
         <activity android:name=".view.activity.ConditionSymptomSearchActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"></activity>
@@ -51,11 +45,15 @@
         <activity android:name=".view.activity.BookAppointmentActivity" />
         <activity android:name=".view.activity.ChooseTimeActivity"></activity>
 
-
         <activity
             android:name=".view.activity.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+        <activity
+            android:name=".view.activity.PatientBasicSettingsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".view.activity.ProfilePictureActivity" />
+        <activity android:name=".view.activity.ChangePasswordActivity"></activity>
     </application>
-
 </manifest>

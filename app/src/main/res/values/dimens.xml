@@ -19,6 +19,7 @@
     <dimen name="spinner_50">50sp</dimen>
     <dimen name="spinner_60">60sp</dimen>
     <dimen name="spinner_150">150sp</dimen>
+    <dimen name="image">50sp</dimen>
     <dimen name="arrow_60">60sp</dimen>
     <dimen name="margin_10">10sp</dimen>
     <dimen name="margin_20">20sp</dimen>
@@ -35,4 +36,5 @@
     <dimen name="buttonWidth_150">150sp</dimen>
     <dimen name="CommentHeight">120sp</dimen>
     <dimen name="timeHeight">80sp</dimen>
+    <dimen name="topPadding">55sp</dimen>
 </resources>

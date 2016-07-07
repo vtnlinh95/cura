@@ -59,4 +59,5 @@ public class DoctorUserDAL extends UserDAL {
 		DoctorUserDatabaseHelper dbh = new DoctorUserDatabaseHelper();
 		return dbh.searchDoctorFunction(search);
 	}
+
 }
