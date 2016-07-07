@@ -67,8 +67,12 @@ public abstract class DatabaseHelper {
 			Entity result = getEntityFromResultSet(rs);
 			return result;
 		} finally {
-			rs.close();
-			stmt.close();
+			if(rs != null){
+				rs.close();
+			}
+			if(stmt != null){
+				stmt.close();
+			}
 		}
 	}
 

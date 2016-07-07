@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.SpecialityEntity;
@@ -27,6 +28,7 @@ public class DoctorUserEntity extends UserEntity {
     private String gender;
     private Date birth;
     private String insurance;
+    private List<AppointmentEntity> apptList;
 
     public DoctorUserEntity(String id, String name, String email, String password, String phone, DegreeEntity degree,
                             List<SpecialityEntity> speciality, double rating, int experience, double minPrice, double maxPrice,
@@ -143,8 +145,16 @@ public class DoctorUserEntity extends UserEntity {
     public void setInsurance(String insurance) {
         this.insurance = insurance;
     }
+    
+    public List<AppointmentEntity> getApptList() {
+		return apptList;
+	}
 
-    @Override
+	public void setApptList(List<AppointmentEntity> apptList) {
+		this.apptList = apptList;
+	}
+
+	@Override
     public int getType() {
         return DOCTOR_TYPE;
     }
@@ -158,5 +168,7 @@ public class DoctorUserEntity extends UserEntity {
         return new TypeToken<Collection<DoctorUserEntity>>() {
         }.getType();
     }
+    
+    
 }
 

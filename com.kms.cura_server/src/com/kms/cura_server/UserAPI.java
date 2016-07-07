@@ -1,11 +1,16 @@
 package com.kms.cura_server;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.google.gson.JsonElement;
 import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
@@ -23,11 +28,13 @@ import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura_server.resources.Strings;
 import com.kms.cura_server.response.APIResponse;
+import com.kms.cura_server.response.AppointmentAPIResponse;
 import com.kms.cura_server.response.UserAPIResponse;
 
 @Path("/user")
 public final class UserAPI {
 	private static String LIST_OF_CHANGES = "list_of_changes";
+	private static String CRITERIA = "criteria";
 
 	@GET
 	@Path("/getAllUser")
@@ -134,6 +141,24 @@ public final class UserAPI {
 			DoctorUserEntity newDoctor = DoctorUserDAL.getInstance().updateDoctor(doctorUserEntity);
 			return new UserAPIResponse().successResponse(newDoctor);
 		} catch (Exception e) {
+			return APIResponse.unsuccessResponse(e.getMessage());
+		}
+	}
+	
+	
+	@POST
+	@Path("/getBookAppts")
+	public String getBookAppts(String jsonData){
+		JSONObject jsonObject = new JSONObject(jsonData);
+		JSONObject object = jsonObject.getJSONObject(CRITERIA);
+		Set<String> keySet = object.keySet();
+		HashMap<String, Integer> criteria = new HashMap<>();
+		for(String key : keySet){
+			criteria.put(key, object.getInt(key));
+		}
+		try {
+			return new AppointmentAPIResponse().successListApptsResponse(UserDAL.getInstance().getAppointment(criteria));
+		} catch (ClassNotFoundException | SQLException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}
 	}

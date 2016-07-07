@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.reflect.TypeToken;
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.HealthEntity;
 
 public class PatientUserEntity extends UserEntity {
@@ -17,6 +18,7 @@ public class PatientUserEntity extends UserEntity {
 	private String insurance;
 	private String healthConcern;
 	private List<HealthEntity> healthEntities;
+	private List<AppointmentEntity> apptList;
 
 	public PatientUserEntity(UserEntity entity) {
 		super(entity.getId(), entity.getName(), entity.getEmail(), entity.getPassword());
@@ -33,7 +35,7 @@ public class PatientUserEntity extends UserEntity {
 	}
 
 	public PatientUserEntity(String id, String name, String email, String password, String gender, Date birth,
-							 String location, String insurance, String healthConcern, List<HealthEntity> healthEntities) {
+							 String location, String insurance, String healthConcern, List<HealthEntity> healthEntities, List<AppointmentEntity> appointmentEntities) {
 		super(id, name, email, password);
 		this.gender = gender;
 		this.birth = birth;
@@ -41,6 +43,7 @@ public class PatientUserEntity extends UserEntity {
 		this.insurance = insurance;
 		this.healthConcern = healthConcern;
 		this.healthEntities = healthEntities;
+		this.apptList = appointmentEntities;
 	}
 
 	public String getGender() {
@@ -89,6 +92,14 @@ public class PatientUserEntity extends UserEntity {
 
 	public void setHealthEntities(List<HealthEntity> healthEntities) {
 		this.healthEntities = healthEntities;
+	}
+	
+	public List<AppointmentEntity> getApptList() {
+		return apptList;
+	}
+
+	public void setApptList(List<AppointmentEntity> apptList) {
+		this.apptList = apptList;
 	}
 
 	@Override

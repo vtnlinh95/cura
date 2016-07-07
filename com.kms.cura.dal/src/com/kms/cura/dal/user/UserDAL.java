@@ -1,12 +1,14 @@
 package com.kms.cura.dal.user;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.kms.cura.dal.EntityDAL;
 import com.kms.cura.dal.database.DatabaseHelper;
 import com.kms.cura.dal.database.UserDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.user.UserEntity;
 
@@ -48,6 +50,11 @@ public class UserDAL extends EntityDAL {
 		UserDatabaseHelper dbh = new UserDatabaseHelper();
 		entity = dbh.insertUser(Userentity);
 		return entity;
+	}
+	
+	public List<AppointmentEntity> getAppointment(HashMap<String, Integer> criteria) throws ClassNotFoundException, SQLException{
+		UserDatabaseHelper dbh = new UserDatabaseHelper();
+		return dbh.getAppointment(criteria,null, null);
 	}
 
 }

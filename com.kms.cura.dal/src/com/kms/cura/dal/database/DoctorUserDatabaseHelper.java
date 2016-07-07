@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ import com.kms.cura.dal.DegreeDAL;
 import com.kms.cura.dal.FacilityDAL;
 import com.kms.cura.dal.SpecialityDAL;
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.mapping.AppointmentColumn;
 import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.dal.mapping.Doctor_FacilityColumn;
 import com.kms.cura.dal.mapping.Doctor_SpecialityColumn;
 import com.kms.cura.dal.mapping.FacilityColumn;
+import com.kms.cura.dal.mapping.PatientColumn;
 import com.kms.cura.dal.mapping.SpecialityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.DegreeEntity;
@@ -219,6 +222,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 
 			}
 			if (userEntity != null) {
+				HashMap<String, Integer> map = new HashMap<>();
+				map.put(AppointmentColumn.DOCTOR_ID.getColumnName(), Integer.parseInt(resultSet.getString(DoctorColumn.USER_ID.getColumnName())));
 				DoctorUserEntity doctor = new DoctorUserEntity(
 						resultSet.getString(DoctorColumn.USER_ID.getColumnName()),
 						resultSet.getString(DoctorColumn.NAME.getColumnName()), userEntity.getEmail(),
@@ -232,6 +237,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 						resultSet.getString(DoctorColumn.GENDER.getColumnName()),
 						resultSet.getDate(DoctorColumn.BIRTH.getColumnName()),
 						resultSet.getString(DoctorColumn.INSURANCE.getColumnName()));
+				doctor.setApptList(dbh.getAppointment(map, null, doctor));
 				return doctor;
 			}
 			return null;
@@ -531,6 +537,33 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		} finally {
 			con.setAutoCommit(true);
 		}
+	}
+	
+	public Entity querybyID(int id) throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT * FROM ");
+		builder.append(DoctorColumn.TABLE_NAME);
+		builder.append(" WHERE ");
+		builder.append(DoctorColumn.USER_ID.getColumnName());
+		builder.append(" = ?");
+		try {
+			stmt = con.prepareStatement(builder.toString());
+			stmt.setInt(1, id);
+			rs = stmt.executeQuery();
+			if(rs != null && rs.next()){
+				return getEntityFromResultSet(rs);
+			}
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
+			if(stmt != null){
+				stmt.close();
+			}
+		}
+		return null;
 	}
 
 }

@@ -4,12 +4,20 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.kms.cura.dal.exception.DALException;
 import com.kms.cura.dal.exception.DuplicatedUserEmailException;
+import com.kms.cura.dal.mapping.AppointmentColumn;
 import com.kms.cura.dal.mapping.UserColumn;
+import com.kms.cura.entity.AppointmentEntity;
+import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class UserDatabaseHelper extends DatabaseHelper {
@@ -166,6 +174,49 @@ public class UserDatabaseHelper extends DatabaseHelper {
 		}
 		return null;
 
+	}
+	
+	public List<AppointmentEntity> getAppointment(HashMap<String, Integer> criteria, PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity) throws SQLException, ClassNotFoundException{
+		List<AppointmentEntity> listAppts = new ArrayList<>();
+		int count = 0 ;
+		Set<String> set = criteria.keySet();
+		StringBuilder builder = new StringBuilder();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		builder.append("SELECT * FROM ");
+		builder.append(AppointmentColumn.TABLE_NAME);
+		builder.append(" WHERE ");
+		for (String key : set){
+			builder.append(key);
+			builder.append(" = ");
+			builder.append(criteria.get(key));
+			if(count != set.size()-1){
+				builder.append(" AND ");
+			}
+			++count;
+		}
+		try{
+			stmt = con.prepareStatement(builder.toString());
+			rs = stmt.executeQuery();
+			if(rs != null){
+				AppointmentDatabaseHelper appointmentDatabaseHelper = new AppointmentDatabaseHelper();
+				while(rs.next()){
+					listAppts.add(appointmentDatabaseHelper.geAppointmentEntityFromResultSet(rs,patientUserEntity,doctorUserEntity));
+				}
+			}
+			return listAppts;
+		}
+		finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(stmt != null){
+				stmt.close();
+			}
+			if(con != null){
+				closeConnection();
+			}
+		}
 	}
 	
 }
