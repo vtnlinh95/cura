@@ -49,6 +49,12 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         patientProfileFragment = new PatientProfileFragment();
         patientHealthTrachkerFragment = new HealthTrackerFragment();
         patientAppointmentFragment = new PatientAppointmentListFragment();
+        String navigation = getIntent().getStringExtra(NAVIGATION_KEY);
+        if (navigation != null && navigation.equals(ConditionSymptomSearchActivity.TO_HEALTH_TRACKER)) {
+            changeFragment(patientHealthTrachkerFragment);
+        } else {
+            changeFragment(patientHomeFragment);
+        }
         patientSettingsFragment = new PatientSettingsFragment();
     }
 
