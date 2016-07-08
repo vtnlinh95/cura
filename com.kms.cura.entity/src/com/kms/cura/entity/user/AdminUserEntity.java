@@ -6,4 +6,5 @@ public class AdminUserEntity extends UserEntity {
 		super(id, name, email, password);
 	}
 
+
 }
