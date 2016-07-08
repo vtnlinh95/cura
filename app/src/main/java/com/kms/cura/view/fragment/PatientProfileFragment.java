@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kms.cura.R;
 import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.utils.CurrentUserProfile;
+import com.kms.cura.utils.DataUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -36,10 +37,10 @@ public class PatientProfileFragment extends Fragment {
     public void loadData() {
         PatientUserEntity entity = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
         profile = loadImage(R.drawable.profile_anon128, R.id.ivAccountAvatar);
-        txtName = loadText(entity.getName(), R.id.txtName);
-        txtGender = loadText(getGender(entity), R.id.txtGender);
+        txtName = loadText(DataUtils.showUnicode(entity.getName()),R.id.txtName);
+        txtGender = loadText(getGender(entity), R.id.txtGender, R.id.ivGender);
         if (entity.getBirth() == null) {
-            txtDOB = loadText(null, R.id.txtDOB);
+            txtDOB = loadText(null, R.id.txtDOB, R.id.ivDOB);
         } else {
             Date date = entity.getBirth();
             StringBuilder sb = new StringBuilder();
@@ -48,10 +49,10 @@ public class PatientProfileFragment extends Fragment {
             sb.append(date.getMonth() + 1);
             sb.append("/");
             sb.append(date.getYear() + 1900);
-            txtDOB = loadText(sb.toString(), R.id.txtDOB);
+            txtDOB = loadText(sb.toString(), R.id.txtDOB, R.id.ivDOB);
         }
-        txtLocation = loadText(entity.getLocation(), R.id.txtLocation);
-        txtInsurance = loadText(entity.getInsurance(), R.id.txtInsurance);
+        txtLocation = loadText(DataUtils.showUnicode(entity.getLocation()), R.id.txtLocation, R.id.ivLocation);
+        txtInsurance = loadText(entity.getInsurance(), R.id.txtInsurance, R.id.ivInsurance);
         txtHealthConcerns = loadText(entity.getHealthConcern(), R.id.txtHealthConcern);
     }
 
@@ -63,6 +64,18 @@ public class PatientProfileFragment extends Fragment {
             return getResources().getString(R.string.male);
         }
         return getResources().getString(R.string.female);
+    }
+
+    public TextView loadText(String src, int id, int imageId) {
+        TextView textView = (TextView) getActivity().findViewById(id);
+        ImageView imageView = (ImageView) getActivity().findViewById(imageId);
+        if (src == null) {
+            imageView.setVisibility(View.GONE);
+            textView.setHeight(0);
+        } else {
+            textView.setText(src);
+        }
+        return textView;
     }
 
     public TextView loadText(String src, int id) {

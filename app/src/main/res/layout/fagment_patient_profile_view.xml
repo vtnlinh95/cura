@@ -41,42 +41,103 @@
         android:layout_marginRight="10sp"
         android:layout_marginLeft="10sp"
         >
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Gender "
-            android:id="@+id/txtGender"
-            android:gravity="center"/>
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="@dimen/padding_16"
+                android:layout_height="@dimen/padding_16"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/ivGender"
+                android:background="@drawable/gender_icon"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Gender "
+                android:layout_marginLeft="10sp"
+                android:textSize="@dimen/docText_18"
+                android:id="@+id/txtGender"
+                />
+        </LinearLayout>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopProfile"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="@dimen/padding_16"
+            android:layout_height="@dimen/padding_16"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/ivDOB"
+            android:background="@drawable/dob_icon"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Date of Birth "
-            android:id="@+id/txtDOB"
-            android:gravity="center"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Location "
-            android:id="@+id/txtLocation"
-            android:gravity="center"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Insurance "
-            android:id="@+id/txtInsurance"
-            android:gravity="center"/>
+            android:textSize="@dimen/docText_18"
+            android:layout_marginLeft="10sp"
+            android:id="@+id/txtDOB" />
     </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/healthConcerns"
-        android:textSize="@dimen/textSizeTitle"
-        android:gravity="center_horizontal"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_marginTop="5sp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtHealthConcern"
-        android:layout_marginTop="10sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopProfile"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="@dimen/padding_16"
+                android:layout_height="@dimen/padding_16"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/ivLocation"
+                android:background="@drawable/location_icon"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Location "
+                android:id="@+id/txtLocation"
+                android:textSize="@dimen/docText_18"
+                android:layout_marginLeft="10sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopProfile"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="@dimen/padding_16"
+                android:layout_height="@dimen/padding_16"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/ivInsurance"
+                android:background="@drawable/insurance_icon"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Insurance "
+                android:textSize="@dimen/docText_18"
+                android:id="@+id/txtInsurance"
+                android:layout_marginLeft="10sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTopProfile"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="@dimen/padding_16"
+                android:layout_height="@dimen/padding_16"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/concern_icon"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/healthConcerns"
+                android:textSize="@dimen/docText_18"
+                android:layout_marginLeft="10sp"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtHealthConcern"
+            android:layout_marginTop="10sp"/>
+    </LinearLayout>
 </LinearLayout>
