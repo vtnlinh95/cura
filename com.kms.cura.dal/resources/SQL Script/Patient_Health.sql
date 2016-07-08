@@ -1,3 +1,5 @@
+use cura;
+
 create table Patient_Health (
 	patient_id INT NOT NULL,
     condition_id INT,
