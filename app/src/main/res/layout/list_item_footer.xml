@@ -7,12 +7,13 @@
     android:paddingBottom="15sp">
 
     <Button
-        android:layout_width="@dimen/button_width"
+        android:layout_width="@dimen/buttonWidth_150"
         android:layout_height="wrap_content"
         android:text="New Button"
         android:id="@+id/button_list_item_button"
+        android:background="@android:drawable/dialog_holo_light_frame"
         android:layout_gravity="left"
         android:textColor="@color/white"
-        android:background="@color/colorPrimary"
-        android:allowUndo="false" />
+        android:allowUndo="false"
+        android:backgroundTint="@color/colorPrimary" />
 </LinearLayout>

@@ -54,9 +54,9 @@ public class DoctorProfessionalSettingsActivity extends AppCompatActivity {
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
         listAdapter.setChildButtonText(0, "Add Specialties");
         listAdapter.setChildButtonText(1, "Add Facilities");
-
         // setting list adapter
         expListView.setAdapter(listAdapter);
+        expListView.setFooterDividersEnabled(true);
         expListView.setChildIndicator(null);
         expListView.setChildDivider(getResources().getDrawable(R.color.transparent));
         // Listview Group click listener
@@ -117,7 +117,8 @@ public class DoctorProfessionalSettingsActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listView);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.ProfessionalSettings, android.R.layout.simple_list_item_1);
         listView.setAdapter(adapter);
-
+        listView.setHeaderDividersEnabled(true);
+        listView.setFooterDividersEnabled(true);
     }
 
     /*
