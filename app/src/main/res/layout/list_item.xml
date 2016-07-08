@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_item"
     android:layout_width="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:layout_height="wrap_content"
     android:gravity="left"
     android:layoutDirection="ltr"
@@ -11,7 +12,7 @@
     android:paddingBottom="10sp">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/button_x_delete_button"
         android:layout_width="@dimen/docText_20"
         android:layout_height="@dimen/docText_20"
         android:background="@mipmap/ic_clear_black"

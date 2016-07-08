@@ -9,17 +9,23 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.UserController;
+import com.kms.cura.view.activity.AccountTypeSelectionActivity;
+import com.kms.cura.view.activity.BookAppointmentActivity;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter extends BaseExpandableListAdapter implements View.OnClickListener {
 
     private Context _context;
     private List<String> _listDataHeader; // header titles
@@ -49,7 +55,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
         final String childText = (String) getChild(groupPosition, childPosition);
@@ -58,12 +64,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.list_item, null);
+            ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.button_x_delete_button);
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Toast.makeText(v.getContext(), _listDataHeader.get(groupPosition) + " : " + _listDataChild.get(_listDataHeader.get(groupPosition)).get(childPosition), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         if (childPosition % 2 == 0) {
             convertView.setBackgroundColor(convertView.getResources().getColor(R.color.light_grey_2));
         }
-        TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.lblListItem);
+        TextView txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
 
         txtListChild.setText(childText);
         //the last row is used as footer
@@ -72,6 +85,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_item_footer, null);
             Button button = (Button) convertView.findViewById(R.id.button_list_item_button);
             button.setText(buttonText.get(groupPosition));
+            button.setOnClickListener(this);
             expanded = true;
         }
         return convertView;
@@ -129,5 +143,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void setChildButtonText(int parentGroup, String text) {
         buttonText.add(parentGroup, text);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_list_item_button) {
+            Button button = (Button) v;
+            String buttonText = button.getText().toString();
+
+            if (buttonText.equals("Add Specialties")) {
+                Toast.makeText(v.getContext(), "Add new Specialities", Toast.LENGTH_SHORT).show();
+            } else if (buttonText.equals("Add Facilities")) {
+                Toast.makeText(v.getContext(), "Add new Facilities", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
     }
 }
