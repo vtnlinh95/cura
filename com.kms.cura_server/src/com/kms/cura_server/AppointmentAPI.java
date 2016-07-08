@@ -28,9 +28,10 @@ public final class AppointmentAPI {
 			criteria.put(key, object.getInt(key));
 		}
 		try {
-			return new AppointmentAPIResponse().successListApptsResponse(AppointmentDAL.getInstance().getAppointment(criteria));
+			return new AppointmentAPIResponse().successListApptsResponse(AppointmentDAL.getInstance().getAppointment(criteria,null,null));
 		} catch (ClassNotFoundException | SQLException e) {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}
 	}
+	
 }
