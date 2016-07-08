@@ -18,7 +18,7 @@ public class PatientUserEntity extends UserEntity {
 	private String insurance;
 	private String healthConcern;
 	private List<HealthEntity> healthEntities;
-	private List<AppointmentEntity> appointmentList;
+	private List<AppointmentEntity> appointmentList = new ArrayList<>();
 
 	public PatientUserEntity(UserEntity entity) {
 		super(entity.getId(), entity.getName(), entity.getEmail(), entity.getPassword());
@@ -100,6 +100,10 @@ public class PatientUserEntity extends UserEntity {
 
 	public void setAppointmentList(List<AppointmentEntity> appointmentList) {
 		this.appointmentList = appointmentList;
+	}
+	
+	public void addAllAppointmentList(List<AppointmentEntity> appointmentList){
+		this.appointmentList.addAll(appointmentList);
 	}
 
 	@Override

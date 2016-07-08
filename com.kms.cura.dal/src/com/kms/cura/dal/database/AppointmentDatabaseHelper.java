@@ -27,41 +27,38 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 		return null;
 	}
 
-	protected AppointmentEntity geAppointmentEntityFromResultSet(ResultSet resultSet,
-			PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity)
+	protected AppointmentEntity geAppointmentEntityFromResultSet(ResultSet resultSet, PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity)
 			throws SQLException, ClassNotFoundException {
 		PatientUserDatabaseHelper patientUserDatabaseHelper = new PatientUserDatabaseHelper();
 		DoctorUserDatabaseHelper doctorUserDatabaseHelper = new DoctorUserDatabaseHelper();
-		if (patientUserEntity != null) {
-			return new AppointmentEntity(patientUserEntity,
-					(DoctorUserEntity) doctorUserDatabaseHelper
-							.querybyID(resultSet.getInt(AppointmentColumn.DOCTOR_ID.getColumnName())),
+		if(patientUserEntity != null){
+			return new AppointmentEntity(
+					null,
+					(DoctorUserEntity) doctorUserDatabaseHelper.querybyID(resultSet.getInt(AppointmentColumn.DOCTOR_ID.getColumnName())),
 					resultSet.getDate(AppointmentColumn.APPT_DAY.getColumnName()),
 					resultSet.getTime(AppointmentColumn.START_TIME.getColumnName()),
 					resultSet.getTime(AppointmentColumn.END_TIME.getColumnName()),
 					resultSet.getInt(AppointmentColumn.STATUS.getColumnName()));
-		} else if (doctorUserEntity != null) {
+		}
+		else if(doctorUserEntity != null){
 			return new AppointmentEntity(
-					(PatientUserEntity) patientUserDatabaseHelper
-							.querybyID(resultSet.getInt(AppointmentColumn.PATIENT_ID.getColumnName())),
-					doctorUserEntity, resultSet.getDate(AppointmentColumn.APPT_DAY.getColumnName()),
+					(PatientUserEntity) patientUserDatabaseHelper.querybyID((resultSet.getInt(AppointmentColumn.PATIENT_ID.getColumnName()))),
+					null,
+					resultSet.getDate(AppointmentColumn.APPT_DAY.getColumnName()),
 					resultSet.getTime(AppointmentColumn.START_TIME.getColumnName()),
 					resultSet.getTime(AppointmentColumn.END_TIME.getColumnName()),
 					resultSet.getInt(AppointmentColumn.STATUS.getColumnName()));
 		}
 		return new AppointmentEntity(
-				(PatientUserEntity) patientUserDatabaseHelper.queryByID(PatientColumn.TABLE_NAME,
-						resultSet.getInt(AppointmentColumn.PATIENT_ID.getColumnName())),
-				(DoctorUserEntity) doctorUserDatabaseHelper.queryByID(DoctorColumn.TABLE_NAME,
-						resultSet.getInt(AppointmentColumn.DOCTOR_ID.getColumnName())),
+				(PatientUserEntity) patientUserDatabaseHelper.querybyID((resultSet.getInt(AppointmentColumn.PATIENT_ID.getColumnName()))),
+				(DoctorUserEntity) doctorUserDatabaseHelper.querybyID(resultSet.getInt(AppointmentColumn.DOCTOR_ID.getColumnName())),
 				resultSet.getDate(AppointmentColumn.APPT_DAY.getColumnName()),
 				resultSet.getTime(AppointmentColumn.START_TIME.getColumnName()),
 				resultSet.getTime(AppointmentColumn.END_TIME.getColumnName()),
 				resultSet.getInt(AppointmentColumn.STATUS.getColumnName()));
 	}
 
-	public List<AppointmentEntity> getAppointment(HashMap<String, Integer> criteria,
-			PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity)
+	public List<AppointmentEntity> getAppointment(HashMap<String, Integer> criteria, PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity)
 			throws SQLException, ClassNotFoundException {
 		List<AppointmentEntity> listAppts = new ArrayList<>();
 		int count = 0;

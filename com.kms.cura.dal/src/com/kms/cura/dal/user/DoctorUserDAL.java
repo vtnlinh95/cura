@@ -43,18 +43,10 @@ public class DoctorUserDAL extends UserDAL {
 	}
 	
 	public DoctorUserEntity getAllReferenceAttributeforDoctor(DoctorUserEntity doctorUserEntity) throws ClassNotFoundException, SQLException {
-		if (doctorUserEntity.getAppointmentList() != null) {
-			return doctorUserEntity;
-		}
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put(AppointmentColumn.DOCTOR_ID.getColumnName(), Integer.parseInt(doctorUserEntity.getId()));
-		List<AppointmentEntity> list = AppointmentDAL.getInstance().getAppointment(map,null,doctorUserEntity);
-		doctorUserEntity.setAppointmentList(list);
-		for (AppointmentEntity entity : list){
-			PatientUserEntity patientUserEntity = entity.getPatientUserEntity();
-			patientUserEntity = PatientUserDAL.getInstance().getAllReferenceAttributeforPatient(patientUserEntity);
-			entity.setPatientUserEntity(patientUserEntity);
-		}
+		List<AppointmentEntity> list = AppointmentDAL.getInstance().getAppointment(map,null, doctorUserEntity);
+		doctorUserEntity.addAllAppointmentList(list);
 		return doctorUserEntity;
 	}
 	

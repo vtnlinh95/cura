@@ -28,7 +28,7 @@ public class DoctorUserEntity extends UserEntity {
     private String gender;
     private Date birth;
     private String insurance;
-    private List<AppointmentEntity> appointmentList;
+    private List<AppointmentEntity> appointmentList = new ArrayList<>();
 
     public DoctorUserEntity(String id, String name, String email, String password, String phone, DegreeEntity degree,
                             List<SpecialityEntity> speciality, double rating, int experience, double minPrice, double maxPrice,
@@ -154,7 +154,11 @@ public class DoctorUserEntity extends UserEntity {
 	public void setAppointmentList(List<AppointmentEntity> appointmentList) {
 		this.appointmentList = appointmentList;
 	}
-
+	
+	public void addAllAppointmentList(List<AppointmentEntity> appointmentList){
+		this.appointmentList.addAll(appointmentList);
+	}
+	
 	@Override
     public int getType() {
         return DOCTOR_TYPE;

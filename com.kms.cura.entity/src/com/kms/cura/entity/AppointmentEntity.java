@@ -31,22 +31,6 @@ public class AppointmentEntity {
 		this.endTime = endTime;
 		this.status = status;
 	}
-	
-	public AppointmentEntity( DoctorUserEntity doctorUserEntity, Date apptDay,Time startTime, Time endTime, int status) {
-		this.doctorUserEntity = doctorUserEntity;
-		this.apptDay = apptDay;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.status = status;
-	}
-	
-	public AppointmentEntity(PatientUserEntity patientUserEntity, Date apptDay,Time startTime, Time endTime, int status) {
-		this.patientUserEntity = patientUserEntity;
-		this.apptDay = apptDay;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.status = status;
-	}
 
 	public PatientUserEntity getPatientUserEntity() {
 		return patientUserEntity;
