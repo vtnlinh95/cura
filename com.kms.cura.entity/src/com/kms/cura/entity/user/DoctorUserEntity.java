@@ -55,7 +55,7 @@ public class DoctorUserEntity extends UserEntity {
         this.gender = gender;
         this.birth = birth;
     }
-    
+
     public String getPhone() {
         return phone;
     }
@@ -113,14 +113,14 @@ public class DoctorUserEntity extends UserEntity {
     }
 
     public List<WorkingHourEntity> getWorkingTime() {
-		return workingTime;
-	}
+        return workingTime;
+    }
 
-	public void setWorkingTime(List<WorkingHourEntity> workingTime) {
-		this.workingTime = workingTime;
-	}
+    public void setWorkingTime(List<WorkingHourEntity> workingTime) {
+        this.workingTime = workingTime;
+    }
 
-	public String getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -142,6 +142,14 @@ public class DoctorUserEntity extends UserEntity {
 
     public void setInsurance(String insurance) {
         this.insurance = insurance;
+    }
+
+    public List<FacilityEntity> getFacilities() {
+        List<FacilityEntity> result = new ArrayList<FacilityEntity>();
+        for (WorkingHourEntity workingHourEntity : this.workingTime) {
+            result.add(workingHourEntity.getFacilityEntity());
+        }
+        return result;
     }
 
     @Override

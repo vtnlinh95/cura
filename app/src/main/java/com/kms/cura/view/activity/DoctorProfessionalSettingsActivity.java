@@ -1,19 +1,26 @@
 package com.kms.cura.view.activity;
 
 
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ExpandableListView.OnGroupCollapseListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.entity.FacilityEntity;
+import com.kms.cura.entity.SpecialityEntity;
+import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.utils.CurrentUserProfile;
 import com.kms.cura.view.adapter.ExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -27,12 +34,15 @@ public class DoctorProfessionalSettingsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ExpandableListView expListView;
     private List<String> listDataHeader;
+    private DoctorUserEntity entity;
+    private ListView listView;
     private HashMap<String, List<String>> listDataChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_professional_settings);
+        entity = (DoctorUserEntity) CurrentUserProfile.getInstance().getEntity();
         initToolbar();
 
         // get the listview
@@ -42,8 +52,8 @@ public class DoctorProfessionalSettingsActivity extends AppCompatActivity {
         prepareListData();
 
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listDataChild);
-        listAdapter.setChildButtonText(0, "Add Facilities");
-        listAdapter.setChildButtonText(1, "Add Specialties");
+        listAdapter.setChildButtonText(0, "Add Specialties");
+        listAdapter.setChildButtonText(1, "Add Facilities");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
@@ -103,6 +113,11 @@ public class DoctorProfessionalSettingsActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        listView = (ListView) findViewById(R.id.listView);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.ProfessionalSettings, android.R.layout.simple_list_item_1);
+        listView.setAdapter(adapter);
+
     }
 
     /*
@@ -113,30 +128,27 @@ public class DoctorProfessionalSettingsActivity extends AppCompatActivity {
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding child data
-        listDataHeader.add("Top 250");
-        listDataHeader.add("Now Showing");
+        listDataHeader.add("Specialties");
+        listDataHeader.add("Facilities");
 
         // Adding child data
-        List<String> top250 = new ArrayList<String>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
+        List<String> Specialties = new ArrayList<String>();
+        List<SpecialityEntity> specialityEntities = entity.getSpeciality();
+        for (SpecialityEntity specialty : specialityEntities) {
+            Specialties.add(specialty.getName());
+        }
+        Specialties.add("");
 
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
+        List<String> Facilities = new ArrayList<String>();
+        List<FacilityEntity> facilityEntities = entity.getFacilities();
+        for (FacilityEntity facility : facilityEntities) {
+            Facilities.add(facility.getName());
+        }
+        Facilities.add("");
 
 
-        listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), nowShowing);
+        listDataChild.put(listDataHeader.get(0), Specialties); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), Facilities);
 
     }
 

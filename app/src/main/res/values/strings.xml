@@ -74,6 +74,11 @@
         <item>Password</item>
     </string-array>
 
+    <string-array name="ProfessionalSettings">
+        <item>Working Hour</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="Insurance">
         <item>Aetna</item>
         <item>Altius</item>
