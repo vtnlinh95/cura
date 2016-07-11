@@ -101,7 +101,7 @@ INSERT INTO Specialities_Conditions VALUES ((SELECT id FROM Specialties WHERE na
 
 INSERT INTO Specialities_Conditions VALUES ((SELECT id FROM Specialties WHERE name = 'Rheumatologist'), (SELECT id FROM Conditions WHERE name = 'Arthritis'));
 
-INSERT INTO Specifacilitiesalities_Conditions VALUES ((SELECT id FROM Specialties WHERE name = 'Urologist'), (SELECT id FROM Conditions WHERE name = 'Kidney Stones'));
+INSERT INTO Specialities_Conditions VALUES ((SELECT id FROM Specialties WHERE name = 'Urologist'), (SELECT id FROM Conditions WHERE name = 'Kidney Stones'));
 
 INSERT INTO Specialities_Conditions VALUES ((SELECT id FROM Specialties WHERE name = 'Urologist'), (SELECT id FROM Conditions WHERE name = 'Urinary Tract Infection'));
 
