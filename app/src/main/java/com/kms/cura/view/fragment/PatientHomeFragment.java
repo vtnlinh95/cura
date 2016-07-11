@@ -398,8 +398,8 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         List<String> list = new ArrayList<String>(Arrays.asList(location.split(",")));
         data = list.get(0).replaceAll("City", "");
         data = data.replaceAll("city", "");
-        data = data.replaceAll("Hanoi","Ha Noi");
-        data = data.replaceAll("Danang","Da Nang");
+        data = data.replaceAll("Hanoi", "Ha Noi");
+        data = data.replaceAll("Danang", "Da Nang");
         data = data.trim();
         return data;
     }

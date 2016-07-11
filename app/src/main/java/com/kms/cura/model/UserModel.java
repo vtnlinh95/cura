@@ -11,9 +11,6 @@ import com.kms.cura.model.request.LoginUserModelResponse;
 import com.kms.cura.model.request.RegisterModelResponse;
 import com.kms.cura.utils.RequestUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserModel extends EntityModel {
     private static UserModel instance;
     private static String tag_string_req = "string_req";

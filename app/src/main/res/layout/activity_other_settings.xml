@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:windowSoftInputMode="adjustPan"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/view">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/other_settings_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/marginTop"
+        android:id="@+id/frameLayout">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginRight="20sp"
+            android:layout_marginLeft="20sp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spinner_60"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_20"
+                android:padding="5sp"
+                android:weightSum="1">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="100sp"
+                    android:text="@string/qualify_degree"
+                    android:fontFamily="sans-serif"
+                    android:textSize="@dimen/docText_18"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.52" />
+
+                <Spinner
+                    android:layout_width="@dimen/spinner_150"
+                    android:layout_height="@dimen/spinner_50"
+                    android:id="@+id/spnDegree_Settings"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/black"
+                    android:layout_weight="0.55" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spinner_60"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_20"
+                android:padding="5sp">
+                <TextView
+                    android:layout_width="152dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/experience_start"
+                    android:fontFamily="sans-serif"
+                    android:textSize="@dimen/docText_18"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="@dimen/padding_8"
+                    android:paddingBottom="2sp" />
+                <EditText
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif"
+                    android:id="@+id/editText_settings_experience_start"
+                    android:maxLines="1"
+                    android:textSize="@dimen/docText_18"
+                    android:singleLine="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center|start"
+                android:padding="5sp"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/price_range"
+                    android:textSize="@dimen/docText_18"
+                    android:textColor="@color/black"
+                    android:layout_weight="0.46" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/spinner_60"
+                    android:id="@+id/setting_birthday"
+                    android:textSize="@dimen/docText_18"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:layout_width="75sp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/editText_minPrice"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/hyphen"
+                    android:id="@+id/textView3"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/docText_20"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:layout_width="75sp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:ems="10"
+                    android:id="@+id/editText_maxPrice"
+                    android:textAlignment="center" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="end|bottom"></LinearLayout>
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_settings_save"
+        android:text="@string/save"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:layout_below="@+id/frameLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="95dp" />
+</RelativeLayout>

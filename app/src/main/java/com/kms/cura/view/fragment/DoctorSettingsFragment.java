@@ -12,14 +12,17 @@ import android.widget.ArrayAdapter;
 
 import com.kms.cura.R;
 import com.kms.cura.view.activity.ChangePasswordActivity;
+import com.kms.cura.view.activity.DoctorBasicSettingsActivity;
+import com.kms.cura.view.activity.DoctorProfessionalSettingsActivity;
 import com.kms.cura.view.activity.PatientBasicSettingsActivity;
 import com.kms.cura.view.activity.ProfilePictureActivity;
 
 
-public class PatientSettingsFragment extends ListFragment implements AdapterView.OnItemClickListener {
+public class DoctorSettingsFragment extends ListFragment implements AdapterView.OnItemClickListener {
     private static final int PROFILE = 0;
     private static final int BASIC_SETTINGS = 1;
-    private static final int CHANGE_PASSWORD = 2;
+    private static final int PROFESSIONAL_INFORMATION = 2;
+    private static final int CHANGE_PASSWORD = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,7 @@ public class PatientSettingsFragment extends ListFragment implements AdapterView
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Settings, android.R.layout.simple_list_item_1);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.DoctorSettings, android.R.layout.simple_list_item_1);
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
     }
@@ -53,7 +56,9 @@ public class PatientSettingsFragment extends ListFragment implements AdapterView
         if (position == PROFILE) {
             changeActivity(ProfilePictureActivity.class);
         } else if (position == BASIC_SETTINGS) {
-            changeActivity(PatientBasicSettingsActivity.class);
+            changeActivity(DoctorBasicSettingsActivity.class);
+        }else if (position == PROFESSIONAL_INFORMATION) {
+            changeActivity(DoctorProfessionalSettingsActivity.class);
         } else if (position == CHANGE_PASSWORD) {
             changeActivity(ChangePasswordActivity.class);
         }
