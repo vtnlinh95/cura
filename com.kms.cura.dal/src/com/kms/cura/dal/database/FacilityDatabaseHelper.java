@@ -9,7 +9,6 @@ import com.kms.cura.dal.mapping.EntityColumn;
 import com.kms.cura.dal.mapping.FacilityColumn;
 import com.kms.cura.dal.mapping.OpeningHourColumn;
 import com.kms.cura.entity.DayOfTheWeek;
-import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.OpeningHour;
 
@@ -20,7 +19,7 @@ public class FacilityDatabaseHelper extends DatabaseHelper {
 	}
 
 	@Override
-	protected Entity getEntityFromResultSet(ResultSet resultSet) throws SQLException, ClassNotFoundException {
+	protected FacilityEntity getEntityFromResultSet(ResultSet resultSet) throws SQLException, ClassNotFoundException {
 		List<OpeningHour> openingHours = new ArrayList<OpeningHour>();
 		ResultSet openingHoursRS = null;
 		try {
@@ -46,5 +45,9 @@ public class FacilityDatabaseHelper extends DatabaseHelper {
 				openingHoursRS.close();
 			}
 		}
+	}
+	
+	public FacilityEntity queryByID(int id) throws SQLException, ClassNotFoundException {
+		return (FacilityEntity) super.queryByID(FacilityColumn.TABLE_NAME, id);
 	}
 }

@@ -11,7 +11,7 @@ public abstract class EntityDAL {
 	protected List<Entity> getAll(String tableName, DatabaseHelper dbh) throws ClassNotFoundException, SQLException {
 		List<Entity> result = null;
 		try {
-			result = dbh.queryAll(tableName, dbh);
+			result = dbh.queryAll(tableName);
 			return result;
 		} finally {
 			if (dbh != null && result != null) {
@@ -35,18 +35,6 @@ public abstract class EntityDAL {
 	protected Entity getByID(String tableName, int id, DatabaseHelper dbh) throws SQLException, ClassNotFoundException {
 		try {
 			Entity result = dbh.queryByID(tableName, id);
-			return result;
-		} finally {
-			if (dbh != null) {
-				dbh.closeConnection();
-			}
-		}
-	}
-
-	protected Entity insert(String tableName, Entity entity, DatabaseHelper dbh)
-			throws ClassNotFoundException, SQLException {
-		try {
-			Entity result = dbh.insert(tableName, entity);
 			return result;
 		} finally {
 			if (dbh != null) {

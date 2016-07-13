@@ -2,17 +2,20 @@ package com.kms.cura.dal.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.kms.cura.dal.mapping.ConditionColumn;
-import com.kms.cura.dal.mapping.SymptomColumn;
 import com.kms.cura.entity.ConditionEntity;
 import com.kms.cura.entity.Entity;
-import com.kms.cura.entity.SymptomEntity;
 
 public class ConditionDatabaseHelper extends DatabaseHelper {
 
     public ConditionDatabaseHelper() throws ClassNotFoundException, SQLException {
         super();
+    }
+    
+    public List<Entity> queryAll() throws SQLException, ClassNotFoundException {
+    	return super.queryAll(ConditionColumn.TABLE_NAME);
     }
 
     @Override

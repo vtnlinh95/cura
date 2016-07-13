@@ -18,4 +18,9 @@ public enum UserColumn {
 	}
 
 	public static final String TABLE_NAME = "Users";
+	
+	@Override
+	public String toString() {
+		return columnName;
+	}
 }

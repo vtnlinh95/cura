@@ -8,7 +8,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
 import com.google.gson.JsonElement;
-import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
 import com.kms.cura.dal.database.PatientUserDatabaseHelper;
 import com.kms.cura.dal.database.UserDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
@@ -57,11 +56,10 @@ public final class UserAPI {
 	@Path("/getAllPatient")
 	public String getAllPatient() {
 		try {
-			List<Entity> users = PatientUserDAL.getInstance().getAll(new PatientUserDatabaseHelper());
-			JsonElement element = EntityToJsonConverter.convertEntityListToJson(users);
-			return element.toString();
+			List<Entity> users = PatientUserDAL.getInstance().getAll();
+			return new UserAPIResponse().successResponsePatient(users);
 		} catch (ClassNotFoundException | SQLException e) {
-			return Strings.error_internal + e.toString();
+			return APIResponse.unsuccessResponse(e.getMessage());
 		}
 	}
 
@@ -69,11 +67,10 @@ public final class UserAPI {
 	@Path("/getAllDoctor")
 	public String getAllDoctor() {
 		try {
-			List<Entity> users = DoctorUserDAL.getInstance().getAll(new DoctorUserDatabaseHelper());
-			JsonElement element = EntityToJsonConverter.convertEntityListToJson(users);
-			return element.toString();
+			List<Entity> users = DoctorUserDAL.getInstance().getAll();
+			return new UserAPIResponse().successResponse(users);
 		} catch (ClassNotFoundException | SQLException e) {
-			return Strings.error_internal + e.getMessage();
+			return UserAPIResponse.unsuccessResponse(e.getMessage());
 		}
 	}
 
@@ -124,7 +121,6 @@ public final class UserAPI {
 		}
 
 	}
-
 	@POST
 	@Path("/updateDoctor")
 	public String updateDoctor(String jsonData) {

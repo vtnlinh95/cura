@@ -5,9 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.exception.DuplicatedUserEmailException;
 import com.kms.cura.dal.mapping.PatientColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.user.PatientUserEntity;
@@ -57,35 +59,26 @@ public class PatientUserDatabaseHelper extends UserDatabaseHelper {
 		return columnValueMap;
 	}
 
-	@Override
-	public UserEntity insertUser(UserEntity entity) throws SQLException, DALException, ClassNotFoundException {
+	public PatientUserEntity insertPatientUser(UserEntity entity)
+			throws SQLException, DALException, ClassNotFoundException {
 		PreparedStatement stmt = null;
-		UserEntity userEntity = super.insertUser(entity);
-		ResultSet rs = null;
 		if (!(entity instanceof PatientUserEntity)) {
 			return null;
 		}
+		if (queryByEmail(entity.getEmail()) != null) {
+			throw new DuplicatedUserEmailException(entity.getEmail());
+		}
 		try {
 			con.setAutoCommit(false);
-			int userId = Integer.parseInt(userEntity.getId());
-			entity.setId(String.valueOf(userId));
+			super.insertUser(entity);
+			con.commit();
+			UserEntity newlyInsertedUser = queryByEmail(entity.getEmail());
+			entity.setId(newlyInsertedUser.getId());
 			stmt = getInsertStatementForUser((PatientUserEntity) entity);
 			stmt.executeUpdate();
-			stmt.close();
 			con.commit();
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("SELECT * FROM ");
-			sb.append(PatientColumn.TABLE_NAME);
-			sb.append(" WHERE ");
-			sb.append(PatientColumn.USER_ID.getColumnName());
-			sb.append(" = ?");
-
-			stmt = con.prepareStatement(sb.toString());
-			stmt.setInt(1, userId);
-			rs = stmt.executeQuery();
-			rs.next();
-			return getEntityFromResultSet(rs);
+			return queryPatientByID(newlyInsertedUser.getId());
 		} catch (SQLException e) {
 			if (con != null) {
 				System.err.print("Transaction is being rolled back");
@@ -94,42 +87,78 @@ public class PatientUserDatabaseHelper extends UserDatabaseHelper {
 			throw e;
 		} finally {
 			con.setAutoCommit(true);
-			stmt.close();
+			if (stmt != null) {
+				stmt.close();
+			}
 		}
+	}
+
+	public PatientUserEntity queryPatientByID(String id) throws SQLException, ClassNotFoundException {
+		return (PatientUserEntity) queryUserEntitybyId(PatientColumn.TABLE_NAME, id,
+				PatientColumn.USER_ID.getColumnName());
 	}
 
 	public PreparedStatement getInsertStatementForUser(PatientUserEntity entity) throws SQLException {
 		Map<String, Object> patientValueMap = getColumnValueMapForEntity(entity);
 		String databaseName = PatientColumn.TABLE_NAME;
-		String databaseMethod = "INSERT INTO";
-		return createPreparedStatement(patientValueMap, databaseName, databaseMethod);
+		return createInsertPreparedStatement(patientValueMap, databaseName);
+	}
+	
+	public List<PatientUserEntity> getAllPatient() throws SQLException, ClassNotFoundException{
+		List<PatientUserEntity> list = new ArrayList<>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT * FROM ");
+		builder.append(PatientColumn.TABLE_NAME);
+		builder.append(" LEFT JOIN ");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(" ON ");
+		builder.append(PatientColumn.TABLE_NAME);
+		builder.append(".");
+		builder.append(PatientColumn.USER_ID.getColumnName());
+		builder.append(" = ");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(".");
+		builder.append(UserColumn.ID.getColumnName());
+		try{
+			stmt = con.prepareStatement(builder.toString());
+			rs = stmt.executeQuery();
+			if(rs != null){
+				while(rs.next()){
+					list.add(getEntityFromResultSet(rs));
+				}
+			}
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(stmt != null){
+				stmt.close();
+			}
+		}
+		return list;
 	}
 
 	@Override
-	protected UserEntity getEntityFromResultSet(ResultSet resultSet) throws SQLException, ClassNotFoundException {
-		UserDatabaseHelper dbh = new UserDatabaseHelper();
-		UserEntity userEntity = (UserEntity) dbh.queryByID(UserColumn.TABLE_NAME,
-				resultSet.getInt(PatientColumn.USER_ID.getColumnName()));
-		if (userEntity != null) {
-			PatientUserEntity patient = new PatientUserEntity(resultSet.getString(PatientColumn.USER_ID.getColumnName()),
-					resultSet.getString(PatientColumn.NAME.getColumnName()), userEntity.getEmail(),
-					userEntity.getPassword(), resultSet.getString(PatientColumn.GENDER.getColumnName()),
-					resultSet.getDate(PatientColumn.BIRTH.getColumnName()),
-					resultSet.getString(PatientColumn.LOCATION.getColumnName()),
-					resultSet.getString(PatientColumn.INSURANCE.getColumnName()),
-					resultSet.getString(PatientColumn.HEALTH_CONCERN.getColumnName()));
-			PatientHealthDatabaseHelper healthDbh = new PatientHealthDatabaseHelper();
-			patient.setHealthEntities(new ArrayList<>(healthDbh.queryHealthByPatientID(userEntity.getId())));
-			return patient;
-		}
-		return null;
+	protected PatientUserEntity getEntityFromResultSet(ResultSet resultSet)
+			throws SQLException, ClassNotFoundException {
+		PatientUserEntity patient = new PatientUserEntity(resultSet.getString(PatientColumn.USER_ID.getColumnName()),
+				resultSet.getString(PatientColumn.NAME.getColumnName()),
+				resultSet.getString(UserColumn.EMAIL.getColumnName()),
+				resultSet.getString(UserColumn.PASSWORD.getColumnName()),
+				resultSet.getString(PatientColumn.GENDER.getColumnName()),
+				resultSet.getDate(PatientColumn.BIRTH.getColumnName()),
+				resultSet.getString(PatientColumn.LOCATION.getColumnName()),
+				resultSet.getString(PatientColumn.INSURANCE.getColumnName()),
+				resultSet.getString(PatientColumn.HEALTH_CONCERN.getColumnName()));
+		PatientHealthDatabaseHelper healthDbh = new PatientHealthDatabaseHelper();
+		patient.setHealthEntities(new ArrayList<>(healthDbh.queryHealthByPatientID(patient.getId())));
+		return patient;
 	}
-	
-	
 
 	public PatientUserEntity searchPatient(UserEntity entity) throws ClassNotFoundException, SQLException {
-		return (PatientUserEntity) queryUserEntitybyEmailPassword(PatientColumn.TABLE_NAME, UserColumn.TABLE_NAME,
-				entity.getEmail(), entity.getPassword(), PatientColumn.USER_ID.getColumnName(),
-				UserColumn.ID.getColumnName());
+		return (PatientUserEntity) queryUserEntitybyEmailPassword(PatientColumn.TABLE_NAME, entity.getEmail(),
+				entity.getPassword(), PatientColumn.USER_ID.getColumnName());
 	}
 }
