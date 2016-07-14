@@ -186,4 +186,16 @@
     <string name="title_activity_navi">navi</string>
     <string name="upload">Upload</string>
     <string name="pick_image">Pick Image</string>
+    <string name="description">Description</string>
+    <string name="commonCondition">Associated Conditions</string>
+    <string name="commonSymptom">Common Symptoms</string>
+    <string name="findDoctor">Find a doctor</string>
+    <string name="startDate">Start date:</string>
+    <string name="endDate">End date:</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_title_condition">Details about your condition</string>
+    <string name="add_title_symptom">Details about your symptom</string>
+    <string name="warning">Warning</string>
+    <string name="seeMore">see more…</string>
+    <string name="seeLess">see less</string>
 </resources>

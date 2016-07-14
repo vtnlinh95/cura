@@ -24,6 +24,7 @@ import com.kms.cura.controller.SymptomController;
 import com.kms.cura.entity.SymptomEntity;
 import com.kms.cura.view.activity.ConditionSymptomSearchActivity;
 import com.kms.cura.view.activity.PatientViewActivity;
+import com.kms.cura.view.activity.SymptomInfoActivity;
 import com.kms.cura.view.adapter.FilterAdapter;
 
 import java.util.ArrayList;
@@ -117,7 +118,10 @@ public class SymptomSearchFragment extends Fragment implements SearchView.OnQuer
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         SymptomEntity entity = symptomEntities.get((int) adapter.getItemId(position));
-        Toast.makeText(getActivity(), entity.getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), SymptomInfoActivity.class);
+        intent.putExtra(SymptomEntity.ID, entity.getId());
+        intent.putExtra(SymptomEntity.NAME, entity.getName());
+        startActivity(intent);
     }
 
     private void changeToFragment(Fragment fragment) {

@@ -3,6 +3,7 @@ package com.kms.cura.controller;
 import android.os.Bundle;
 
 import com.android.volley.VolleyError;
+import com.kms.cura.entity.ConditionEntity;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.model.SpecialityModel;
 import com.kms.cura.view.activity.RegisterDoctorActivity;
@@ -32,6 +33,10 @@ public class SpecialityController {
             }
         }
         return specialitySelected;
+    }
+
+    public static List<SpecialityEntity> getByCondition(ConditionEntity entity) throws Exception {
+        return SpecialityModel.getInstace().getSpecialitiesByCondition(entity);
     }
 
 }

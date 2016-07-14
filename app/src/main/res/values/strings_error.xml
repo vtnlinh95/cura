@@ -24,4 +24,8 @@
     <string name="BookAptDayError">The date to book the appointment can not be in the past</string>
     <string name="ImageSizeError">Image size is too large</string>
     <string name="NoImageError">Image does not exist</string>
+    <string name="startDateError">Start date can\'t be after current date</string>
+    <string name="endDateErrorStart2">End date can\'t be before start date</string>
+    <string name="endDateErrorStart1">Please input start date</string>
+    <string name="endDateErrorCurrent">End date can\'t be after current date</string>
 </resources>

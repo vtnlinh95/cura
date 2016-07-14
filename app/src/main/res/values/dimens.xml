@@ -38,4 +38,6 @@
     <dimen name="timeHeight">80sp</dimen>
     <dimen name="topPadding">55sp</dimen>
     <dimen name="marginTopProfile">10sp</dimen>
+    <dimen name="calendarSize">30sp</dimen>
+    <dimen name="scrollHeight">200sp</dimen>
 </resources>

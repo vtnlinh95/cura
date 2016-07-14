@@ -1,8 +1,8 @@
 package com.kms.cura.controller;
 
 import com.kms.cura.entity.ConditionEntity;
+import com.kms.cura.entity.SymptomEntity;
 import com.kms.cura.model.ConditionModel;
-
 import java.util.List;
 
 /**
@@ -15,5 +15,9 @@ public class ConditionController {
 
     public static List<ConditionEntity> getAllCondition() {
         return ConditionModel.getInstance().getAllCondition();
+    }
+
+    public static List<ConditionEntity> getAssociatedCondition(SymptomEntity entity) throws Exception {
+        return ConditionModel.getInstance().getAssociatedCondition(entity);
     }
 }

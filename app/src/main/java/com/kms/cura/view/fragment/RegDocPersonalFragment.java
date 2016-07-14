@@ -51,12 +51,11 @@ public class RegDocPersonalFragment extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
         View myFragmentView = inflater.inflate(R.layout.fragment_reg_doc__personal, container, false);
         tvBirth = (TextView) myFragmentView.findViewById(R.id.tvBDate);
+        tvBirth.setVisibility(View.INVISIBLE);
         initButton(myFragmentView);
         initEdittext(myFragmentView);
         initSpinner(myFragmentView);
-
         reformData();
-
         return myFragmentView;
     }
 
@@ -144,6 +143,14 @@ public class RegDocPersonalFragment extends Fragment implements View.OnClickList
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             setSpecificDate(day, month + 1, year);
+            tvBirth.setVisibility(View.VISIBLE);
+            tvBirth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnChooseDate.callOnClick();
+                }
+            });
+
         }
     };
 
@@ -205,6 +212,7 @@ public class RegDocPersonalFragment extends Fragment implements View.OnClickList
                 spnSex.setSelection(0);
             else if (sex.equals(RegisterDoctorActivity.SEX_FEMALE))
                 spnSex.setSelection(1);
+            tvBirth.setVisibility(View.VISIBLE);
         } else {
             setDateString(day, month, year);
         }

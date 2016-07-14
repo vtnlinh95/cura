@@ -1,10 +1,13 @@
 package com.kms.cura.dal;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import com.kms.cura.dal.database.ConditionDatabaseHelper;
+import com.kms.cura.entity.ConditionEntity;
 import com.kms.cura.entity.Entity;
+import com.kms.cura.entity.SymptomEntity;
 
 public class ConditionDAL extends EntityDAL {
 	private static ConditionDAL _instance;
@@ -22,5 +25,11 @@ public class ConditionDAL extends EntityDAL {
 
 	public List<Entity> getAll() throws ClassNotFoundException, SQLException {
 		return new ConditionDatabaseHelper().queryAll();
+	}
+
+	public List<ConditionEntity> getAssociatedCondition(SymptomEntity entity)
+			throws SQLException, ClassNotFoundException {
+		ConditionDatabaseHelper dbh = new ConditionDatabaseHelper();
+		return dbh.queryAssociatedCondition(entity);
 	}
 }
