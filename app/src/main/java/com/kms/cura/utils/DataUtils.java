@@ -34,6 +34,16 @@ public class DataUtils {
         }
     }
 
+    public static List<AppointmentEntity> getApptListofDoctor(List<AppointmentEntity> list){
+        List<AppointmentEntity> entities = new ArrayList<>();
+        for(AppointmentEntity entity : list){
+            if (entity.getStatus() == 1){
+                entities.add(entity);
+            }
+        }
+        return entities;
+    }
+
     public static List<AppointmentEntity> getUpcomingAppts(List<AppointmentEntity> appts){
         List<AppointmentEntity> upcomingAppts = new ArrayList<>();
         Date current = gettheCurrent();

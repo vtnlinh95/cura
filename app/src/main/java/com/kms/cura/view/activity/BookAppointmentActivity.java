@@ -24,6 +24,7 @@ import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.utils.DataUtils;
 import com.kms.cura.view.adapter.StringListAdapter;
 
 import java.sql.Time;
@@ -55,6 +56,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     public static String YEAR_SELECTED = "YEAR_SELECTED";
     public static String LENGTH_SELECTED = "LENGTH_SELECTED";
     public static String TIME_FRAME = "TIME_FRAME";
+    public static String AVAILABLE = "AVAILABLE";
     public static int REQUEST_cODE = 200;
     public static int RESULT_OK = 400;
     private String hintText;
@@ -153,8 +155,8 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             }
         });
         ArrayList<String> timeFrame = (ArrayList<String>) getTimeFrame(workingHourSelected);
-
         bundle.putStringArrayList(TIME_FRAME,timeFrame);
+        bundle.putIntArray(AVAILABLE, getAvailable(timeFrame.size()));
         return null;
     }
 
@@ -188,9 +190,20 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         return position;
     }
 
-    private boolean[] getAvailable(int size){
-        boolean [] available = new boolean[size];
-        List<AppointmentEntity> appts = doctorUserEntity.getAppointmentList();
+    private int[] getAvailable(int size){
+        int [] available = new int[size];
+        for(int i=0; i< size; ++i){
+            available[i] = 1;
+        }
+        List<AppointmentEntity> appts = DataUtils.getApptListofDoctor(doctorUserEntity.getAppointmentList());
+        for(AppointmentEntity entity : appts){
+            int start = getpositionTime(entity.getStartTime())-size;
+            int end = getpositionTime(entity.getEndTime())-size;
+            for(int i=start; i<end; ++i){
+                available[i] = 0;
+            }
+        }
+        return available;
     }
 
 
