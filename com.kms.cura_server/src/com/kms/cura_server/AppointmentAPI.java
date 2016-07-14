@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import com.google.gson.Gson;
 import com.kms.cura.dal.AppointmentDAL;
 import com.kms.cura.entity.AppointSearchEntity;
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura_server.response.APIResponse;
 import com.kms.cura_server.response.AppointmentAPIResponse;
 
@@ -26,4 +27,14 @@ public final class AppointmentAPI {
 		}
 	}
 	
+	@POST
+	@Path("/createAppts")
+	public String createAppts(String jsonData){
+		AppointmentEntity appointmentEntity = new Gson().fromJson(jsonData, AppointmentEntity.getAppointmentType());
+		try {
+			return new AppointmentAPIResponse().successListApptsResponse(AppointmentDAL.getInstance().bookAppointment(appointmentEntity));
+		} catch (ClassNotFoundException | SQLException e) {
+			return APIResponse.unsuccessResponse(e.getMessage());
+		}
+	}
 }

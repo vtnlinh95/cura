@@ -32,4 +32,14 @@ public class AppointmentDAL {
 			appointmentDatabaseHelper.closeConnection();
 		}
 	}
+
+	public List<AppointmentEntity> bookAppointment(AppointmentEntity entity)
+			throws ClassNotFoundException, SQLException {
+		AppointmentDatabaseHelper dbh = new AppointmentDatabaseHelper();
+		try {
+			return dbh.bookAppointment(entity);
+		} finally {
+			dbh.closeConnection();
+		}
+	}
 }
