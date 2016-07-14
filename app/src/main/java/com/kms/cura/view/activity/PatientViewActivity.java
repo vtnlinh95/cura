@@ -1,5 +1,6 @@
 package com.kms.cura.view.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.controller.UserController;
+import com.kms.cura.entity.ConditionEntity;
 import com.kms.cura.view.fragment.HealthTrackerFragment;
 import com.kms.cura.view.fragment.PatientHomeFragment;
 import com.kms.cura.view.fragment.PatientProfileFragment;
@@ -37,19 +39,14 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         initDrawer();
         initNavigationView();
         initFragments();
+        navigate(getIntent().getStringExtra(NAVIGATION_KEY));
     }
 
     private void initFragments() {
         patientHomeFragment = PatientHomeFragment.newInstance(getApplicationContext(), this);
         patientProfileFragment = new PatientProfileFragment();
         patientHealthTrachkerFragment = new HealthTrackerFragment();
-        if (getIntent().getStringExtra(NAVIGATION_KEY) != null && getIntent().getStringExtra(NAVIGATION_KEY).equals(ConditionSymptomSearchActivity.TO_HEALTH_TRACKER)) {
-            changeFragment(patientHealthTrachkerFragment);
-        } else {
-            changeFragment(patientHomeFragment);
-        }
         patientSettingsFragment = new PatientSettingsFragment();
-        changeFragment(patientHomeFragment);
     }
 
     private void changeFragment(Fragment newFragment) {
@@ -75,13 +72,7 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
     }
 
     public void initToolBar() {
-//        patientToolbar = (Toolbar) findViewById(R.id.patientToolbar);
         patientToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(patientToolbar);
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        View content_toolbar = getLayoutInflater().inflate(R.layout.content_toolbar_patient_profile_view, null);
-//        Toolbar.LayoutParams layoutParams = new Toolbar.LayoutParams(Gravity.CENTER_HORIZONTAL);
-//        patientToolbar.addView(content_toolbar, layoutParams);
     }
 
 
@@ -167,4 +158,17 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
             dialog.dismiss();
         }
     }
+
+    private void navigate(String key) {
+        if (key != null) {
+            switch (key) {
+                case ConditionSymptomSearchActivity.TO_HEALTH_TRACKER:
+                    changeFragment(patientHealthTrachkerFragment);
+                    break;
+            }
+        } else {
+            changeFragment(patientHomeFragment);
+        }
+    }
+
 }

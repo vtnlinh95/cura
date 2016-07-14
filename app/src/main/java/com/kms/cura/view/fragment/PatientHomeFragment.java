@@ -30,6 +30,8 @@ import com.kms.cura.constant.EventConstant;
 import com.kms.cura.controller.ErrorController;
 import com.kms.cura.controller.SpecialityController;
 import com.kms.cura.controller.UserController;
+import com.kms.cura.entity.ConditionEntity;
+import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.event.EventBroker;
@@ -52,6 +54,7 @@ import java.util.Locale;
 
 public class PatientHomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, UpdateSpinner, ReloadData, EventHandler {
     private static final String FRAGMENT_NAME = "Home";
+    public static final String AUTO_FILL = "auto_fill";
     private EditText edtName, edtLocation;
     private RadioGroup rdbtngroupLocation;
     private RadioButton rdbtnCurrentLocation, rdbtnManualEnter;
@@ -116,6 +119,9 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         modifyToolbar();
         initButton(root);
         getActivity().setTitle(FRAGMENT_NAME);
+        if (getArguments().getBoolean(AUTO_FILL, false)) {
+            autoFillSpeciality(getArguments());
+        }
         return root;
     }
 
@@ -303,8 +309,9 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
     private Bundle createBundle() {
         Bundle bundle = getArguments();
-        bundle.putBooleanArray(PatientViewActivity.PATIENT, specialityAdapter.getSelectedBoolean());
-
+        if (specialityAdapter != null) {
+            bundle.putBooleanArray(PatientViewActivity.PATIENT, specialityAdapter.getSelectedBoolean());
+        }
         return bundle;
     }
 
@@ -395,5 +402,57 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         data = data.replaceAll("Danang","Da Nang");
         data = data.trim();
         return data;
+    }
+
+    private void autoFillSpeciality(Bundle bundle) {
+        final ConditionEntity entity = new ConditionEntity(bundle.getString(ConditionEntity.ID), bundle.getString(ConditionEntity.NAME), bundle.getString(ConditionEntity.DESCRIPTION));
+        new AsyncTask<Object, Void, Void>() {
+            private Exception exception = null;
+            private List<SpecialityEntity> specialityEntities;
+            @Override
+            protected void onPreExecute() {
+                showProgressDialog();
+            }
+
+            @Override
+            protected Void doInBackground(Object[] params) {
+                try {
+                    specialityEntities = SpecialityController.getByCondition(entity);
+                } catch (Exception e) {
+                    exception = e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                hideProgressDialog();
+                if (exception != null) {
+                    ErrorController.showDialogRefresh(getActivity(), "Error : " + exception.getMessage(), reloadData);
+                    return;
+                } else {
+                    setAutoFilledData(specialityEntities);
+                }
+            }
+        }.execute();
+    }
+
+    private void setAutoFilledData(List<SpecialityEntity> specialityEntities) {
+        speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
+        speciality.add(HINT_TEXT);
+        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, getAutoFilledData(specialityEntities), updateSpinner);
+        spnSpeciality.setAdapter(specialityAdapter);
+        spnSpeciality.setSelection(specialityAdapter.getCount());
+    }
+
+    private boolean[] getAutoFilledData(List<SpecialityEntity> specialityEntities) {
+        boolean b[] = new boolean[speciality.size()];
+        for (int i = 0; i < specialityEntities.size(); ++i) {
+            for (int j = 0; j < speciality.size(); ++j)
+            if (specialityEntities.get(i).getName().equals(speciality.get(j))) {
+                b[j] = true;
+            }
+        }
+        return b;
     }
 }

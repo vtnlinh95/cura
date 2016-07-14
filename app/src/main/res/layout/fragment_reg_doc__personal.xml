@@ -64,7 +64,8 @@
                 android:layout_gravity="center"
                 android:gravity="bottom"
                 android:fontFamily="sans-serif"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:layout_marginLeft="@dimen/padding_16"/>
         </LinearLayout>
 
         <LinearLayout
@@ -89,7 +90,10 @@
                 android:textSize="@dimen/docText_18"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/black"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/padding_8"
+                android:paddingRight="@dimen/padding_16"
+                android:paddingLeft="@dimen/padding_16" />
             <ImageButton
                 android:layout_width="@dimen/spinner_40"
                 android:layout_height="@dimen/spinner_40"

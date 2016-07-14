@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.entity.HealthEntity;
@@ -106,13 +105,13 @@ public class HealthTrackerFragment extends Fragment implements Toolbar.OnMenuIte
         Toolbar healthTrackerToolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         healthTrackerToolbar.getMenu().clear();
         healthTrackerToolbar.setTitle(getString(R.string.health_tracker));
-        healthTrackerToolbar.inflateMenu(R.menu.menu_health_tracker);
+        healthTrackerToolbar.inflateMenu(R.menu.menu_add);
         healthTrackerToolbar.setOnMenuItemClickListener(this);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.btnAddConSym) {
+        if (item.getItemId() == R.id.btnAdd) {
             Intent intent = new Intent(getActivity(), ConditionSymptomSearchActivity.class);
             startActivity(intent);
         }

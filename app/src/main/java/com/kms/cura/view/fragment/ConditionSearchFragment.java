@@ -22,12 +22,14 @@ import android.widget.Toast;
 import com.kms.cura.R;
 import com.kms.cura.controller.ConditionController;
 import com.kms.cura.entity.ConditionEntity;
+import com.kms.cura.view.activity.ConditionInfoActivity;
 import com.kms.cura.view.activity.ConditionSymptomSearchActivity;
 import com.kms.cura.view.activity.PatientViewActivity;
 import com.kms.cura.view.adapter.FilterAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 
 public class ConditionSearchFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener, AdapterView.OnItemClickListener, TextWatcher {
 
@@ -118,7 +120,11 @@ public class ConditionSearchFragment extends Fragment implements SearchView.OnQu
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ConditionEntity entity = conditionEntities.get((int) adapter.getItemId(position));
-        Toast.makeText(getActivity(), entity.getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), ConditionInfoActivity.class);
+        intent.putExtra(ConditionEntity.ID, entity.getId());
+        intent.putExtra(ConditionEntity.NAME, entity.getName());
+        intent.putExtra(ConditionEntity.DESCRIPTION, entity.getDescription());
+        startActivity(intent);
     }
 
     private void changeToFragment(Fragment fragment) {
@@ -155,4 +161,5 @@ public class ConditionSearchFragment extends Fragment implements SearchView.OnQu
     public void afterTextChanged(Editable s) {
 
     }
+
 }

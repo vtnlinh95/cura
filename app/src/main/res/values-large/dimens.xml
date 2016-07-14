@@ -29,4 +29,6 @@
     <dimen name="timeHeight">100sp</dimen>
     <dimen name="topPadding">65sp</dimen>
     <dimen name="marginTopProfile">15sp</dimen>
+    <dimen name="calendarSize">50sp</dimen>
+    <dimen name="scrollHeight">300sp</dimen>
 </resources>
