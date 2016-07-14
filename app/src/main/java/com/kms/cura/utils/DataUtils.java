@@ -1,9 +1,12 @@
 package com.kms.cura.utils;
 
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.Entity;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -30,4 +33,34 @@ public class DataUtils {
             return src;
         }
     }
+
+    public static List<AppointmentEntity> getUpcomingAppts(List<AppointmentEntity> appts){
+        List<AppointmentEntity> upcomingAppts = new ArrayList<>();
+        Date current = gettheCurrent();
+        for(AppointmentEntity entity : appts){
+            if(entity.getApptDay().after(current)){
+                upcomingAppts.add(entity);
+            }
+        }
+        return upcomingAppts;
+    }
+
+    public static List<AppointmentEntity> getPastAppts(List<AppointmentEntity> appts){
+        List<AppointmentEntity> pastAppts = new ArrayList<>();
+        Date current = gettheCurrent();
+        for(AppointmentEntity entity : appts){
+            if(entity.getApptDay().before(current)){
+                pastAppts.add(entity);
+            }
+        }
+        return pastAppts;
+    }
+
+    private static Date gettheCurrent(){
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date date = calendar.getTime();
+        return new Date(date.getTime());
+    }
+
+
 }

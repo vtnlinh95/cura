@@ -206,6 +206,12 @@
     <string name="edit">Edit</string>
     <string name="done">Done</string>
     <string name="endDate">End date:</string>
+    <string name="Appointment">Appointments</string>
+    <string name="Pending">  PENDING  </string>
+    <string name="Rejected">  REJECTED  </string>
+    <string name="Cancel">  CANCELLED  </string>
+    <string name="Complete">  COMPLETED  </string>
+    <string name="Incomplete">  INCOMPLETE  </string>
     <string name="cancel">Cancel</string>
     <string name="add_title_condition">Details about your condition</string>
     <string name="add_title_symptom">Details about your symptom</string>
