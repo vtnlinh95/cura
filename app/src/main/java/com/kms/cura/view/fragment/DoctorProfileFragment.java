@@ -38,11 +38,23 @@ public class DoctorProfileFragment extends Fragment {
     private LinearLayout facilityLayout;
     private ExpandableListView listWorkingHour;
     private RatingBar ratingBar;
+    private DoctorUserEntity doctorUserEntity;
     private LayoutInflater inflater;
     private View root;
     private List<WorkingHourEntity> listWH;
 
     public DoctorProfileFragment() {
+
+    }
+
+    public static DoctorProfileFragment newInstance(DoctorUserEntity entity) {
+        DoctorProfileFragment fragment = new DoctorProfileFragment();
+        fragment.setDoctorUserEntity(entity);
+        return fragment;
+    }
+
+    public void setDoctorUserEntity(DoctorUserEntity doctorUserEntity) {
+        this.doctorUserEntity = doctorUserEntity;
     }
 
     @Nullable
@@ -51,12 +63,16 @@ public class DoctorProfileFragment extends Fragment {
         this.inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         root = this.inflater.inflate(R.layout.activity_doctor_profile_view,null);
         loadData();
-        modifyToolbar();
+        if(CurrentUserProfile.getInstance().isDoctor()) {
+            modifyToolbar();
+        }
         return root;
     }
 
     public void loadData() {
-        DoctorUserEntity doctorUserEntity = (DoctorUserEntity) CurrentUserProfile.getInstance().getEntity();
+        if(CurrentUserProfile.getInstance().isDoctor()) {
+            doctorUserEntity = (DoctorUserEntity) CurrentUserProfile.getInstance().getEntity();
+        }
         txtName = loadText(doctorUserEntity.getName(), R.id.txtDoctorName);
         txtDegree = loadText(doctorUserEntity.getDegree().getName(), R.id.txtDoctorDegree);
         txtSpeciality = loadText(getSpecialityName(doctorUserEntity), R.id.txtDoctorSpecialties);

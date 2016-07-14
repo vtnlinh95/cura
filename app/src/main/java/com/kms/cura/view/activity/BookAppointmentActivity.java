@@ -19,11 +19,16 @@ import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.controller.ErrorController;
+import com.kms.cura.entity.OpeningHour;
+import com.kms.cura.entity.WorkingHourEntity;
+import com.kms.cura.entity.json.JsonToEntityConverter;
+import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.view.adapter.StringListAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -32,7 +37,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     private Spinner spnFacilities, spnApptLength;
     private Button btnRequestAppt, btnChooseDate;
     private LinearLayout btnChooseTime;
-    private TextView txtDate, txtTime;
+    private TextView txtDate, txtTime, txtDoctorName;
     private EditText edtComment;
     private ImageView btnBack;
     private List<String> doctorFacilityName;
@@ -50,12 +55,17 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     public static int REQUEST_cODE = 200;
     public static int RESULT_OK = 400;
     private String hintText;
+    private String data;
+    private List<WorkingHourEntity> list;
+    private DoctorUserEntity doctorUserEntity;
     private boolean selectDate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_appointment);
+        data = getIntent().getStringExtra(SearchActivity.DOCTOR_SELECTED);
+        doctorUserEntity = JsonToEntityConverter.convertJsonStringToEntity(data, DoctorUserEntity.getDoctorEntityType());
         initView();
     }
 
@@ -66,6 +76,8 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     }
 
     public void initView() {
+        txtDoctorName = (TextView) findViewById(R.id.txtDoctorName);
+        txtDoctorName.setText(doctorUserEntity.getName());
         btnChooseDate = initButton(R.id.btnChooseDate);
         btnChooseTime = (LinearLayout) findViewById(R.id.btnChoseTime);
         btnRequestAppt = initButton(R.id.btnRequestAppt);
@@ -102,12 +114,44 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         apptLength = new ArrayList<>();
         Collections.addAll(apptLength, length);
         apptLength.add(hintText);
+        list = doctorUserEntity.getWorkingTime();
+        setUpSpinnerFacility();
+    }
+
+    private void setUpSpinnerFacility(){
         doctorFacilityName = new ArrayList<>();
-        doctorFacilityName.add("A");
-        doctorFacilityName.add("B");
-        doctorFacilityName.add("C");
+        for(WorkingHourEntity entity: list){
+            doctorFacilityName.add(entity.getFacilityEntity().getName());
+        }
         doctorFacilityName.add(hintText);
     }
+
+    private boolean[] getDataFromSelected(int position){
+        Calendar calendar = new GregorianCalendar(year, month - 1, day);
+        int dateofWeek = calendar.get(Calendar.DAY_OF_WEEK)-1;
+        List<OpeningHour> workingHour = list.get(position).getWorkingTime();
+        List<OpeningHour> workingHourSelected = new ArrayList<>();
+        for(OpeningHour hour : workingHour){
+            if(hour.getDayOfTheWeek().getCode() == dateofWeek){
+                workingHourSelected.add(hour);
+            }
+        }
+        Collections.sort(workingHourSelected, new Comparator<OpeningHour>() {
+            @Override
+            public int compare(OpeningHour lhs, OpeningHour rhs) {
+                if(lhs.getOpenTime().before(rhs.getOpenTime()) &&
+                        lhs.getCloseTime().before(rhs.getCloseTime())){
+                    return -1;
+                }
+                else{
+                    return 1;
+                }
+            }
+        });
+        return null;
+    }
+
+
 
     public void initTextView() {
         txtDate = (TextView) findViewById(R.id.txtDate);
