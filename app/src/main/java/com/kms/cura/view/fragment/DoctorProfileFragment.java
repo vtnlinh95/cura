@@ -38,25 +38,41 @@ public class DoctorProfileFragment extends Fragment {
     private LinearLayout facilityLayout;
     private ExpandableListView listWorkingHour;
     private RatingBar ratingBar;
+    private DoctorUserEntity doctorUserEntity;
     private LayoutInflater inflater;
     private View root;
     private List<WorkingHourEntity> listWH;
 
     public DoctorProfileFragment() {
+
+    }
+
+    public static DoctorProfileFragment newInstance(DoctorUserEntity entity) {
+        DoctorProfileFragment fragment = new DoctorProfileFragment();
+        fragment.setDoctorUserEntity(entity);
+        return fragment;
+    }
+
+    public void setDoctorUserEntity(DoctorUserEntity doctorUserEntity) {
+        this.doctorUserEntity = doctorUserEntity;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        root = this.inflater.inflate(R.layout.activity_doctor_profile_view,null);
+        root = this.inflater.inflate(R.layout.activity_doctor_profile_view, null);
         loadData();
-        modifyToolbar();
+        if (CurrentUserProfile.getInstance().isDoctor()) {
+            modifyToolbar();
+        }
         return root;
     }
 
     public void loadData() {
-        DoctorUserEntity doctorUserEntity = (DoctorUserEntity) CurrentUserProfile.getInstance().getEntity();
+        if (CurrentUserProfile.getInstance().isDoctor()) {
+            doctorUserEntity = (DoctorUserEntity) CurrentUserProfile.getInstance().getEntity();
+        }
         txtName = loadText(doctorUserEntity.getName(), R.id.txtDoctorName);
         txtDegree = loadText(doctorUserEntity.getDegree().getName(), R.id.txtDoctorDegree);
         txtSpeciality = loadText(getSpecialityName(doctorUserEntity), R.id.txtDoctorSpecialties);
@@ -167,8 +183,8 @@ public class DoctorProfileFragment extends Fragment {
         for (int i = 0; i < 7; ++i) {
             HashMap<String, OpeningHour> workingtime = new HashMap<>();
             for (WorkingHourEntity workingHourEntity : listWH) {
-                for(int k =0; k<workingHourEntity.getWorkingTime().size(); ++k){
-                    if(workingHourEntity.getWorkingTime().get(k).getDayOfTheWeek().getCode() == i){
+                for (int k = 0; k < workingHourEntity.getWorkingTime().size(); ++k) {
+                    if (workingHourEntity.getWorkingTime().get(k).getDayOfTheWeek().getCode() == i) {
                         workingtime.put(workingHourEntity.getFacilityEntity().getName(), workingHourEntity.getWorkingTime().get(k));
                     }
                 }
@@ -180,7 +196,7 @@ public class DoctorProfileFragment extends Fragment {
 
     private void setListViewHeight(ExpandableListView listView,
                                    int group) {
-        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+        ExpandableListAdapter listAdapter = listView.getExpandableListAdapter();
         int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
                 View.MeasureSpec.EXACTLY);
         int totalHeight = getTotalHeight(listView, listAdapter, group, desiredWidth);

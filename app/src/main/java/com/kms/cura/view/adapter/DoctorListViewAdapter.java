@@ -72,12 +72,6 @@ public class DoctorListViewAdapter extends BaseAdapter {
         holder.name.setText(result.get(position).getName());
         holder.speciality.setText(getSpecialityString(position));
         holder.raiting.setRating((float) result.get(position).getRating());
-        rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "You Clicked " + EntityToJsonConverter.convertEntityToJson(result.get(position)).toString(), Toast.LENGTH_LONG).show();
-            }
-        });
         return rowView;
     }
 
