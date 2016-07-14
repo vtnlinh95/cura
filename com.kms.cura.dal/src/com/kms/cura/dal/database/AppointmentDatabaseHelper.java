@@ -94,6 +94,10 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 		return createSelectWherePreparedStatement(getColumnValueMapForEntity(entity), AppointmentColumn.TABLE_NAME);
 	}
 
+	private PreparedStatement getinsertAppointmentQuery(AppointmentEntity entity) throws SQLException {
+		return createInsertPreparedStatement(getColumnValueMapForEntity(entity), AppointmentColumn.TABLE_NAME);
+	}
+
 	private Map<String, Object> getColumnValueMapForEntity(AppointmentEntity entity) {
 		if (entity == null) {
 			// handle error;
@@ -112,10 +116,51 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 		if (entity.getApptDay() != null) {
 			columnValueMap.put(AppointmentColumn.STATUS.getColumnName(), entity.getStatus());
 		}
+		if (entity.getStartTime() != null) {
+			columnValueMap.put(AppointmentColumn.START_TIME.getColumnName(), entity.getStartTime());
+		}
+		if (entity.getEndTime() != null) {
+			columnValueMap.put(AppointmentColumn.END_TIME.getColumnName(), entity.getEndTime());
+		}
 		if (entity.getStatus() != -1) {
 			columnValueMap.put(AppointmentColumn.APPT_DAY.getColumnName(), entity.getApptDay());
 		}
 		return columnValueMap;
+	}
+
+	public List<AppointmentEntity> bookAppointment(AppointmentEntity entity)
+			throws SQLException, ClassNotFoundException {
+		List<AppointmentEntity> patientAppts;
+		try {
+			con.setAutoCommit(false);
+			createAppointment(entity);
+			AppointmentEntity search = new AppointmentEntity(entity.getPatientUserEntity(), null, null, null, null,
+					null, -1);
+			patientAppts = getAppointment(new AppointSearchEntity(search), entity.getPatientUserEntity(), null);
+			con.commit();
+			return patientAppts;
+		} catch (SQLException e) {
+			if (con != null) {
+				System.err.print("Transaction is being rolled back");
+				con.rollback();
+			}
+			throw e;
+		} finally {
+			con.setAutoCommit(true);
+		}
+	}
+
+	private void createAppointment(AppointmentEntity entity) throws SQLException {
+		PreparedStatement stmt = null;
+		try {
+			stmt = getinsertAppointmentQuery(entity);
+			stmt.executeUpdate();
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+
 	}
 
 }

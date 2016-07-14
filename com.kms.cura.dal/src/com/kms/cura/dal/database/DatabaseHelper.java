@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -183,6 +184,8 @@ public abstract class DatabaseHelper {
 				stmt.setDate(count, (Date) valueEntry.getValue());
 			} else if (valueEntry.getValue() instanceof Double) {
 				stmt.setDouble(count, (Double) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof Time){
+				stmt.setTime(count, (Time) valueEntry.getValue());
 			} else {
 				// handle for null
 				stmt.setString(count, null);
