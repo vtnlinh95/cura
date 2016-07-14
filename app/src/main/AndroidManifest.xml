@@ -42,7 +42,6 @@
         <activity
             android:name=".view.activity.DoctorViewActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"></activity>
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.activity.ConditionSymptomSearchActivity"
@@ -68,10 +67,13 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.activity.ProfilePictureActivity" />
-        <activity android:name=".view.activity.ChangePasswordActivity"></activity>
+        <activity android:name=".view.activity.ChangePasswordActivity" />
         <activity android:name=".view.activity.DoctorBasicSettingsActivity"></activity>
         <activity android:name=".view.activity.DoctorProfessionalSettingsActivity"></activity>
         <activity android:name=".view.activity.DoctorWorkingHourSettingsActivity" />
+        <activity android:name=".view.activity.PatientHealthDetailActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.activity.OtherSettingsActivity"
             android:label="@string/title_activity_other_settings"

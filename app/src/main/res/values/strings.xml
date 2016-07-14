@@ -203,6 +203,8 @@
     <string name="commonSymptom">Common Symptoms</string>
     <string name="findDoctor">Find a doctor</string>
     <string name="startDate">Start date:</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
     <string name="endDate">End date:</string>
     <string name="cancel">Cancel</string>
     <string name="add_title_condition">Details about your condition</string>
