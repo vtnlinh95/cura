@@ -25,6 +25,7 @@ import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.view.adapter.StringListAdapter;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -52,6 +53,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     public static String MONTH_SELECTED = "MONTH_SELECTED";
     public static String YEAR_SELECTED = "YEAR_SELECTED";
     public static String LENGTH_SELECTED = "LENGTH_SELECTED";
+    public static String TIME_FRAME = "TIME_FRAME";
     public static int REQUEST_cODE = 200;
     public static int RESULT_OK = 400;
     private String hintText;
@@ -126,9 +128,10 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         doctorFacilityName.add(hintText);
     }
 
-    private boolean[] getDataFromSelected(int position){
+    private Bundle getDataFromSelected(int position){
+        Bundle bundle = new Bundle();
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
-        int dateofWeek = calendar.get(Calendar.DAY_OF_WEEK)-1;
+        int dateofWeek = calendar.get(Calendar.DAY_OF_WEEK)-2;
         List<OpeningHour> workingHour = list.get(position).getWorkingTime();
         List<OpeningHour> workingHourSelected = new ArrayList<>();
         for(OpeningHour hour : workingHour){
@@ -148,9 +151,39 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
                 }
             }
         });
+        bundle.putStringArrayList(TIME_FRAME, (ArrayList<String>) getTimeFrame(workingHourSelected));
         return null;
     }
 
+    private List<String> getTimeFrame(List<OpeningHour> list){
+        if(list.size() == 0){
+            return null;
+        }
+        int start = getpositionTime(list.get(0).getOpenTime());
+        int end = getpositionTime(list.get(list.size()-1).getCloseTime());
+        String [] timeFrame = getResources().getStringArray(R.array.TimeFrame48);
+        ArrayList<String> selectedTimeFrame = new ArrayList<>();
+        for (int i=start; i<end; ++i){
+            selectedTimeFrame.add(timeFrame[i]);
+        }
+        return selectedTimeFrame;
+    }
+
+    private int getpositionTime(Time src){
+        int position = 0;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(src);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+        position = hour*2;
+        if(min ==30){
+            position+=1;
+        }
+        else if(min > 30){
+            position += 2;
+        }
+        return position;
+    }
 
 
     public void initTextView() {
@@ -186,6 +219,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             Intent toChooseTime = new Intent(this, ChooseTimeActivity.class);
             Bundle bundle = createBundle();
             toChooseTime.putExtras(bundle);
+            getDataFromSelected(spnFacilities.getSelectedItemPosition());
             startActivityForResult(toChooseTime, REQUEST_cODE);
         } else {
             Toast.makeText(this, getResources().getString(R.string.BookAptError), Toast.LENGTH_SHORT).show();
