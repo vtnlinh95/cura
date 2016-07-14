@@ -32,8 +32,6 @@
                 android:layout_marginRight="?attr/actionBarSize"
                 android:textAllCaps="true" />
         </android.support.v7.widget.Toolbar>
-
-
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout

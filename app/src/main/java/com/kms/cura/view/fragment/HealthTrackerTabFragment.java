@@ -1,5 +1,6 @@
 package com.kms.cura.view.fragment;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.view.activity.PatientHealthDetailActivity;
 import com.kms.cura.view.adapter.HealthListAdapter;
 
 import java.util.ArrayList;
@@ -50,14 +52,16 @@ public class HealthTrackerTabFragment extends Fragment implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (state == HealthTrackerFragment.STATE_CURRENT) {
-            Toast.makeText(getActivity(), "Click " + healthList.get(position) + " at position " + (position + 1), Toast.LENGTH_SHORT).show(); // just for testing UI
-            // navigate to Patient's Conditions/Symptoms Details screen
-
+            navigateToDetailPage(state, position);
         } else if (state == HealthTrackerFragment.STATE_PAST) {
-            Toast.makeText(getActivity(), "Click " + healthList.get(position) + " at position " + (position + 1), Toast.LENGTH_SHORT).show(); // just for testing UI
-            // navigate to Patient's Conditions/Symptoms Details screen
-
+            navigateToDetailPage(state, position);
         }
     }
 
+    private void navigateToDetailPage(int state, int position) {
+        Intent intent = new Intent(getActivity(), PatientHealthDetailActivity.class);
+        intent.putExtra(PatientHealthDetailActivity.STATE, state);
+        intent.putExtra(PatientHealthDetailActivity.KEY_POSITION, position);
+        startActivity(intent);
+    }
 }
