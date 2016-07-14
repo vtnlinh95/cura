@@ -20,4 +20,5 @@ public class Settings {
     public static final String GET_ASSOCIATED_CONDITION = "/condition/getAssociatedCondition";
     public static final String GET_ASSOCIATED_SYMPTOM = "/symptom/getAssociatedSymptom";
     public static final String GET_SPECIALITY_CONDITION = "/speciality/getByCondition";
+    public static final String GET_APPT = "/appt/getBookAppts";
 }

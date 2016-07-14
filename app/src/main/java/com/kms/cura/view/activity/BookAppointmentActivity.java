@@ -3,7 +3,9 @@ package com.kms.cura.view.activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,12 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.AppointmentController;
+import com.kms.cura.controller.DegreeController;
 import com.kms.cura.controller.ErrorController;
+import com.kms.cura.controller.FacilityController;
+import com.kms.cura.controller.SpecialityController;
+import com.kms.cura.entity.AppointSearchEntity;
 import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
+import com.kms.cura.entity.user.PatientUserEntity;
+import com.kms.cura.utils.CurrentUserProfile;
 import com.kms.cura.utils.DataUtils;
 import com.kms.cura.view.adapter.StringListAdapter;
 
@@ -64,6 +73,8 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     private List<WorkingHourEntity> list;
     private DoctorUserEntity doctorUserEntity;
     private boolean selectDate = false;
+    private List<AppointmentEntity> doctorAppts;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +202,38 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     }
 
     private int[] getAvailable(int size){
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        showProgressDialog();
+        AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
+            private Exception exception = null;
+
+            @Override
+            protected Void doInBackground(Object[] params) {
+                try {
+                    Calendar calendar = new GregorianCalendar(year,month-1,day);
+                    AppointmentEntity entity = new AppointmentEntity((PatientUserEntity)CurrentUserProfile.getInstance().getEntity(),
+                            doctorUserEntity,list.get(spnFacilities.getSelectedItemPosition()).getFacilityEntity(),
+                            new java.sql.Date(calendar.getTime().getTime()),null,null,
+                            AppointmentEntity.ACCEPTED_STT);
+                    AppointSearchEntity search = new AppointSearchEntity(entity);
+                    doctorAppts = AppointmentController.getAppointmentList(search);
+                } catch (Exception e) {
+                    exception = e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                hideProgressDialog();
+                if (exception != null) {
+                    ErrorController.showDialog(BookAppointmentActivity.this, "Error : " + exception.getMessage());
+                }
+            }
+        };
+        task.execute();
         int [] available = new int[size];
         for(int i=0; i< size; ++i){
             available[i] = 1;
@@ -312,4 +355,13 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         return (current.after(selected));
     }
 
+    private void showProgressDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }
 }
