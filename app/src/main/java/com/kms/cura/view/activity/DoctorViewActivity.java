@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.kms.cura.R;
 import com.kms.cura.controller.UserController;
 import com.kms.cura.view.fragment.DoctorHomeFragment;
+import com.kms.cura.view.fragment.DoctorSettingsFragment;
 import com.kms.cura.view.fragment.DoctorProfileFragment;
 
 public class DoctorViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DialogInterface.OnClickListener {
@@ -36,8 +37,8 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
     }
 
     private void initFragments() {
-        //doctorHomeFragment = new DoctorHomeFragment();
         doctorProfileFragment = new DoctorProfileFragment();
+        doctorSettingsFragment = new DoctorSettingsFragment();
         changeFragment(doctorProfileFragment);
     }
 
@@ -119,7 +120,7 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_messages) {
             Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
-            Toast.makeText(this, "settings", Toast.LENGTH_SHORT).show();
+            changeFragment(doctorSettingsFragment);
         } else if (id == R.id.nav_signOut) {
             showDialogSignOut();
         }

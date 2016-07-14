@@ -14,7 +14,6 @@ import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.dal.mapping.Doctor_FacilityColumn;
 import com.kms.cura.dal.mapping.Doctor_SpecialityColumn;
 import com.kms.cura.dal.mapping.FacilityColumn;
-import com.kms.cura.dal.mapping.PatientColumn;
 import com.kms.cura.dal.mapping.SpecialityColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.DegreeEntity;
@@ -24,7 +23,6 @@ import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
-import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
@@ -301,7 +299,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		DoctorUserEntity doctor = search.getDoctor();
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT DISTINCT ");
-		
+
 		sb.append(DoctorColumn.USER_ID.getColumnName());
 		sb.append(", ");
 		sb.append(UserColumn.TABLE_NAME);
@@ -351,7 +349,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		sb.append(Doctor_FacilityColumn.FACILITY_ID.getColumnName());
 		sb.append(" = ");
 		sb.append(FacilityColumn.ID.getColumnName());
-		
+
 		sb.append(" JOIN ");
 		sb.append(UserColumn.TABLE_NAME);
 		sb.append(" ON ");
@@ -362,7 +360,7 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		sb.append(DoctorColumn.TABLE_NAME);
 		sb.append(".");
 		sb.append(DoctorColumn.USER_ID.getColumnName());
-		
+
 		sb.append(" JOIN ");
 		sb.append(Doctor_SpecialityColumn.TABLE_NAME);
 		sb.append(" ON ");
@@ -549,8 +547,8 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		return (DoctorUserEntity) queryUserEntitybyId(DoctorColumn.TABLE_NAME, id,
 				DoctorColumn.USER_ID.getColumnName());
 	}
-	
-	public List<DoctorUserEntity> getAllDoctor() throws SQLException, ClassNotFoundException{
+
+	public List<DoctorUserEntity> getAllDoctor() throws SQLException, ClassNotFoundException {
 		List<DoctorUserEntity> list = new ArrayList<>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -567,19 +565,19 @@ public class DoctorUserDatabaseHelper extends UserDatabaseHelper {
 		builder.append(UserColumn.TABLE_NAME);
 		builder.append(".");
 		builder.append(UserColumn.ID.getColumnName());
-		try{
+		try {
 			stmt = con.prepareStatement(builder.toString());
 			rs = stmt.executeQuery();
-			if(rs != null){
-				while(rs.next()){
+			if (rs != null) {
+				while (rs.next()) {
 					list.add(getEntityFromResultSet(rs));
 				}
 			}
-		}finally{
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
-			if(stmt != null){
+			if (stmt != null) {
 				stmt.close();
 			}
 		}

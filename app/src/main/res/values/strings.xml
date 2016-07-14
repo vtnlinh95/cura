@@ -67,6 +67,18 @@
         <item>Password</item>
     </string-array>
 
+    <string-array name="DoctorSettings">
+        <item>Picture</item>
+        <item>Basic Information</item>
+        <item>Professional Information</item>
+        <item>Password</item>
+    </string-array>
+
+    <string-array name="ProfessionalSettings">
+        <item>Working Hour</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="Insurance">
         <item>Aetna</item>
         <item>Altius</item>
@@ -198,4 +210,13 @@
     <string name="warning">Warning</string>
     <string name="seeMore">see more…</string>
     <string name="seeLess">see less</string>
+    <string name="add_specialties">Add Specialties</string>
+    <string name="add_facilities">Add Facilities</string>
+    <string name="specialties">Specialities</string>
+    <string name="facilities">Facilities</string>
+    <string name="title_activity_other_settings">OtherSettingsActivity</string>
+    <string name="qualify_degree">Qualifying Degree</string>
+    <string name="experience_start">Experience Start</string>
+    <string name="price_range">Price Range</string>
+    <string name="hyphen">-</string>
 </resources>

@@ -29,7 +29,8 @@ public class DoctorUserEntity extends UserEntity {
     private Date birth;
     private String insurance;
     private List<AppointmentEntity> appointmentList = new ArrayList<>();
-	public static String MALE = "M";
+    public static String MALE = "M";
+
     public DoctorUserEntity(String id, String name, String email, String password, String phone, DegreeEntity degree,
                             List<SpecialityEntity> speciality, double rating, int experience, double minPrice, double maxPrice,
                             List<WorkingHourEntity> workingTime, String gender, Date birth, String insurance) {
@@ -57,7 +58,7 @@ public class DoctorUserEntity extends UserEntity {
         this.gender = gender;
         this.birth = birth;
     }
-    
+
     public String getPhone() {
         return phone;
     }
@@ -115,14 +116,14 @@ public class DoctorUserEntity extends UserEntity {
     }
 
     public List<WorkingHourEntity> getWorkingTime() {
-		return workingTime;
-	}
+        return workingTime;
+    }
 
-	public void setWorkingTime(List<WorkingHourEntity> workingTime) {
-		this.workingTime = workingTime;
-	}
+    public void setWorkingTime(List<WorkingHourEntity> workingTime) {
+        this.workingTime = workingTime;
+    }
 
-	public String getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -144,22 +145,29 @@ public class DoctorUserEntity extends UserEntity {
 
     public void setInsurance(String insurance) {
         this.insurance = insurance;
-    }
-    
+    }    
 
 	public List<AppointmentEntity> getAppointmentList() {
 		return appointmentList;
 	}
 
-	public void setAppointmentList(List<AppointmentEntity> appointmentList) {
-		this.appointmentList = appointmentList;
-	}
-	
-	public void addAllAppointmentList(List<AppointmentEntity> appointmentList){
-		this.appointmentList.addAll(appointmentList);
-	}
-	
-	@Override
+    public void setAppointmentList(List<AppointmentEntity> appointmentList) {
+        this.appointmentList = appointmentList;
+    }
+
+    public void addAllAppointmentList(List<AppointmentEntity> appointmentList) {
+        this.appointmentList.addAll(appointmentList);
+    }
+
+    public List<FacilityEntity> getFacilities() {
+        List<FacilityEntity> result = new ArrayList<FacilityEntity>();
+        for (WorkingHourEntity workingHourEntity : this.workingTime) {
+            result.add(workingHourEntity.getFacilityEntity());
+        }
+        return result;
+    }
+
+    @Override
     public int getType() {
         return DOCTOR_TYPE;
     }
@@ -168,7 +176,7 @@ public class DoctorUserEntity extends UserEntity {
         return new TypeToken<DoctorUserEntity>() {
         }.getType();
     }
-    
+
     public String getPriceRange() {
         StringBuilder builder = new StringBuilder();
         builder.append(getMinPrice());
@@ -181,7 +189,7 @@ public class DoctorUserEntity extends UserEntity {
         return new TypeToken<Collection<DoctorUserEntity>>() {
         }.getType();
     }
-    
-    
+
+
 }
 
