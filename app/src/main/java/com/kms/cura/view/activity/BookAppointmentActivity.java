@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.controller.ErrorController;
+import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.json.JsonToEntityConverter;
@@ -151,7 +152,9 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
                 }
             }
         });
-        bundle.putStringArrayList(TIME_FRAME, (ArrayList<String>) getTimeFrame(workingHourSelected));
+        ArrayList<String> timeFrame = (ArrayList<String>) getTimeFrame(workingHourSelected);
+
+        bundle.putStringArrayList(TIME_FRAME,timeFrame);
         return null;
     }
 
@@ -183,6 +186,11 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             position += 2;
         }
         return position;
+    }
+
+    private boolean[] getAvailable(int size){
+        boolean [] available = new boolean[size];
+        List<AppointmentEntity> appts = doctorUserEntity.getAppointmentList();
     }
 
 
