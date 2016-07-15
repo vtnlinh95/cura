@@ -36,7 +36,7 @@ public class DoctorUserDAL extends UserDAL {
 		if (doctorUserEntity == null) {
 			return null;
 		}
-		AppointmentEntity entity = new AppointmentEntity(null, doctorUserEntity, null, null, null, null, -1);
+		AppointmentEntity entity = new AppointmentEntity(null, doctorUserEntity, null, null, null, null, -1,null,null);
 		AppointSearchEntity criteria = new AppointSearchEntity(entity);
 		List<AppointmentEntity> list = AppointmentDAL.getInstance().getAppointment(criteria, null, doctorUserEntity);
 		doctorUserEntity.addAllAppointmentList(list);
@@ -86,7 +86,12 @@ public class DoctorUserDAL extends UserDAL {
 			throws SQLException, ClassNotFoundException {
 		DoctorUserDatabaseHelper dbh = new DoctorUserDatabaseHelper();
 		try {
-			return dbh.searchDoctorFunction(search);
+			List<DoctorUserEntity> doctorUserEntities = dbh.searchDoctorFunction(search);
+			List<DoctorUserEntity> newDoctor = new ArrayList<>();
+			for(DoctorUserEntity entity : doctorUserEntities){
+				newDoctor.add(getAllReferenceAttributeforDoctor(entity));
+			}
+			return newDoctor;
 		} finally {
 			dbh.closeConnection();
 		}

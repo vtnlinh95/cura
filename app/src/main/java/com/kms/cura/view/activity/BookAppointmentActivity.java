@@ -3,16 +3,13 @@ package com.kms.cura.view.activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -20,13 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
-import com.kms.cura.controller.AppointmentController;
-import com.kms.cura.controller.DegreeController;
 import com.kms.cura.controller.ErrorController;
-import com.kms.cura.controller.FacilityController;
-import com.kms.cura.controller.SpecialityController;
-import com.kms.cura.entity.AppointSearchEntity;
 import com.kms.cura.entity.AppointmentEntity;
+import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.OpeningHour;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.json.JsonToEntityConverter;
@@ -36,12 +29,12 @@ import com.kms.cura.utils.CurrentUserProfile;
 import com.kms.cura.utils.DataUtils;
 import com.kms.cura.view.adapter.StringListAdapter;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -70,11 +63,13 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     public static int RESULT_OK = 400;
     private String hintText;
     private String data;
+    private List<String> time;
     private List<WorkingHourEntity> list;
     private DoctorUserEntity doctorUserEntity;
     private boolean selectDate = false;
-    private List<AppointmentEntity> doctorAppts;
-    private ProgressDialog pDialog;
+    private int dateofWeek = 0;
+    private String selectedStartTime;
+    private String selectedEndTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,119 +129,109 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         setUpSpinnerFacility();
     }
 
-    private void setUpSpinnerFacility(){
+    private void setUpSpinnerFacility() {
         doctorFacilityName = new ArrayList<>();
-        for(WorkingHourEntity entity: list){
+        for (WorkingHourEntity entity : list) {
             doctorFacilityName.add(entity.getFacilityEntity().getName());
         }
         doctorFacilityName.add(hintText);
     }
 
-    private Bundle getDataFromSelected(int position){
+    private Bundle getDataFromSelected(int position) {
         Bundle bundle = new Bundle();
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
-        int dateofWeek = calendar.get(Calendar.DAY_OF_WEEK)-2;
+        dateofWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2;
         List<OpeningHour> workingHour = list.get(position).getWorkingTime();
         List<OpeningHour> workingHourSelected = new ArrayList<>();
-        for(OpeningHour hour : workingHour){
-            if(hour.getDayOfTheWeek().getCode() == dateofWeek){
+        for (OpeningHour hour : workingHour) {
+            if (hour.getDayOfTheWeek().getCode() == dateofWeek) {
                 workingHourSelected.add(hour);
             }
         }
         Collections.sort(workingHourSelected, new Comparator<OpeningHour>() {
             @Override
             public int compare(OpeningHour lhs, OpeningHour rhs) {
-                if(lhs.getOpenTime().before(rhs.getOpenTime()) &&
-                        lhs.getCloseTime().before(rhs.getCloseTime())){
+                if (lhs.getOpenTime().before(rhs.getOpenTime()) &&
+                        lhs.getCloseTime().before(rhs.getCloseTime())) {
                     return -1;
-                }
-                else{
+                } else {
                     return 1;
                 }
             }
         });
-        ArrayList<String> timeFrame = (ArrayList<String>) getTimeFrame(workingHourSelected);
-        bundle.putStringArrayList(TIME_FRAME,timeFrame);
-        bundle.putIntArray(AVAILABLE, getAvailable(timeFrame.size()));
-        return null;
+        List<Integer> available = new ArrayList<>();
+        ArrayList<String> timeFrame = (ArrayList<String>) getTimeFrame(workingHourSelected, available);
+        bundle.putStringArrayList(TIME_FRAME, timeFrame);
+        bundle.putIntegerArrayList(AVAILABLE, (ArrayList<Integer>) available);
+        return bundle;
     }
 
-    private List<String> getTimeFrame(List<OpeningHour> list){
-        if(list.size() == 0){
+    private List<String> getTimeFrame(List<OpeningHour> list, List<Integer> newAvailable) {
+        if (list.size() == 0) {
             return null;
         }
+        String[] timeResource = getResources().getStringArray(R.array.Time48);
+        int[] available = getAvailable();
         int start = getpositionTime(list.get(0).getOpenTime());
-        int end = getpositionTime(list.get(list.size()-1).getCloseTime());
-        String [] timeFrame = getResources().getStringArray(R.array.TimeFrame48);
+        int end = getpositionTime(list.get(list.size() - 1).getCloseTime());
+        String[] timeFrame = getResources().getStringArray(R.array.TimeFrame48);
         ArrayList<String> selectedTimeFrame = new ArrayList<>();
-        for (int i=start; i<end; ++i){
+        time = new ArrayList<>();
+        for (int i = start; i < end; ++i) {
             selectedTimeFrame.add(timeFrame[i]);
+            newAvailable.add(available[i]);
+            time.add(timeResource[i]);
         }
         return selectedTimeFrame;
     }
 
-    private int getpositionTime(Time src){
+    private int getpositionTime(Time src) {
         int position = 0;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(src);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int min = calendar.get(Calendar.MINUTE);
-        position = hour*2;
-        if(min ==30){
-            position+=1;
-        }
-        else if(min > 30){
+        position = hour * 2;
+        if (min == 30) {
+            position += 1;
+        } else if (min > 30) {
             position += 2;
         }
         return position;
     }
 
-    private int[] getAvailable(int size){
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Loading...");
-        pDialog.setCancelable(false);
-        showProgressDialog();
-        AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
-            private Exception exception = null;
-
-            @Override
-            protected Void doInBackground(Object[] params) {
-                try {
-                    Calendar calendar = new GregorianCalendar(year,month-1,day);
-                    AppointmentEntity entity = new AppointmentEntity((PatientUserEntity)CurrentUserProfile.getInstance().getEntity(),
-                            doctorUserEntity,list.get(spnFacilities.getSelectedItemPosition()).getFacilityEntity(),
-                            new java.sql.Date(calendar.getTime().getTime()),null,null,
-                            AppointmentEntity.ACCEPTED_STT);
-                    AppointSearchEntity search = new AppointSearchEntity(entity);
-                    doctorAppts = AppointmentController.getAppointmentList(search);
-                } catch (Exception e) {
-                    exception = e;
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                hideProgressDialog();
-                if (exception != null) {
-                    ErrorController.showDialog(BookAppointmentActivity.this, "Error : " + exception.getMessage());
-                }
-            }
-        };
-        task.execute();
-        int [] available = new int[size];
-        for(int i=0; i< size; ++i){
+    private int[] getAvailable() {
+        List<AppointmentEntity> doctorApptswithDate = getApptsListbyDate(DataUtils.getAcceptedApptList(doctorUserEntity.getAppointmentList()));
+        List<AppointmentEntity> patientApptswithDate = getApptsListbyDate(DataUtils.getAcceptedApptList(((PatientUserEntity) CurrentUserProfile.getInstance().getEntity()).getAppointmentList()));
+        int[] available = new int[48];
+        for (int i = 0; i < 48; ++i) {
             available[i] = 1;
         }
-        List<AppointmentEntity> appts = DataUtils.getApptListofDoctor(doctorUserEntity.getAppointmentList());
-        for(AppointmentEntity entity : appts){
-            int start = getpositionTime(entity.getStartTime())-size;
-            int end = getpositionTime(entity.getEndTime())-size;
-            for(int i=start; i<end; ++i){
+        checkAvailable(available, doctorApptswithDate);
+        checkAvailable(available, patientApptswithDate);
+        return available;
+    }
+
+    private void checkAvailable(int[] available, List<AppointmentEntity> list) {
+        for (AppointmentEntity entity : list) {
+            int start = getpositionTime(entity.getStartTime());
+            int end = getpositionTime(entity.getEndTime());
+            for (int i = start; i < end; ++i) {
                 available[i] = 0;
             }
         }
-        return available;
+    }
+
+    private List<AppointmentEntity> getApptsListbyDate(List<AppointmentEntity> list) {
+        List<AppointmentEntity> doctorApptswithDate = new ArrayList<>();
+        Calendar calendar = new GregorianCalendar(year, month - 1, day);
+        java.sql.Date selected = new java.sql.Date(calendar.getTime().getTime());
+        for (AppointmentEntity entity : list) {
+            if (entity.getApptDay().getTime() == selected.getTime()) {
+                doctorApptswithDate.add(entity);
+            }
+        }
+        return doctorApptswithDate;
     }
 
 
@@ -265,8 +250,21 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             chooseTime();
         } else if (id == R.id.btnBack) {
             finish();
+        } else {
+            requestAppointment();
         }
 
+    }
+
+    private void requestAppointment() {
+        String cmt = edtComment.getText().toString();
+        FacilityEntity selectedFacility = list.get(spnFacilities.getSelectedItemPosition()).getFacilityEntity();
+        Calendar calendar = new GregorianCalendar(year, month - 1, day);
+        Date selectedDate = new Date(calendar.getTime().getTime());
+        Time startTime = Time.valueOf(selectedStartTime);
+        Time endTime = Time.valueOf(selectedEndTime);
+        AppointmentEntity entity = new AppointmentEntity((PatientUserEntity) CurrentUserProfile.getInstance().getEntity(),
+                doctorUserEntity, selectedFacility, selectedDate, startTime, endTime, AppointmentEntity.PENDING_STT, cmt, null);
     }
 
     private void chooseDate() {
@@ -283,7 +281,6 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             Intent toChooseTime = new Intent(this, ChooseTimeActivity.class);
             Bundle bundle = createBundle();
             toChooseTime.putExtras(bundle);
-            getDataFromSelected(spnFacilities.getSelectedItemPosition());
             startActivityForResult(toChooseTime, REQUEST_cODE);
         } else {
             Toast.makeText(this, getResources().getString(R.string.BookAptError), Toast.LENGTH_SHORT).show();
@@ -331,7 +328,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     }
 
     public Bundle createBundle() {
-        Bundle bundle = new Bundle();
+        Bundle bundle = getDataFromSelected(spnFacilities.getSelectedItemPosition());
         bundle.putInt(DATE_SELECTED, day);
         bundle.putInt(MONTH_SELECTED, month);
         bundle.putInt(YEAR_SELECTED, year);
@@ -343,8 +340,10 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_cODE) {
             if (resultCode == RESULT_OK) {
-                Bundle time = data.getExtras();
-                txtTime.setText(time.getString(ChooseTimeActivity.START_TIME) + "-" + time.getString(ChooseTimeActivity.END_TIME));
+                Bundle timeBundle = data.getExtras();
+                txtTime.setText(timeBundle.getString(ChooseTimeActivity.START_TIME) + "-" + timeBundle.getString(ChooseTimeActivity.END_TIME));
+                selectedStartTime = time.get(timeBundle.getInt(ChooseTimeActivity.INDEX_START_TIME));
+                selectedEndTime = time.get(timeBundle.getInt(ChooseTimeActivity.INDEX_END_TIME));
             }
         }
     }
@@ -355,13 +354,4 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         return (current.after(selected));
     }
 
-    private void showProgressDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
 }

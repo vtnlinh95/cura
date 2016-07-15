@@ -34,7 +34,7 @@ public class DataUtils {
         }
     }
 
-    public static List<AppointmentEntity> getApptListofDoctor(List<AppointmentEntity> list){
+    public static List<AppointmentEntity> getAcceptedApptList(List<AppointmentEntity> list){
         List<AppointmentEntity> entities = new ArrayList<>();
         for(AppointmentEntity entity : list){
             if (entity.getStatus() == 1){

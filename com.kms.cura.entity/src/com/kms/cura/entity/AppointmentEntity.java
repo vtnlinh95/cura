@@ -31,9 +31,11 @@ public class AppointmentEntity {
 	private Time startTime;
 	private Time endTime;
 	private int status = -1;
+	private String patientCmt;
+	private String doctorCmt;
 	
 	public AppointmentEntity(PatientUserEntity patientUserEntity, DoctorUserEntity doctorUserEntity, FacilityEntity facilityEntity, Date apptDay,
-			Time startTime, Time endTime, int status) {
+			Time startTime, Time endTime, int status, String patientCmt, String doctorCmt) {
 		this.patientUserEntity = patientUserEntity;
 		this.doctorUserEntity = doctorUserEntity;
 		this.facilityEntity = facilityEntity;
@@ -41,6 +43,8 @@ public class AppointmentEntity {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.status = status;
+		this.patientCmt = patientCmt;
+		this.doctorCmt = doctorCmt;
 	}
 
 	public PatientUserEntity getPatientUserEntity() {
@@ -108,6 +112,24 @@ public class AppointmentEntity {
 		 return new TypeToken<List<AppointmentEntity>>() {
 	        }.getType();
 	}
+
+	public String getPatientCmt() {
+		return patientCmt;
+	}
+
+	public void setPatientCmt(String patientCmt) {
+		this.patientCmt = patientCmt;
+	}
+
+	public String getDoctorCmt() {
+		return doctorCmt;
+	}
+
+	public void setDoctorCmt(String doctorCmt) {
+		this.doctorCmt = doctorCmt;
+	}
+	
+	
 
 	public String getStatusName(){
 		switch (status){

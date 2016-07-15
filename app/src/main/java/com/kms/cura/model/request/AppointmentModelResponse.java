@@ -1,26 +1,26 @@
 package com.kms.cura.model.request;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.kms.cura.entity.AppointmentEntity;
-import com.kms.cura.entity.user.UserEntity;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.kms.cura.model.AppointmentModel;
 
 import java.util.List;
 
 /**
- * Created by linhtnvo on 7/14/2016.
+ * Created by linhtnvo on 7/15/2016.
  */
 public class AppointmentModelResponse implements EntityModelResponse {
-    List<AppointmentEntity> appointment;
     boolean gotResponse;
     boolean responseError = false;
     String error;
+    List<AppointmentEntity> appts;
 
-    public List<AppointmentEntity> getAppointment() {
-        return appointment;
+    public List<AppointmentEntity> getAppts() {
+        return appts;
+    }
+
+    public void setAppts(List<AppointmentEntity> appts) {
+        this.appts = appts;
     }
 
     @Override
@@ -32,18 +32,7 @@ public class AppointmentModelResponse implements EntityModelResponse {
 
     @Override
     public void onResponse(String response) {
-        JSONObject jsonObject = null;
-        Gson gson = new Gson();
-        try {
-            jsonObject = new JSONObject(response);
-            boolean status = jsonObject.getBoolean(UserEntity.STATUS_KEY);
-            if (status) {
 
-            }
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean isGotResponse(){
