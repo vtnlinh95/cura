@@ -143,7 +143,7 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 			con.setAutoCommit(false);
 			createAppointment(entity);
 			AppointmentEntity search = new AppointmentEntity(entity.getPatientUserEntity(), null, null, null, null,
-					null, -1);
+					null, -1,null, null);
 			patientAppts = getAppointment(new AppointSearchEntity(search), entity.getPatientUserEntity(), null);
 			con.commit();
 			return patientAppts;

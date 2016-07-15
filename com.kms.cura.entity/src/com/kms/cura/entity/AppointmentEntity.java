@@ -23,7 +23,7 @@ public class AppointmentEntity {
 	public static String COMPLETED = "COMPLETED";
 	public static String INCOMPLETE = "INCOMPLETE";
 	public static String ACCEPTED = "ACCEPTED";
-	
+	public static String APPTS_LIST = "appts_list";
 	private PatientUserEntity patientUserEntity;
 	private DoctorUserEntity doctorUserEntity;
 	private FacilityEntity facilityEntity;

@@ -3,9 +3,12 @@ package com.kms.cura.view.activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -17,7 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.AppointmentController;
+import com.kms.cura.controller.DegreeController;
 import com.kms.cura.controller.ErrorController;
+import com.kms.cura.controller.FacilityController;
+import com.kms.cura.controller.SpecialityController;
 import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.FacilityEntity;
 import com.kms.cura.entity.OpeningHour;
@@ -70,6 +77,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     private int dateofWeek = 0;
     private String selectedStartTime;
     private String selectedEndTime;
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +148,13 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     private Bundle getDataFromSelected(int position) {
         Bundle bundle = new Bundle();
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
-        dateofWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2;
+        dateofWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        if(dateofWeek == 1){
+            dateofWeek = 6;
+        }
+        else{
+            dateofWeek-=2;
+        }
         List<OpeningHour> workingHour = list.get(position).getWorkingTime();
         List<OpeningHour> workingHourSelected = new ArrayList<>();
         for (OpeningHour hour : workingHour) {
@@ -168,7 +182,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
     private List<String> getTimeFrame(List<OpeningHour> list, List<Integer> newAvailable) {
         if (list.size() == 0) {
-            return null;
+            return new ArrayList<>();
         }
         String[] timeResource = getResources().getStringArray(R.array.Time48);
         int[] available = getAvailable();
@@ -258,19 +272,50 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
     private void requestAppointment() {
         String cmt = edtComment.getText().toString();
+        if("".equals(cmt)){
+            cmt = null;
+        }
         FacilityEntity selectedFacility = list.get(spnFacilities.getSelectedItemPosition()).getFacilityEntity();
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
         Date selectedDate = new Date(calendar.getTime().getTime());
         Time startTime = Time.valueOf(selectedStartTime);
         Time endTime = Time.valueOf(selectedEndTime);
-        AppointmentEntity entity = new AppointmentEntity((PatientUserEntity) CurrentUserProfile.getInstance().getEntity(),
+        final AppointmentEntity entity = new AppointmentEntity((PatientUserEntity) CurrentUserProfile.getInstance().getEntity(),
                 doctorUserEntity, selectedFacility, selectedDate, startTime, endTime, AppointmentEntity.PENDING_STT, cmt, null);
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Loading...");
+        pDialog.setCancelable(false);
+        showProgressDialog();
+        AsyncTask<Object, Void, Void> task = new AsyncTask<Object, Void, Void>() {
+            private Exception exception = null;
+
+            @Override
+            protected Void doInBackground(Object[] params) {
+                try {
+                    PatientUserEntity patientUserEntity = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
+                    patientUserEntity.setAppointmentList(AppointmentController.bookAppointment(entity));
+                } catch (Exception e) {
+                    exception = e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                hideProgressDialog();
+                if (exception != null) {
+                    ErrorController.showDialog(BookAppointmentActivity.this, "Error : " + exception.getMessage());
+                }
+                else{
+                    finish();
+                }
+            }
+        };
+        task.execute();
     }
 
     private void chooseDate() {
-        if (day == 0 && month == 0 && year == 0) {
-            setCurrentDate();
-        }
+        setCurrentDate();
         Dialog dateDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT, myDateListener, year, month - 1, day);
         dateDialog.show();
     }
@@ -352,6 +397,16 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         Calendar current = new GregorianCalendar(year, month - 1, day);
         Calendar selected = new GregorianCalendar(yearSelected, monthSelected - 1, daySelected);
         return (current.after(selected));
+    }
+    private void showProgressDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+            pDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
 }

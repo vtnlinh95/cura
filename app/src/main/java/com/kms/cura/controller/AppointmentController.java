@@ -9,7 +9,7 @@ import java.util.List;
  * Created by linhtnvo on 7/15/2016.
  */
 public class AppointmentController {
-    public static List<AppointmentEntity> bookAppointment(AppointmentEntity appointmentEntity){
+    public static List<AppointmentEntity> bookAppointment(AppointmentEntity appointmentEntity) throws Exception {
         return AppointmentModel.getInstance().bookAppointment(appointmentEntity);
     }
 }

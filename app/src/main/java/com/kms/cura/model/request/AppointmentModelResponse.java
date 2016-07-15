@@ -1,9 +1,18 @@
 package com.kms.cura.model.request;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.kms.cura.entity.AppointmentEntity;
+import com.kms.cura.entity.user.PatientUserEntity;
+import com.kms.cura.entity.user.UserEntity;
 import com.kms.cura.model.AppointmentModel;
+import com.kms.cura.utils.CurrentUserProfile;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +41,33 @@ public class AppointmentModelResponse implements EntityModelResponse {
 
     @Override
     public void onResponse(String response) {
-
+        JSONObject jsonObject = null;
+        Gson gson = new Gson();
+        try {
+            jsonObject = new JSONObject(response);
+            boolean status = jsonObject.getBoolean(UserEntity.STATUS_KEY);
+            PatientUserEntity patient = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
+            if (status) {
+                List<AppointmentEntity> listAppts = new ArrayList<>();
+                JSONArray jsonArrayAppts = jsonObject.getJSONArray(AppointmentEntity.APPTS_LIST);
+                for (int i = 0; i < jsonArrayAppts.length(); i++) {
+                    AppointmentEntity entity = gson.fromJson(
+                            jsonArrayAppts.getJSONObject(i).toString(), AppointmentEntity.class);
+                    entity.setPatientUserEntity(patient);
+                    listAppts.add(entity);
+                }
+                appts = new ArrayList<>();
+                appts.addAll(listAppts);
+            }
+            else {
+                error = jsonObject.getString(UserEntity.MESSAGE);
+                responseError = true;
+            }
+        } catch (JSONException e) {
+            responseError = true;
+            error = e.getMessage();
+        }
+        gotResponse = true;
     }
 
     public boolean isGotResponse(){
