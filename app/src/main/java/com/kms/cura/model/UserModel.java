@@ -3,6 +3,7 @@ package com.kms.cura.model;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.kms.cura.entity.DoctorSearchEntity;
+import com.kms.cura.entity.ImageEntity;
 import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.UserEntity;
@@ -76,10 +77,10 @@ public class UserModel extends EntityModel {
         VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
     }
 
-    public void savePhoto(String encoded){
+    public void savePhoto(UserEntity entity){
         StringBuilder builder = new StringBuilder();
         builder.append(Settings.SERVER_URL);
-        builder.append(Settings.SEARCH_DOCTOR_API);
+        builder.append(Settings.UPDATE_PROFILE_PHOTO);
         DoctorModelResponse doctorResponse = new DoctorModelResponse();
         StringRequest stringRequest = RequestUtils.createRequest(builder.toString(), Request.Method.POST,
                 EntityToJsonConverter.convertEntityToJson(entity).toString(), doctorResponse);

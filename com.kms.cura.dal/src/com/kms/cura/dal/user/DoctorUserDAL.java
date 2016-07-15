@@ -6,15 +6,12 @@ import java.util.List;
 
 import com.kms.cura.dal.AppointmentDAL;
 import com.kms.cura.dal.database.DoctorUserDatabaseHelper;
-import com.kms.cura.dal.database.PatientUserDatabaseHelper;
 import com.kms.cura.dal.exception.DALException;
-import com.kms.cura.dal.mapping.DoctorColumn;
 import com.kms.cura.entity.AppointSearchEntity;
 import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.Entity;
 import com.kms.cura.entity.user.DoctorUserEntity;
-import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class DoctorUserDAL extends UserDAL {
@@ -91,18 +88,17 @@ public class DoctorUserDAL extends UserDAL {
 			dbh.closeConnection();
 		}
 	}
-	
+
 	public List<Entity> getAll() throws ClassNotFoundException, SQLException {
 		DoctorUserDatabaseHelper dbh = new DoctorUserDatabaseHelper();
-		try{
+		try {
 			List<DoctorUserEntity> list = dbh.getAllDoctor();
 			List<Entity> doctors = new ArrayList<>();
 			for (DoctorUserEntity entity : list) {
 				doctors.add(getAllReferenceAttributeforDoctor((DoctorUserEntity) entity));
 			}
 			return doctors;
-		}
-		finally{
+		} finally {
 			dbh.closeConnection();
 		}
 	}

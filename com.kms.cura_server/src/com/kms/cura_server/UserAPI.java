@@ -15,6 +15,7 @@ import com.kms.cura.dal.user.DoctorUserDAL;
 import com.kms.cura.dal.user.PatientUserDAL;
 import com.kms.cura.dal.user.UserDAL;
 import com.kms.cura.entity.Entity;
+import com.kms.cura.entity.ImageEntity;
 import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
@@ -121,6 +122,7 @@ public final class UserAPI {
 		}
 
 	}
+
 	@POST
 	@Path("/updateDoctor")
 	public String updateDoctor(String jsonData) {
@@ -133,14 +135,14 @@ public final class UserAPI {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}
 	}
-	
+
 	@POST
 	@Path("/updatePhoto")
-	public String updatePhoto(String encodedData) {
-		
+	public String updatePhoto(String jsonData) {
+		UserEntity user = JsonToEntityConverter.convertJsonStringToEntity(jsonData, UserEntity.getUserEntityType());
 		try {
-			DoctorUserEntity newDoctor = UserDAL.getInstance();
-			return new UserAPIResponse().successResponse(newDoctor);
+			UserEntity result = UserDAL.getInstance().updatePhoto(user);
+			return new UserAPIResponse().successResponse(result);
 		} catch (Exception e) {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}

@@ -179,12 +179,13 @@ CREATE TABLE Users (
 	id INT UNIQUE NOT NULL AUTO_INCREMENT,
 	email VARCHAR(50) UNIQUE,
     password VARCHAR(30),
+	imagePath VARCHAR(300),
     PRIMARY KEY (id)
 	);
     
 INSERT INTO Users (email,password) VALUES ('admin@kms-technology.com','admin123');
-INSERT INTO Users (email,password) VALUE ('patient@kms-technology.com','patient123');
-INSERT INTO Users (email,password) VALUE ('doctor@kms-technology.com','doctor123');
+INSERT INTO Users (email,password,imagePath) VALUE ('patient@kms-technology.com','patient123','D:\cura-server\image\default.png');
+INSERT INTO Users (email,password,imagePath) VALUE ('doctor@kms-technology.com','doctor123','D:\cura-server\image\default.png');
 
 CREATE TABLE Admin (
 	user_id INT NOT NULL,

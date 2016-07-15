@@ -2,6 +2,7 @@ package com.kms.cura.view.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.kms.cura.R;
+import com.kms.cura.controller.UserController;
+import com.kms.cura.entity.user.UserEntity;
+import com.kms.cura.utils.CurrentUserProfile;
 import com.kms.cura.utils.ImagePicker;
 
 import java.io.ByteArrayOutputStream;
@@ -23,11 +27,13 @@ public class ProfilePictureActivity extends AppCompatActivity implements View.On
     private ImageView profile;
     private Toolbar toolbar;
     private Button upload, save;
+    private UserEntity user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_picture);
+        user = CurrentUserProfile.getInstance().getEntity();
         initToolbar();
         initProfilePhoto();
         initButtons();
@@ -43,7 +49,13 @@ public class ProfilePictureActivity extends AppCompatActivity implements View.On
 
     private void initProfilePhoto() {
         profile = (ImageView) findViewById(R.id.photo_profile);
-        profile.setImageResource(R.drawable.profile_anon128);
+        if (user.getImage() != null) {
+            byte[] decodedString = Base64.decode(user.getImage().getImage(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            profile.setImageBitmap(decodedByte);
+        } else {
+            profile.setImageResource(R.drawable.profile_anon128);
+        }
     }
 
     private void initToolbar() {
@@ -71,11 +83,14 @@ public class ProfilePictureActivity extends AppCompatActivity implements View.On
 
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-
-
-                    profile.setImageBitmap(bitmap);
+                    String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    UserController.savePhoto(user,encoded);
+//                    profile.setImageBitmap(bitmap);
+                    byte[] decodedString = Base64.decode(user.getImage().getImage(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    profile.setImageBitmap(decodedByte);
                     save.setEnabled(true);
                 }
                 break;

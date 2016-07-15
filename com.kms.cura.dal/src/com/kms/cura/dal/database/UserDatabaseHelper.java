@@ -1,11 +1,15 @@
 package com.kms.cura.dal.database;
 
+import java.awt.image.BufferedImage;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.imageio.ImageIO;
 
 import com.kms.cura.dal.exception.DALException;
 import com.kms.cura.dal.exception.DuplicatedUserEmailException;
@@ -13,6 +17,12 @@ import com.kms.cura.dal.mapping.PhotoColumn;
 import com.kms.cura.dal.mapping.UserColumn;
 import com.kms.cura.entity.ImageEntity;
 import com.kms.cura.entity.user.UserEntity;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class UserDatabaseHelper extends DatabaseHelper {
 	public UserDatabaseHelper() throws ClassNotFoundException, SQLException {
@@ -131,23 +141,23 @@ public class UserDatabaseHelper extends DatabaseHelper {
 				resultSet.getString(UserColumn.PASSWORD.getColumnName()));
 	}
 
-	public UserEntity queryUserEntitybyEmailPassword(String tableName1, String tableName2, String email,
-			String password, String onTable1, String onTable2) throws SQLException, ClassNotFoundException {
+	public UserEntity queryUserEntitybyEmailPassword(String childTable, String email, String password,
+			String childRefIdColumnName) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT * FROM ");
-		builder.append(tableName1);
+		builder.append(childTable);
 		builder.append(" LEFT JOIN ");
-		builder.append(tableName2);
+		builder.append(UserColumn.TABLE_NAME);
 		builder.append(" ON ");
-		builder.append(tableName1);
+		builder.append(childTable);
 		builder.append(".");
-		builder.append(onTable1);
+		builder.append(childRefIdColumnName);
 		builder.append(" = ");
-		builder.append(tableName2);
+		builder.append(UserColumn.TABLE_NAME);
 		builder.append(".");
-		builder.append(onTable2);
+		builder.append(UserColumn.ID);
 		builder.append(" WHERE ");
 		builder.append(UserColumn.EMAIL.getColumnName());
 		builder.append(" = ? AND ");
@@ -162,6 +172,104 @@ public class UserDatabaseHelper extends DatabaseHelper {
 				return getEntityFromResultSet(rs);
 			}
 		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+		return null;
+	}
+
+	public UserEntity queryByEmail(String email) throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = con
+					.prepareStatement("SELECT * FROM " + UserColumn.TABLE_NAME + " WHERE " + UserColumn.EMAIL + " = ?");
+			stmt.setString(1, email);
+			rs = stmt.executeQuery();
+			if (rs != null && rs.next()) {
+				return new UserEntity(rs.getString(UserColumn.ID.getColumnName()), null,
+						rs.getString(UserColumn.EMAIL.getColumnName()),
+						rs.getString(UserColumn.PASSWORD.getColumnName()));
+			}
+			return null;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+	}
+
+	public UserEntity queryUserEntitybyId(String childTable, String id, String childRefIdColumnName)
+			throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT * FROM ");
+		builder.append(childTable);
+		builder.append(" LEFT JOIN ");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(" ON ");
+		builder.append(childTable);
+		builder.append(".");
+		builder.append(childRefIdColumnName);
+		builder.append(" = ");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(".");
+		builder.append(UserColumn.ID.getColumnName());
+		builder.append(" WHERE ");
+		builder.append(UserColumn.ID.getColumnName());
+		builder.append(" = ?");
+		try {
+			stmt = con.prepareStatement(builder.toString());
+			stmt.setString(1, id);
+			rs = stmt.executeQuery();
+			if (rs != null && rs.next()) {
+				return getEntityFromResultSet(rs);
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+		return null;
+	}
+
+	public UserEntity updateProfile(UserEntity user) throws SQLException, ClassNotFoundException, IOException {
+		saveImage(user.getImage().getImage());
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("UPDATE");
+		builder.append(UserColumn.TABLE_NAME);
+		builder.append(" SET ");
+		builder.append(UserColumn.IMAGE_PATH);
+		builder.append(" = ");
+		builder.append(" ? ");
+		builder.append(" WHERE ");
+		builder.append(UserColumn.ID);
+		builder.append(" = ? ");
+		try {
+			con.setAutoCommit(false);
+			stmt = con.prepareStatement(builder.toString());
+			stmt.setString(1, user.getImage().getPath());
+			stmt.setInt(2, Integer.parseInt(user.getId()));
+			rs = stmt.executeQuery();
+			con.commit();
+			if (rs != null && rs.next()) {
+				return getEntityFromResultSet(rs);
+			}
+		} finally {
+			con.setAutoCommit(true);
 			if (stmt != null) {
 				stmt.close();
 			}
@@ -169,34 +277,27 @@ public class UserDatabaseHelper extends DatabaseHelper {
 		return null;
 
 	}
-	
-	public UserEntity updateProfile(UserEntity user, ImageEntity image) throws SQLException, ClassNotFoundException{
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		StringBuilder builder = new StringBuilder();
-		builder.append("INSERT INTO");
-		builder.append(PhotoColumn.TABLE_NAME);
-		builder.append(" ( ");
-		builder.append(PhotoColumn.USER_ID);
-		builder.append(" , ");
-		builder.append(PhotoColumn.PATH);
-		builder.append(" ) ");
-		builder.append(" VALUES (?,?)");
-		try {
-			stmt = con.prepareStatement(builder.toString());
-			stmt.setString(1, user.getId());
-			stmt.setString(2, image.getPath());
-			rs = stmt.executeQuery();
-			if (rs != null && rs.next()) {
-				return getEntityFromResultSet(rs);
-			}
-		} finally {
-			if (stmt != null) {
-				stmt.close();
-			}
-		}
-		return null;
-		
+
+	private String saveImage(String base64String) throws IOException {
+		// create a buffered image
+		BufferedImage image = null;
+		byte[] imageByte;
+
+		imageByte = Base64.decodeBase64(base64String);
+		ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+		image = ImageIO.read(bis);
+		bis.close();
+
+		// write the image to a file
+
+		SimpleDateFormat fmt = new SimpleDateFormat("picture_yyyyMMdd_HHmmss");
+		String fileName = fmt.format(new java.util.Date());
+		String path = "D:\\cura-server\\image\\";
+		StringBuilder sb = new StringBuilder();
+		sb.append(path);
+		sb.append(fileName);
+		File outputfile = new File(sb.toString());
+		ImageIO.write(image, "png", outputfile);
+		return sb.toString();
 	}
-	
 }

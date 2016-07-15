@@ -7,6 +7,7 @@ import com.kms.cura.R;
 import com.kms.cura.entity.DegreeEntity;
 import com.kms.cura.entity.DoctorSearchEntity;
 import com.kms.cura.entity.FacilityEntity;
+import com.kms.cura.entity.ImageEntity;
 import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.entity.WorkingHourEntity;
 import com.kms.cura.entity.user.DoctorUserEntity;
@@ -156,8 +157,9 @@ public class UserController {
         }
     }
 
-    public static void savePhoto(byte[] byteArray){
-        String encoded = base64Encode(byteArray);
-        UserModel.getInstance()
+    public static void savePhoto(UserEntity user, String encodedImage) {
+        ImageEntity imageEntity = new ImageEntity(encodedImage, null, null, null);
+        user.setImageEntity(imageEntity);
+        UserModel.getInstance().savePhoto(user);
     }
 }

@@ -1,13 +1,17 @@
 package com.kms.cura.entity.user;
 
+import java.lang.reflect.Type;
+
+import com.google.gson.reflect.TypeToken;
 import com.kms.cura.entity.Entity;
+import com.kms.cura.entity.ImageEntity;
 
 public class UserEntity extends Entity {
 	public static final String TYPE = "type";
 	public static final int USER_TYPE = 0;
 	private String email;
 	private String password;
-	private String imagePath;
+	private ImageEntity imageEntity;
 
 	public UserEntity(String id, String name, String email, String password) {
 		super(id, name);
@@ -40,12 +44,16 @@ public class UserEntity extends Entity {
 		return USER_TYPE;
 	}
 
-	public String getImagePath() {
-		return imagePath;
+	public ImageEntity getImage() {
+		return imageEntity;
 	}
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setImageEntity(ImageEntity image) {
+		this.imageEntity = image;
 	}
 
+	public static Type getUserEntityType() {
+        return new TypeToken<UserEntity>() {
+        }.getType();
+    }
 }
