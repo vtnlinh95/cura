@@ -7,6 +7,7 @@ public class UserEntity extends Entity {
 	public static final int USER_TYPE = 0;
 	private String email;
 	private String password;
+	private String imagePath;
 
 	public UserEntity(String id, String name, String email, String password) {
 		super(id, name);
@@ -37,6 +38,14 @@ public class UserEntity extends Entity {
 
 	public int getType() {
 		return USER_TYPE;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 }

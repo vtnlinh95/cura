@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import com.kms.cura.R;
 import com.kms.cura.utils.ImagePicker;
+
+import java.io.ByteArrayOutputStream;
 
 public class ProfilePictureActivity extends AppCompatActivity implements View.OnClickListener {
     private static String ACTIVITY_NAME = "Profile Picture";
@@ -61,9 +64,17 @@ public class ProfilePictureActivity extends AppCompatActivity implements View.On
         switch (requestCode) {
             case PICK_IMAGE:
                 Bitmap bitmap = ImagePicker.getImageFromResult(this, resultCode, data);
+
                 if (bitmap != null && bitmap.getByteCount() > MAX_IMAGE_SIZE) {
                     Toast.makeText(this, R.string.ImageSizeError, Toast.LENGTH_SHORT).show();
                 } else if (bitmap != null && bitmap.getByteCount() != 0) {
+
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+
+
                     profile.setImageBitmap(bitmap);
                     save.setEnabled(true);
                 }

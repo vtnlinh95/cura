@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.kms.cura.dal.exception.DALException;
+import com.kms.cura.dal.exception.DuplicatedUserEmailException;
+import com.kms.cura.dal.mapping.PhotoColumn;
 import com.kms.cura.dal.mapping.UserColumn;
+import com.kms.cura.entity.ImageEntity;
 import com.kms.cura.entity.user.UserEntity;
 
 public class UserDatabaseHelper extends DatabaseHelper {
@@ -16,13 +19,30 @@ public class UserDatabaseHelper extends DatabaseHelper {
 		super();
 	}
 
-	protected void insertUser(UserEntity entity) throws SQLException, DALException, ClassNotFoundException {
+	public UserEntity insertUser(UserEntity entity) throws SQLException, DALException, ClassNotFoundException {
 		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
 		if (!(entity instanceof UserEntity)) {
-			return;
+			return null;
 		}
 		try {
+			con.setAutoCommit(false);
+
 			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT * FROM ");
+			sb.append(UserColumn.TABLE_NAME);
+			sb.append(" WHERE ");
+			sb.append(UserColumn.EMAIL.getColumnName());
+			sb.append(" = ?");
+
+			stmt = con.prepareStatement(sb.toString());
+			stmt.setString(1, entity.getEmail());
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				throw new DuplicatedUserEmailException(entity.getEmail());
+			}
+
+			sb.setLength(0);
 			sb.append("INSERT INTO ");
 			sb.append(UserColumn.TABLE_NAME);
 			sb.append(" (");
@@ -36,13 +56,71 @@ public class UserDatabaseHelper extends DatabaseHelper {
 			stmt2.setString(1, entity.getEmail());
 			stmt2.setString(2, entity.getPassword());
 			stmt2.executeUpdate();
+
+			con.commit();
+
+			stmt.setString(1, entity.getEmail());
+			rs = stmt.executeQuery();
+			con.commit();
+			UserDatabaseHelper dbh = new UserDatabaseHelper();
+			rs.next();
+			return dbh.getEntityFromResultSet(rs);
+		} catch (SQLException e) {
+			if (con != null) {
+				System.err.print("Transaction is being rolled back");
+				con.rollback();
+			}
+			throw e;
+
 		} finally {
+			con.setAutoCommit(true);
 			if (stmt != null) {
 				stmt.close();
 			}
 			if (stmt2 != null) {
 				stmt2.close();
 			}
+		}
+	}
+
+	protected PreparedStatement createPreparedStatement(Map<String, Object> valueMap, String databaseName,
+			String databaseMethod) throws SQLException {
+		StringBuilder insertString = new StringBuilder(databaseMethod + " " + databaseName + " (");
+		StringBuilder valueString = new StringBuilder(") VALUES (");
+		boolean isFirst = true;
+		for (Entry<String, Object> entry : valueMap.entrySet()) {
+			if (isFirst) {
+				isFirst = false;
+			} else {
+				insertString.append(",");
+				valueString.append(",");
+			}
+			insertString.append(entry.getKey());
+			valueString.append("?");
+		}
+		valueString.append(")");
+		String statementString = insertString.toString() + valueString.toString();
+		PreparedStatement stmt = con.prepareStatement(statementString);
+		setPreparedStatementValue(valueMap, stmt);
+		return stmt;
+	}
+
+	protected void setPreparedStatementValue(Map<String, Object> valueMap, PreparedStatement stmt) throws SQLException {
+		int count = 1;
+		for (Entry<String, Object> valueEntry : valueMap.entrySet()) {
+			if (valueEntry.getValue() instanceof Integer) {
+				stmt.setInt(count, (Integer) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof String) {
+				stmt.setString(count, (String) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof Date) {
+				stmt.setDate(count, (Date) valueEntry.getValue());
+			} else if (valueEntry.getValue() instanceof Double) {
+				stmt.setDouble(count, (Double) valueEntry.getValue());
+			} else {
+				// handle for null
+				stmt.setString(count, null);
+			}
+			count++;
 		}
 	}
 
@@ -53,47 +131,23 @@ public class UserDatabaseHelper extends DatabaseHelper {
 				resultSet.getString(UserColumn.PASSWORD.getColumnName()));
 	}
 
-	public UserEntity queryByEmail(String email) throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = con
-					.prepareStatement("SELECT * FROM " + UserColumn.TABLE_NAME + " WHERE " + UserColumn.EMAIL + " = ?");
-			stmt.setString(1, email);
-			rs = stmt.executeQuery();
-			if (rs != null && rs.next()) {
-				return new UserEntity(rs.getString(UserColumn.ID.getColumnName()), null,
-						rs.getString(UserColumn.EMAIL.getColumnName()),
-						rs.getString(UserColumn.PASSWORD.getColumnName()));
-			}
-			return null;
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
-			if (stmt != null) {
-				stmt.close();
-			}
-		}
-	}
-
-	public UserEntity queryUserEntitybyEmailPassword(String childTable, String email, String password,
-			String childRefIdColumnName) throws SQLException, ClassNotFoundException {
+	public UserEntity queryUserEntitybyEmailPassword(String tableName1, String tableName2, String email,
+			String password, String onTable1, String onTable2) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT * FROM ");
-		builder.append(childTable);
+		builder.append(tableName1);
 		builder.append(" LEFT JOIN ");
-		builder.append(UserColumn.TABLE_NAME);
+		builder.append(tableName2);
 		builder.append(" ON ");
-		builder.append(childTable);
+		builder.append(tableName1);
 		builder.append(".");
-		builder.append(childRefIdColumnName);
+		builder.append(onTable1);
 		builder.append(" = ");
-		builder.append(UserColumn.TABLE_NAME);
+		builder.append(tableName2);
 		builder.append(".");
-		builder.append(UserColumn.ID);
+		builder.append(onTable2);
 		builder.append(" WHERE ");
 		builder.append(UserColumn.EMAIL.getColumnName());
 		builder.append(" = ? AND ");
@@ -108,89 +162,41 @@ public class UserDatabaseHelper extends DatabaseHelper {
 				return getEntityFromResultSet(rs);
 			}
 		} finally {
-			if (rs != null) {
-				rs.close();
-			}
 			if (stmt != null) {
 				stmt.close();
 			}
 		}
 		return null;
-	}
 
-	public UserEntity queryUserEntitybyEmail(String childTable, String email, String childRefIdColumnName)
-			throws SQLException, ClassNotFoundException {
+	}
+	
+	public UserEntity updateProfile(UserEntity user, ImageEntity image) throws SQLException, ClassNotFoundException{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT * FROM ");
-		builder.append(childTable);
-		builder.append(" LEFT JOIN ");
-		builder.append(UserColumn.TABLE_NAME);
-		builder.append(" ON ");
-		builder.append(childTable);
-		builder.append(".");
-		builder.append(childRefIdColumnName);
-		builder.append(" = ");
-		builder.append(UserColumn.TABLE_NAME);
-		builder.append(".");
-		builder.append(UserColumn.ID.getColumnName());
-		builder.append(" WHERE ");
-		builder.append(UserColumn.EMAIL.getColumnName());
-		builder.append(" = ?");
+		builder.append("INSERT INTO");
+		builder.append(PhotoColumn.TABLE_NAME);
+		builder.append(" ( ");
+		builder.append(PhotoColumn.USER_ID);
+		builder.append(" , ");
+		builder.append(PhotoColumn.PATH);
+		builder.append(" ) ");
+		builder.append(" VALUES (?,?)");
 		try {
 			stmt = con.prepareStatement(builder.toString());
-			stmt.setString(1, email);
+			stmt.setString(1, user.getId());
+			stmt.setString(2, image.getPath());
 			rs = stmt.executeQuery();
 			if (rs != null && rs.next()) {
 				return getEntityFromResultSet(rs);
 			}
 		} finally {
-			if (rs != null) {
-				rs.close();
-			}
 			if (stmt != null) {
 				stmt.close();
 			}
 		}
 		return null;
+		
 	}
-
-	public UserEntity queryUserEntitybyId(String childTable, String id, String childRefIdColumnName)
-			throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		StringBuilder builder = new StringBuilder();
-		builder.append("SELECT * FROM ");
-		builder.append(childTable);
-		builder.append(" LEFT JOIN ");
-		builder.append(UserColumn.TABLE_NAME);
-		builder.append(" ON ");
-		builder.append(childTable);
-		builder.append(".");
-		builder.append(childRefIdColumnName);
-		builder.append(" = ");
-		builder.append(UserColumn.TABLE_NAME);
-		builder.append(".");
-		builder.append(UserColumn.ID.getColumnName());
-		builder.append(" WHERE ");
-		builder.append(UserColumn.ID.getColumnName());
-		builder.append(" = ?");
-		try {
-			stmt = con.prepareStatement(builder.toString());
-			stmt.setString(1, id);
-			rs = stmt.executeQuery();
-			if (rs != null && rs.next()) {
-				return getEntityFromResultSet(rs);
-			}
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
-			if (stmt != null) {
-				stmt.close();
-			}
-		}
-		return null;
-	}
+	
 }

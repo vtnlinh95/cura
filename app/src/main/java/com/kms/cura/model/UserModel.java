@@ -75,4 +75,14 @@ public class UserModel extends EntityModel {
                 EntityToJsonConverter.convertEntityToJson(entity).toString(), doctorResponse);
         VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
     }
+
+    public void savePhoto(String encoded){
+        StringBuilder builder = new StringBuilder();
+        builder.append(Settings.SERVER_URL);
+        builder.append(Settings.SEARCH_DOCTOR_API);
+        DoctorModelResponse doctorResponse = new DoctorModelResponse();
+        StringRequest stringRequest = RequestUtils.createRequest(builder.toString(), Request.Method.POST,
+                EntityToJsonConverter.convertEntityToJson(entity).toString(), doctorResponse);
+        VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
+    }
 }

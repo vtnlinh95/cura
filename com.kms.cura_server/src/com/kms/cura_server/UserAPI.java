@@ -133,5 +133,17 @@ public final class UserAPI {
 			return APIResponse.unsuccessResponse(e.getMessage());
 		}
 	}
+	
+	@POST
+	@Path("/updatePhoto")
+	public String updatePhoto(String encodedData) {
+		
+		try {
+			DoctorUserEntity newDoctor = UserDAL.getInstance();
+			return new UserAPIResponse().successResponse(newDoctor);
+		} catch (Exception e) {
+			return APIResponse.unsuccessResponse(e.getMessage());
+		}
+	}
 
 }

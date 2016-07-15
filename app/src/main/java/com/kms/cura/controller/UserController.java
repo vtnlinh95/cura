@@ -155,4 +155,9 @@ public class UserController {
             file.delete();
         }
     }
+
+    public static void savePhoto(byte[] byteArray){
+        String encoded = base64Encode(byteArray);
+        UserModel.getInstance()
+    }
 }
