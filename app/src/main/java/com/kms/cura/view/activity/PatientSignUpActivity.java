@@ -76,31 +76,40 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if(edtFirstName.hasFocus()) {
-            validateFirstName();
+        if (edtFirstName.hasFocus()) {
+            if (!validateEmptyName()) {
+                edtFirstName.setError(getResources().getString(R.string.FirstNameError));
+            } else if (!validateFirstName()) {
+                edtFirstName.setError(getResources().getString(R.string.first_name_error));
+            } else {
+                edtFirstName.setError(null);
+            }
         }
-        if(edtEmail.hasFocus()) {
-            validateEmail();
+        if (edtEmail.hasFocus()) {
+            if (!validateEmail()) {
+                edtEmail.setError(getResources().getString(R.string.EmailError));
+            } else {
+                edtEmail.setError(null);
+            }
         }
-        if(edtPassword.hasFocus()) {
-            validatePassword();
+        if (edtPassword.hasFocus()) {
+            if (!validatePassword()) {
+                edtPassword.setError(getResources().getString(R.string.PasswordError));
+            } else {
+                edtPassword.setError(null);
+            }
         }
-        if(edtPasswordReenter.hasFocus()) {
-            validatePasswordReenter();
+        if (edtPasswordReenter.hasFocus()) {
+            if (!validatePasswordReenter()) {
+                edtPasswordReenter.setError(getResources().getString(R.string.PasswordReenterError));
+            } else {
+                edtPasswordReenter.setError(null);
+            }
         }
-    }
-
-    public void refreshDrawable(EditText edit){
-        edit.setError(null);
-        edit.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_done_button, 0);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(validateFirstName()){
-            refreshDrawable(edtFirstName);
-        }
-        if()
         btnRegister.setEnabled(validateFirstName() && validateEmail() && validatePassword() && validatePasswordReenter());
     }
 
@@ -109,39 +118,23 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
     }
 
     public boolean validateFirstName() {
-        if ("".equals(getEditTextText(edtFirstName))) {
-            edtFirstName.setError(getResources().getString(R.string.FirstNameError));
-            return false;
-        }
-        if (!InputUtils.isNameValid(getEditTextText(edtFirstName))) {
-            edtFirstName.setError(getResources().getString(R.string.first_name_error));
-            return false;
-        }
-        return true;
+        return (InputUtils.isNameValid(getEditTextText(edtFirstName)));
+    }
+
+    public boolean validateEmptyName() {
+        return (!"".equals(getEditTextText(edtFirstName)));
     }
 
     public boolean validateEmail() {
-        if (!InputUtils.isEmailValid(getEditTextText(edtEmail))) {
-            edtEmail.setError(getResources().getString(R.string.EmailError));
-            return false;
-        }
-        return true;
+        return (InputUtils.isEmailValid(getEditTextText(edtEmail)));
     }
 
     public boolean validatePassword() {
-        if (!InputUtils.isPasswordValid(getEditTextText(edtPassword))) {
-            edtPassword.setError(getResources().getString(R.string.PasswordError));
-            return false;
-        }
-        return true;
+        return (InputUtils.isPasswordValid(getEditTextText(edtPassword)));
     }
 
     public boolean validatePasswordReenter() {
-        if (!getEditTextText(edtPasswordReenter).equals(getEditTextText(edtPassword))) {
-            edtPasswordReenter.setError(getResources().getString(R.string.PasswordReenterError));
-            return false;
-        }
-        return true;
+        return (getEditTextText(edtPasswordReenter).equals(getEditTextText(edtPassword)));
     }
 
     @Override
