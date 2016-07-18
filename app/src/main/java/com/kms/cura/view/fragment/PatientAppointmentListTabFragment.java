@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,8 @@ public class PatientAppointmentListTabFragment extends Fragment {
     private ExpandableStickyListHeadersListView lvAppts;
     private PatientAppointmentListAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private WeakHashMap<View,Integer> mOriginalViewHeightPool = new WeakHashMap<View, Integer>();
+    private WeakHashMap<View, Integer> mOriginalViewHeightPool = new WeakHashMap<View, Integer>();
+
     public PatientAppointmentListTabFragment() {
     }
 
@@ -64,7 +66,8 @@ public class PatientAppointmentListTabFragment extends Fragment {
                     protected Void doInBackground(Object[] params) {
                         try {
                             PatientUserEntity patient = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
-                            AppointmentEntity entity = new AppointmentEntity((PatientUserEntity)CurrentUserProfile.getInstance().getEntity(),null,null,null,null,null,-1,null,null);
+                            PatientUserEntity patientUserEntity = new PatientUserEntity(patient.getId(),null,null,null,null,null,null,null,null);
+                            AppointmentEntity entity = new AppointmentEntity(patientUserEntity, null, null, null, null, null, -1, null, null);
                             patient.setAppointmentList(AppointmentController.getAppointment(new AppointSearchEntity(entity)));
                         } catch (Exception e) {
                             exception = e;
@@ -74,13 +77,13 @@ public class PatientAppointmentListTabFragment extends Fragment {
 
                     @Override
                     protected void onPostExecute(Void aVoid) {
+                        Log.d("nhatlinh95", "OnPostExecute");
                         if (exception != null) {
                             ErrorController.showDialog(getActivity(), "Error : " + exception.getMessage());
-                        }
-                        else{
+                        } else {
                             apptsList.clear();
                             setupData();
-                            adapter = new PatientAppointmentListAdapter(getActivity(),apptsList);
+                            adapter = new PatientAppointmentListAdapter(getActivity(), apptsList);
                             lvAppts.setAdapter(adapter);
                             lvAppts.setAnimExecutor(new AnimationExecutor());
                         }
@@ -97,28 +100,25 @@ public class PatientAppointmentListTabFragment extends Fragment {
 
     private void setupData() {
         Bundle bundle = getArguments();
-        state = bundle.getInt(PatientAppointmentListFragment.KEY_STATE,PatientAppointmentListFragment.STATE_UPCOMING);
+        state = bundle.getInt(PatientAppointmentListFragment.KEY_STATE, PatientAppointmentListFragment.STATE_UPCOMING);
         apptsList = getData();
     }
 
-    public List<AppointmentEntity> getData(){
+    public List<AppointmentEntity> getData() {
         List<AppointmentEntity> appts = new ArrayList<>();
-        if(state == PatientAppointmentListFragment.STATE_PAST){
-            appts.addAll(DataUtils.getPastAppts(((PatientUserEntity)CurrentUserProfile.getInstance().getEntity()).getAppointmentList()));
-        }
-        else {
-            appts.addAll(DataUtils.getUpcomingAppts(((PatientUserEntity)CurrentUserProfile.getInstance().getEntity()).getAppointmentList()));
+        if (state == PatientAppointmentListFragment.STATE_PAST) {
+            appts.addAll(DataUtils.getPastAppts(((PatientUserEntity) CurrentUserProfile.getInstance().getEntity()).getAppointmentList()));
+        } else {
+            appts.addAll(DataUtils.getUpcomingAppts(((PatientUserEntity) CurrentUserProfile.getInstance().getEntity()).getAppointmentList()));
         }
         Collections.sort(appts, new Comparator<AppointmentEntity>() {
             @Override
             public int compare(AppointmentEntity lhs, AppointmentEntity rhs) {
-                if(lhs.getApptDay().before(rhs.getApptDay())){
+                if (lhs.getApptDay().before(rhs.getApptDay())) {
                     return -1;
-                }
-                else if(lhs.getApptDay().after(rhs.getApptDay())){
+                } else if (lhs.getApptDay().after(rhs.getApptDay())) {
                     return 1;
-                }
-                else{
+                } else {
                     return 0;
                 }
             }
@@ -128,15 +128,15 @@ public class PatientAppointmentListTabFragment extends Fragment {
 
     private void setupListView(View parent) {
         lvAppts = (ExpandableStickyListHeadersListView) parent.findViewById(R.id.lvApptsList);
-        adapter = new PatientAppointmentListAdapter(getActivity(),apptsList);
+        adapter = new PatientAppointmentListAdapter(getActivity(), apptsList);
         lvAppts.setAdapter(adapter);
         lvAppts.setAnimExecutor(new AnimationExecutor());
         lvAppts.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
-                if(lvAppts.isHeaderCollapsed(headerId)){
+                if (lvAppts.isHeaderCollapsed(headerId)) {
                     lvAppts.expand(headerId);
-                }else {
+                } else {
                     lvAppts.collapse(headerId);
                 }
             }
@@ -148,14 +148,14 @@ public class PatientAppointmentListTabFragment extends Fragment {
 
         @Override
         public void executeAnim(final View target, final int animType) {
-            if(ExpandableStickyListHeadersListView.ANIMATION_EXPAND==animType&&target.getVisibility()==View.VISIBLE){
+            if (ExpandableStickyListHeadersListView.ANIMATION_EXPAND == animType && target.getVisibility() == View.VISIBLE) {
                 return;
             }
-            if(ExpandableStickyListHeadersListView.ANIMATION_COLLAPSE==animType&&target.getVisibility()!=View.VISIBLE){
+            if (ExpandableStickyListHeadersListView.ANIMATION_COLLAPSE == animType && target.getVisibility() != View.VISIBLE) {
                 return;
             }
-            if(mOriginalViewHeightPool.get(target)==null){
-                mOriginalViewHeightPool.put(target,target.getHeight());
+            if (mOriginalViewHeightPool.get(target) == null) {
+                mOriginalViewHeightPool.put(target, target.getHeight());
             }
             final int viewHeight = mOriginalViewHeightPool.get(target);
             float animStartY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? 0f : viewHeight;

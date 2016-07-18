@@ -47,7 +47,7 @@ public class AppointmentModel {
         StringBuilder builder = new StringBuilder();
         builder.append(Settings.SERVER_URL);
         builder.append(Settings.GET_APPT);
-        AppointmentModelResponse response = new AppointmentModelResponse();
+        AppointmentModelResponse response = new AppointmentModelResponse(search.getAppointmentEntity().getPatientUserEntity());
         StringRequest stringRequest = RequestUtils.createRequest(builder.toString(), Request.Method.POST,
                 new Gson().toJson(search,AppointSearchEntity.getAppointmentSearchType()),response);
         VolleyHelper.getInstance().addToRequestQueue(stringRequest, tag_string_req);
