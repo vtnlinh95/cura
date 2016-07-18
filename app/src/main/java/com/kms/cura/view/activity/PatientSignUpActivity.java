@@ -76,14 +76,31 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        validateFirstName();
-        validateEmail();
-        validatePassword();
-        validatePasswordReenter();
+        if(edtFirstName.hasFocus()) {
+            validateFirstName();
+        }
+        if(edtEmail.hasFocus()) {
+            validateEmail();
+        }
+        if(edtPassword.hasFocus()) {
+            validatePassword();
+        }
+        if(edtPasswordReenter.hasFocus()) {
+            validatePasswordReenter();
+        }
+    }
+
+    public void refreshDrawable(EditText edit){
+        edit.setError(null);
+        edit.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_done_button, 0);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        if(validateFirstName()){
+            refreshDrawable(edtFirstName);
+        }
+        if()
         btnRegister.setEnabled(validateFirstName() && validateEmail() && validatePassword() && validatePasswordReenter());
     }
 
