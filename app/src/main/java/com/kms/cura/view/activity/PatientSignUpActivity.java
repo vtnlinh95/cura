@@ -21,6 +21,7 @@ import com.kms.cura.view.fragment.PatientProfileFragment;
 public class PatientSignUpActivity extends AppCompatActivity implements TextWatcher, EventHandler {
     private EditText edtFirstName, edtEmail, edtPassword, edtPasswordReenter;
     private Button btnRegister;
+    public static final String  FROM_PATIENT_REGISTER = "FROM_PATIENT_REGISTER";
     private int count = 0;
     private EventBroker broker;
 
@@ -131,8 +132,12 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
     public void handleEvent(String event, Object data) {
         switch (event) {
             case EventConstant.REGISTER_SUCCESS:
-                Intent toProfile = new Intent(this, PatientProfileFragment.class);
+                UserController.saveLoginInfo(this,edtEmail.getText().toString(),edtPassword.getText().toString());
+                Intent toProfile = new Intent(this, PatientViewActivity.class);
+                toProfile.putExtra(PatientViewActivity.NAVIGATION_KEY,FROM_PATIENT_REGISTER);
                 startActivity(toProfile);
+                unregisterEvent();
+                finish();
                 break;
             case EventConstant.REGISTER_FAILED:
                 ErrorController.showDialog(this, "Register failed :" + data);
@@ -145,6 +150,9 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
                 }
                 break;
             case EventConstant.INTERNAL_ERROR:
+                if(data == null){
+                    data = "";
+                }
                 ErrorController.showDialog(this, getResources().getString(R.string.InternalError) + " :" + data);
         }
     }

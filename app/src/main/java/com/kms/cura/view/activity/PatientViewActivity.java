@@ -43,6 +43,7 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
         navigate(getIntent().getStringExtra(NAVIGATION_KEY));
     }
 
+
     private void initFragments() {
         patientHomeFragment = PatientHomeFragment.newInstance(getApplicationContext(), this);
         patientProfileFragment = new PatientProfileFragment();
@@ -166,6 +167,9 @@ public class PatientViewActivity extends AppCompatActivity implements Navigation
             switch (key) {
                 case ConditionSymptomSearchActivity.TO_HEALTH_TRACKER:
                     changeFragment(patientHealthTrachkerFragment);
+                    break;
+                case PatientSignUpActivity.FROM_PATIENT_REGISTER:
+                    changeFragment(patientProfileFragment);
                     break;
             }
         } else {
