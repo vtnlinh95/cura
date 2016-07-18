@@ -16,11 +16,12 @@ import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.view.fragment.DoctorProfileFragment;
 
-public class ViewDoctorProfileActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener{
+public class ViewDoctorProfileActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
     private DoctorUserEntity doctorUserEntity;
     private Bundle bundle;
     private ImageView btnBack;
     private String data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class ViewDoctorProfileActivity extends AppCompatActivity implements Tool
         loadFragemnt();
     }
 
-    private void loadFragemnt(){
+    private void loadFragemnt() {
         data = getIntent().getStringExtra(SearchActivity.DOCTOR_SELECTED);
         doctorUserEntity = JsonToEntityConverter.convertJsonStringToEntity(data, DoctorUserEntity.getDoctorEntityType());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -38,7 +39,7 @@ public class ViewDoctorProfileActivity extends AppCompatActivity implements Tool
         transaction.commit();
     }
 
-    private ImageView setUpButton(){
+    private ImageView setUpButton() {
         ImageView button = (ImageView) findViewById(R.id.btnBack);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +50,7 @@ public class ViewDoctorProfileActivity extends AppCompatActivity implements Tool
         return button;
     }
 
-    private void setUpToolbarForViewDoctor(){
+    private void setUpToolbarForViewDoctor() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.menu_view_doctor);
         toolbar.setOnMenuItemClickListener(this);
@@ -58,9 +59,9 @@ public class ViewDoctorProfileActivity extends AppCompatActivity implements Tool
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.book_appt_action){
+        if (id == R.id.book_appt_action) {
             Intent toBookAppts = new Intent(ViewDoctorProfileActivity.this, BookAppointmentActivity.class);
-            toBookAppts.putExtra(SearchActivity.DOCTOR_SELECTED,data);
+            toBookAppts.putExtra(SearchActivity.DOCTOR_SELECTED, data);
             ViewDoctorProfileActivity.this.startActivity(toBookAppts);
             return true;
         }

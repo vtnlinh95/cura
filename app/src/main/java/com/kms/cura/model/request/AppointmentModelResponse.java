@@ -22,8 +22,12 @@ public class AppointmentModelResponse implements EntityModelResponse {
     boolean gotResponse;
     boolean responseError = false;
     String error;
+    PatientUserEntity patient;
     List<AppointmentEntity> appts;
 
+    public AppointmentModelResponse (PatientUserEntity patientUserEntity){
+        this.patient = patientUserEntity;
+    }
     public List<AppointmentEntity> getAppts() {
         return appts;
     }
@@ -46,7 +50,6 @@ public class AppointmentModelResponse implements EntityModelResponse {
         try {
             jsonObject = new JSONObject(response);
             boolean status = jsonObject.getBoolean(UserEntity.STATUS_KEY);
-            PatientUserEntity patient = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
             if (status) {
                 List<AppointmentEntity> listAppts = new ArrayList<>();
                 JSONArray jsonArrayAppts = jsonObject.getJSONArray(AppointmentEntity.APPTS_LIST);

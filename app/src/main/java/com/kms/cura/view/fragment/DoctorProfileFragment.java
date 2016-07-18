@@ -61,16 +61,16 @@ public class DoctorProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        root = this.inflater.inflate(R.layout.activity_doctor_profile_view,null);
+        root = this.inflater.inflate(R.layout.activity_doctor_profile_view, null);
         loadData();
-        if(CurrentUserProfile.getInstance().isDoctor()) {
+        if (CurrentUserProfile.getInstance().isDoctor()) {
             modifyToolbar();
         }
         return root;
     }
 
     public void loadData() {
-        if(CurrentUserProfile.getInstance().isDoctor()) {
+        if (CurrentUserProfile.getInstance().isDoctor()) {
             doctorUserEntity = (DoctorUserEntity) CurrentUserProfile.getInstance().getEntity();
         }
         txtName = loadText(doctorUserEntity.getName(), R.id.txtDoctorName);
@@ -183,8 +183,8 @@ public class DoctorProfileFragment extends Fragment {
         for (int i = 0; i < 7; ++i) {
             HashMap<String, OpeningHour> workingtime = new HashMap<>();
             for (WorkingHourEntity workingHourEntity : listWH) {
-                for(int k =0; k<workingHourEntity.getWorkingTime().size(); ++k){
-                    if(workingHourEntity.getWorkingTime().get(k).getDayOfTheWeek().getCode() == i){
+                for (int k = 0; k < workingHourEntity.getWorkingTime().size(); ++k) {
+                    if (workingHourEntity.getWorkingTime().get(k).getDayOfTheWeek().getCode() == i) {
                         workingtime.put(workingHourEntity.getFacilityEntity().getName(), workingHourEntity.getWorkingTime().get(k));
                     }
                 }
@@ -196,7 +196,7 @@ public class DoctorProfileFragment extends Fragment {
 
     private void setListViewHeight(ExpandableListView listView,
                                    int group) {
-        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+        ExpandableListAdapter listAdapter = listView.getExpandableListAdapter();
         int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
                 View.MeasureSpec.EXACTLY);
         int totalHeight = getTotalHeight(listView, listAdapter, group, desiredWidth);

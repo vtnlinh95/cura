@@ -66,6 +66,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     public static String LENGTH_SELECTED = "LENGTH_SELECTED";
     public static String TIME_FRAME = "TIME_FRAME";
     public static String AVAILABLE = "AVAILABLE";
+    public static int TIME_FRAME_NUMBER = 48;
     public static int REQUEST_cODE = 200;
     public static int RESULT_OK = 400;
     private String hintText;
@@ -86,6 +87,8 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         data = getIntent().getStringExtra(SearchActivity.DOCTOR_SELECTED);
         doctorUserEntity = JsonToEntityConverter.convertJsonStringToEntity(data, DoctorUserEntity.getDoctorEntityType());
         initView();
+        setUpData();
+        setUpSpinner();
     }
 
     public Button initButton(int id) {
@@ -105,8 +108,6 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         btnBack.setOnClickListener(this);
         btnChooseTime.setOnClickListener(this);
         initTextView();
-        setUpData();
-        setUpSpinner();
     }
 
     public void setUpSpinner() {
@@ -149,11 +150,10 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         Bundle bundle = new Bundle();
         Calendar calendar = new GregorianCalendar(year, month - 1, day);
         dateofWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        if(dateofWeek == 1){
+        if (dateofWeek == 1) {
             dateofWeek = 6;
-        }
-        else{
-            dateofWeek-=2;
+        } else {
+            dateofWeek -= 2;
         }
         List<OpeningHour> workingHour = list.get(position).getWorkingTime();
         List<OpeningHour> workingHourSelected = new ArrayList<>();
@@ -165,6 +165,12 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         Collections.sort(workingHourSelected, new Comparator<OpeningHour>() {
             @Override
             public int compare(OpeningHour lhs, OpeningHour rhs) {
+                if(lhs == null){
+                    return 1;
+                }
+                if(rhs == null){
+                    return -1;
+                }
                 if (lhs.getOpenTime().before(rhs.getOpenTime()) &&
                         lhs.getCloseTime().before(rhs.getCloseTime())) {
                     return -1;
@@ -217,8 +223,8 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
     private int[] getAvailable() {
         List<AppointmentEntity> doctorApptswithDate = getApptsListbyDate(DataUtils.getAcceptedApptList(doctorUserEntity.getAppointmentList()));
         List<AppointmentEntity> patientApptswithDate = getApptsListbyDate(DataUtils.getAcceptedApptList(((PatientUserEntity) CurrentUserProfile.getInstance().getEntity()).getAppointmentList()));
-        int[] available = new int[48];
-        for (int i = 0; i < 48; ++i) {
+        int[] available = new int[TIME_FRAME_NUMBER];
+        for (int i = 0; i < TIME_FRAME_NUMBER; ++i) {
             available[i] = 1;
         }
         checkAvailable(available, doctorApptswithDate);
@@ -272,7 +278,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
 
     private void requestAppointment() {
         String cmt = edtComment.getText().toString();
-        if("".equals(cmt)){
+        if ("".equals(cmt)) {
             cmt = null;
         }
         FacilityEntity selectedFacility = list.get(spnFacilities.getSelectedItemPosition()).getFacilityEntity();
@@ -280,7 +286,8 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         Date selectedDate = new Date(calendar.getTime().getTime());
         Time startTime = Time.valueOf(selectedStartTime);
         Time endTime = Time.valueOf(selectedEndTime);
-        final AppointmentEntity entity = new AppointmentEntity((PatientUserEntity) CurrentUserProfile.getInstance().getEntity(),
+        final PatientUserEntity patient = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
+        final AppointmentEntity entity = new AppointmentEntity(patient,
                 doctorUserEntity, selectedFacility, selectedDate, startTime, endTime, AppointmentEntity.PENDING_STT, cmt, null);
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Loading...");
@@ -293,7 +300,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
             protected Void doInBackground(Object[] params) {
                 try {
                     PatientUserEntity patientUserEntity = (PatientUserEntity) CurrentUserProfile.getInstance().getEntity();
-                    patientUserEntity.setAppointmentList(AppointmentController.bookAppointment(entity));
+                    patientUserEntity.setAppointmentList(AppointmentController.bookAppointment(entity, patient));
                 } catch (Exception e) {
                     exception = e;
                 }
@@ -305,8 +312,7 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
                 hideProgressDialog();
                 if (exception != null) {
                     ErrorController.showDialog(BookAppointmentActivity.this, "Error : " + exception.getMessage());
-                }
-                else{
+                } else {
                     finish();
                 }
             }
@@ -398,10 +404,11 @@ public class BookAppointmentActivity extends AppCompatActivity implements View.O
         Calendar selected = new GregorianCalendar(yearSelected, monthSelected - 1, daySelected);
         return (current.after(selected));
     }
+
     private void showProgressDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
-            pDialog.show();
+        pDialog.show();
     }
 
     private void hideProgressDialog() {
