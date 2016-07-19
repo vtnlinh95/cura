@@ -1,10 +1,12 @@
 package com.kms.cura.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ import com.kms.cura.entity.SpecialityEntity;
 import com.kms.cura.event.EventBroker;
 import com.kms.cura.event.EventHandler;
 import com.kms.cura.utils.InputUtils;
+import com.kms.cura.view.activity.DoctorViewActivity;
+import com.kms.cura.view.activity.PatientViewActivity;
 import com.kms.cura.view.activity.RegisterDoctorActivity;
 
 import java.sql.Date;
@@ -33,6 +37,7 @@ import java.util.List;
 
 public class RegDocAccountFragment extends Fragment implements View.OnClickListener, TextWatcher, EventHandler {
 
+    public static final String FROM_DOCTOR_REGISTER = "FROM_DOCTOR_REGISTER";
     private EditText edtPhone, edtEmail, edtPwd, edtRePwd;
     private Button btnRegister;
     private ImageButton btnBack;
@@ -252,7 +257,11 @@ public class RegDocAccountFragment extends Fragment implements View.OnClickListe
     public void handleEvent(String event, Object data) {
         switch (event) {
             case EventConstant.REGISTER_SUCCESS:
-                ErrorController.showDialog(getActivity(), "Register success");
+                UserController.saveLoginInfo(getActivity(),edtEmail.getText().toString(),edtPwd.getText().toString());
+                Intent toDoctor = new Intent(getActivity(), DoctorViewActivity.class);
+                startActivity(toDoctor);
+                unregisterEvent();
+                getActivity().finish();
                 break;
             case EventConstant.REGISTER_FAILED:
                 ErrorController.showDialog(getActivity(), "Register failed :" + data);
@@ -265,13 +274,10 @@ public class RegDocAccountFragment extends Fragment implements View.OnClickListe
                 }
                 break;
             case EventConstant.INTERNAL_ERROR:
+                if(data == null){
+                    data = "";
+                }
                 ErrorController.showDialog(getActivity(), getResources().getString(R.string.InternalError) + " :" + data);
         }
-    }
-
-    @Override
-    public void onDetach() {
-        unregisterEvent();
-        super.onDetach();
     }
 }
