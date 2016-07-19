@@ -20,7 +20,7 @@
             android:layout_marginTop="30sp"
             android:layout_marginBottom="20sp"/>
 
-        <Spinner
+        <com.kms.cura.view.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="@dimen/spinner_60"
             android:id="@+id/spnDegree"
@@ -28,7 +28,7 @@
             android:textSize="@dimen/docText_18"
             style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
-        <Spinner
+        <com.kms.cura.view.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="@dimen/spinner_60"
             android:id="@+id/spnSpeciality"
@@ -36,7 +36,7 @@
             android:textSize="@dimen/docText_18"
             style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
-        <Spinner
+        <com.kms.cura.view.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="@dimen/spinner_60"
             android:id="@+id/spnFacility"

@@ -16,26 +16,26 @@ import com.kms.cura.model.DegreeModel;
 import com.kms.cura.model.FacilityModel;
 import com.kms.cura.model.SpecialityModel;
 import com.kms.cura.utils.DataUtils;
-import com.kms.cura.view.UpdateSpinner;
+import com.kms.cura.view.CustomSpinner;
+import com.kms.cura.view.SpinnerEventsListener;
 import com.kms.cura.view.adapter.CheckBoxAdapter;
 import com.kms.cura.view.adapter.StringListAdapter;
 import com.kms.cura.view.activity.RegisterDoctorActivity;
 
 import java.util.ArrayList;
 
-public class RegDocProfessionalFragment extends Fragment implements View.OnClickListener, UpdateSpinner, AdapterView.OnItemSelectedListener {
+public class RegDocProfessionalFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, SpinnerEventsListener {
 
     private ArrayList<String> degree, speciality, facility;
     private ArrayList<String> userSpeciality, userFacility;
     private String userDegree;
     private boolean[] checkedSpeciality, checkedFacility;
     private int checkedDegree;
-    private Spinner spnDegree, spnSpeciality, spnFacility;
+    private Spinner spnDegree;
+    private CustomSpinner spnSpeciality, spnFacility;
     private CheckBoxAdapter adapterSpeciality, adapterFacility;
     private StringListAdapter adapterDegree;
     private ImageButton btnNext, btnBack;
-    private UpdateSpinner updateSpinner;
-    private View myFragmentView = null;
     private String spnText[] = {"Degree Types", "Areas of Speciality", "Facilities"};
 
 
@@ -54,7 +54,6 @@ public class RegDocProfessionalFragment extends Fragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.fragment_reg_doc__professional, container, false);
-        updateSpinner = this;
         degree = (ArrayList<String>) DataUtils.getListName(DegreeModel.getInstance().getDegrees());
         speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
         facility = (ArrayList<String>) DataUtils.getListName(FacilityModel.getInstace().getFacilities());
@@ -92,15 +91,16 @@ public class RegDocProfessionalFragment extends Fragment implements View.OnClick
         spnFacility = setupSpinner(myFragmentView, R.id.spnFacility, adapterFacility);
     }
 
-    private Spinner setupSpinner(View parent, int resourceId, CheckBoxAdapter adapter) {
-        Spinner spn = (Spinner) parent.findViewById(resourceId);
+    private CustomSpinner setupSpinner(View parent, int resourceId, CheckBoxAdapter adapter) {
+        CustomSpinner spn = (CustomSpinner) parent.findViewById(resourceId);
         spn.setAdapter(adapter);
         spn.setSelection(adapter.getCount());
+        spn.setSpinnerEventsListener(this);
         return spn;
     }
 
     private CheckBoxAdapter createAdapter(ArrayList<String> data, boolean[] checked) {
-        return new CheckBoxAdapter(getActivity(), R.layout.check_box_item, data, checked, updateSpinner);
+        return new CheckBoxAdapter(getActivity(), R.layout.check_box_item, data, checked);
     }
 
     private ImageButton setupButton(View parent, int resourceId, View.OnClickListener listener) {
@@ -204,16 +204,6 @@ public class RegDocProfessionalFragment extends Fragment implements View.OnClick
     }
 
     @Override
-    public void callBackUpdateSpinner() {
-        adapterFacility = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, facility, adapterFacility.getSelectedBoolean(), updateSpinner);
-        spnFacility.setAdapter(adapterFacility);
-        spnFacility.setSelection(adapterFacility.getCount());
-        adapterSpeciality = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, adapterSpeciality.getSelectedBoolean(), updateSpinner);
-        spnSpeciality.setAdapter(adapterSpeciality);
-        spnSpeciality.setSelection(adapterSpeciality.getCount());
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         checkedDegree = position;
     }
@@ -223,4 +213,18 @@ public class RegDocProfessionalFragment extends Fragment implements View.OnClick
 
     }
 
+    @Override
+    public void onSpinnerOpened() {
+
+    }
+
+    @Override
+    public void onSpinnerClosed() {
+        adapterFacility = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, facility, adapterFacility.getSelectedBoolean());
+        spnFacility.setAdapter(adapterFacility);
+        spnFacility.setSelection(adapterFacility.getCount());
+        adapterSpeciality = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, adapterSpeciality.getSelectedBoolean());
+        spnSpeciality.setAdapter(adapterSpeciality);
+        spnSpeciality.setSelection(adapterSpeciality.getCount());
+    }
 }
