@@ -21,10 +21,11 @@ import com.kms.cura.controller.UserController;
 import com.kms.cura.view.fragment.DoctorHomeFragment;
 import com.kms.cura.view.fragment.DoctorSettingsFragment;
 import com.kms.cura.view.fragment.DoctorProfileFragment;
+import com.kms.cura.view.fragment.DoctorRequestListFragment;
 
 public class DoctorViewActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DialogInterface.OnClickListener {
     private Toolbar doctorToolbar;
-    private Fragment doctorHomeFragment, doctorProfileFragment, doctorSettingsFragment, doctorHealthTrachkerFragment;
+    private Fragment doctorHomeFragment, doctorProfileFragment, doctorSettingsFragment, doctorHealthTrachkerFragment, doctorRequestListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
     private void initFragments() {
         doctorProfileFragment = new DoctorProfileFragment();
         doctorSettingsFragment = new DoctorSettingsFragment();
+        doctorRequestListFragment = new DoctorRequestListFragment();
         changeFragment(doctorProfileFragment);
     }
 
@@ -116,7 +118,7 @@ public class DoctorViewActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_appointment) {
             Toast.makeText(this, "appointment", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_request) {
-            Toast.makeText(this, "Request", Toast.LENGTH_SHORT).show();
+            changeFragment(doctorRequestListFragment);
         } else if (id == R.id.nav_messages) {
             Toast.makeText(this, "message", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {

@@ -5,7 +5,6 @@ import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.entity.user.PatientUserEntity;
 import com.kms.cura.entity.user.UserEntity;
 
-
 /**
  * Created by linhtnvo on 6/8/2016.
  */
@@ -13,6 +12,7 @@ public class CurrentUserProfile {
     private static CurrentUserProfile mInstance;
     private UserEntity entity;
 
+    
 
     private CurrentUserProfile() {
         //
