@@ -104,11 +104,11 @@
                 android:text="@string/Speciality"
                 android:textSize="@dimen/textSize" />
 
-            <Spinner
+            <com.kms.cura.view.CustomSpinner
                 android:id="@+id/spnSpeciality"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spinner_60"
-                android:layout_weight="1"></Spinner>
+                android:layout_weight="1"></com.kms.cura.view.CustomSpinner>
 
         </LinearLayout>
 

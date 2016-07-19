@@ -9,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.kms.cura.R;
-import com.kms.cura.view.UpdateSpinner;
 
 import java.util.ArrayList;
 
@@ -22,9 +21,8 @@ public class CheckBoxAdapter extends BaseAdapter {
     private int resource;
     private ArrayList<String> checkList;
     private boolean[] checked;
-    private UpdateSpinner updateSpinner;
 
-    public CheckBoxAdapter(Context context, int resource, ArrayList objects, boolean[] checked, UpdateSpinner updateSpinner) {
+    public CheckBoxAdapter(Context context, int resource, ArrayList objects, boolean[] checked) {
         this.context = context;
         this.resource = resource;
         this.checkList = objects;
@@ -35,7 +33,6 @@ public class CheckBoxAdapter extends BaseAdapter {
             for (int i = 0; i < checkList.size() - 1; ++i)
                 this.checked[i] = false;
         }
-        this.updateSpinner = updateSpinner;
     }
 
     @Override
@@ -56,7 +53,7 @@ public class CheckBoxAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.check_box_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(resource, parent, false);
         }
         CheckBox cb = (CheckBox) convertView.findViewById(R.id.checkBox);
         final TextView tv = (TextView) convertView.findViewById(R.id.tvHint);
@@ -92,7 +89,6 @@ public class CheckBoxAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 checked[position] = !checked[position];
-                updateSpinner.callBackUpdateSpinner();
             }
         });
     }

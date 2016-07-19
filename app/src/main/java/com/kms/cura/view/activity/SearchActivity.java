@@ -12,25 +12,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 import com.kms.cura.R;
-import com.kms.cura.constant.EventConstant;
-import com.kms.cura.controller.ErrorController;
-import com.kms.cura.entity.json.EntityToJsonConverter;
-import com.kms.cura.entity.json.JsonToEntityConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
-import com.kms.cura.event.EventBroker;
-import com.kms.cura.event.EventHandler;
-import com.kms.cura.view.UpdateSpinner;
 import com.kms.cura.view.adapter.DoctorListViewAdapter;
 import com.kms.cura.view.adapter.SpinnerHintAdapter;
 import com.kms.cura.view.fragment.PatientHomeFragment;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +27,6 @@ public class SearchActivity extends AppCompatActivity implements OnItemSelectedL
     private static final int NAME = 1;
     private static final int RAITING = 2;
     private static final int PRICE = 3;
-    private UpdateSpinner updateSpinner;
     private int checkedSort;
     private ArrayAdapter<CharSequence> adapter;
     private ListView lv;

@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 
 import com.kms.cura.R;
 import com.kms.cura.constant.EventConstant;
@@ -40,8 +39,9 @@ import com.kms.cura.model.Settings;
 import com.kms.cura.model.SpecialityModel;
 import com.kms.cura.utils.DataUtils;
 import com.kms.cura.utils.GPSTracker;
+import com.kms.cura.view.CustomSpinner;
+import com.kms.cura.view.SpinnerEventsListener;
 import com.kms.cura.view.ReloadData;
-import com.kms.cura.view.UpdateSpinner;
 import com.kms.cura.view.activity.PatientViewActivity;
 import com.kms.cura.view.activity.SearchActivity;
 import com.kms.cura.view.adapter.CheckBoxAdapter;
@@ -52,20 +52,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class PatientHomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, UpdateSpinner, ReloadData, EventHandler {
+public class PatientHomeFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, ReloadData, EventHandler, SpinnerEventsListener {
     private static final String FRAGMENT_NAME = "Home";
     public static final String AUTO_FILL = "auto_fill";
     private EditText edtName, edtLocation;
     private RadioGroup rdbtngroupLocation;
     private RadioButton rdbtnCurrentLocation, rdbtnManualEnter;
-    private Spinner spnSpeciality;
+    private CustomSpinner spnSpeciality;
     private Button btnSearch;
     private Context mContext;
     private Activity activity;
     private String currentLocation = null;
     private boolean checked = true;
     private ArrayList<String> speciality;
-    private UpdateSpinner updateSpinner;
     private CheckBoxAdapter specialityAdapter;
     private boolean[] specialitySelected = null; // it stores which specialities are chosen
     private final int CURRENT_LOCATION = 1;
@@ -112,7 +111,6 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_patient_home, container, false);
         broker = EventBroker.getInstance();
-        updateSpinner = this;
         reloadData = this;
         initView(root);
         setUpSpnSpeciality();
@@ -127,7 +125,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
     public void initView(View root) {
         edtName = (EditText) root.findViewById(R.id.edtName);
-        spnSpeciality = (Spinner) root.findViewById(R.id.spnSpeciality);
+        spnSpeciality = (CustomSpinner) root.findViewById(R.id.spnSpeciality);
         edtLocation = (EditText) root.findViewById(R.id.edtLocation);
         rdbtngroupLocation = (RadioGroup) root.findViewById(R.id.rdbtngroupLoacation);
         rdbtngroupLocation.setOnCheckedChangeListener(PatientHomeFragment.this);
@@ -192,9 +190,10 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
 
         speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
         speciality.add(HINT_TEXT);
-        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialitySelected, updateSpinner);
+        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialitySelected);
         spnSpeciality.setAdapter(specialityAdapter);
         spnSpeciality.setSelection(specialityAdapter.getCount());
+        spnSpeciality.setSpinnerEventsListener(this);
 
     }
 
@@ -273,13 +272,6 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         ErrorController.showDialog(getActivity(), getContext().getResources().getString(R.string.LocationError));
     }
 
-    @Override
-    public void callBackUpdateSpinner() {
-        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialityAdapter.getSelectedBoolean(), updateSpinner);
-        spnSpeciality.setAdapter(specialityAdapter);
-        spnSpeciality.setSelection(specialityAdapter.getCount());
-    }
-
     public void loadCurrentLocation(GPSTracker gpsTracker) {
         Location location = gpsTracker.getLocation();
         if (location == null) {
@@ -346,7 +338,6 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
                 intent.putExtra(SEARCH_RESULT, EntityToJsonConverter.convertEntityListToJson((List<DoctorUserEntity>) data).toString());
                 hideProgressDialog();
                 startActivity(intent);
-
                 break;
             case EventConstant.LOGIN_FAILED:
                 hideProgressDialog();
@@ -440,7 +431,7 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
     private void setAutoFilledData(List<SpecialityEntity> specialityEntities) {
         speciality = (ArrayList<String>) DataUtils.getListName(SpecialityModel.getInstace().getSpecialities());
         speciality.add(HINT_TEXT);
-        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, getAutoFilledData(specialityEntities), updateSpinner);
+        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, getAutoFilledData(specialityEntities));
         spnSpeciality.setAdapter(specialityAdapter);
         spnSpeciality.setSelection(specialityAdapter.getCount());
     }
@@ -455,4 +446,16 @@ public class PatientHomeFragment extends Fragment implements RadioGroup.OnChecke
         }
         return b;
     }
+
+    @Override
+    public void onSpinnerOpened() {
+    }
+
+    @Override
+    public void onSpinnerClosed() {
+        specialityAdapter = new CheckBoxAdapter(getActivity(), R.layout.check_box_item, speciality, specialityAdapter.getSelectedBoolean());
+        spnSpeciality.setAdapter(specialityAdapter);
+        spnSpeciality.setSelection(specialityAdapter.getCount());
+    }
+
 }
