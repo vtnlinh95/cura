@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import com.google.gson.Gson;
 import com.kms.cura.R;
+import com.kms.cura.entity.json.EntityToJsonConverter;
 import com.kms.cura.entity.user.DoctorUserEntity;
 import com.kms.cura.view.adapter.DoctorListViewAdapter;
 import com.kms.cura.view.adapter.SpinnerHintAdapter;
@@ -53,7 +54,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemSelectedL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent toProfileView = new Intent(SearchActivity.this,ViewDoctorProfileActivity.class);
-                toProfileView.putExtra(DOCTOR_SELECTED,EntityToJsonConverter.convertEntityToJson(doctors.get(position)).toString());
+                toProfileView.putExtra(DOCTOR_SELECTED, EntityToJsonConverter.convertEntityToJson(doctors.get(position)).toString());
                 startActivity(toProfileView);
             }
         });
