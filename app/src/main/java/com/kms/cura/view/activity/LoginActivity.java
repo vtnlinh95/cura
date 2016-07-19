@@ -38,10 +38,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
         registerEvent();
         createAccountButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
-        if (UserController.checkSignIn(this)) {
-            UserController.autoSignIn(this);
-            finish();
-        }
     }
 
     /**
@@ -165,18 +161,19 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
     public void handleEvent(String event, Object data) {
         switch (event) {
             case EventConstant.LOGIN_SUCCESS:
-                if (!UserController.checkSignIn(this)) {
-                    UserController.saveLoginInfo(this, email.getText().toString(), password.getText().toString());
-                    unregisterEvent();
-                }
+                UserController.saveLoginInfo(this, email.getText().toString(), password.getText().toString());
                 switch ((String) data) {
                     case EventConstant.TYPE_PATIENT:
                         Intent toHomePatient = new Intent(this, PatientViewActivity.class);
                         startActivity(toHomePatient);
+                        unregisterEvent();
+                        finish();
                         break;
                     case EventConstant.TYPE_DOCTOR:
                         Intent toHomeDoctor = new Intent(this, DoctorViewActivity.class);
                         startActivity(toHomeDoctor);
+                        unregisterEvent();
+                        finish();
                         break;
                 }
                 break;
@@ -192,6 +189,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Vie
                 break;
             case EventConstant.INTERNAL_ERROR:
                 String internalError = getResources().getString(R.string.InternalError);
+                if (data == null) {
+                    data = "";
+                }
                 ErrorController.showDialog(this, internalError + " : " + data);
         }
     }
