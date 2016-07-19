@@ -4,15 +4,17 @@ import com.kms.cura.entity.AppointmentEntity;
 import com.kms.cura.entity.Entity;
 
 import java.io.UnsupportedEncodingException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by linhtnvo on 6/17/2016.
  */
 public class DataUtils {
+    public static long MILISECOND_OF_DAY = 86400000;
+
     public static List<String> getListName(List<? extends Entity> list) {
         List<String> names = new ArrayList<>();
         for (int i = 0; i < list.size(); ++i) {
@@ -34,32 +36,49 @@ public class DataUtils {
         }
     }
 
-    public static List<AppointmentEntity> getUpcomingAppts(List<AppointmentEntity> appts){
+    public static List<AppointmentEntity> getAcceptedApptList(List<AppointmentEntity> list) {
+        List<AppointmentEntity> entities = new ArrayList<>();
+        for (AppointmentEntity entity : list) {
+            if (entity.getStatus() == AppointmentEntity.ACCEPTED_STT) {
+                entities.add(entity);
+            }
+        }
+        return entities;
+    }
+
+    public static List<AppointmentEntity> getUpcomingAppts(List<AppointmentEntity> appts) {
         List<AppointmentEntity> upcomingAppts = new ArrayList<>();
         Date current = gettheCurrent();
-        for(AppointmentEntity entity : appts){
-            if(entity.getApptDay().after(current)){
+        long currentTime = current.getTime();
+        for (AppointmentEntity entity : appts) {
+            long apptTime = entity.getApptDay().getTime();
+            if (entity.getApptDay().after(current)) {
+                upcomingAppts.add(entity);
+            } else if (Math.abs(currentTime - apptTime) < MILISECOND_OF_DAY) {
                 upcomingAppts.add(entity);
             }
         }
         return upcomingAppts;
     }
 
-    public static List<AppointmentEntity> getPastAppts(List<AppointmentEntity> appts){
+    public static List<AppointmentEntity> getPastAppts(List<AppointmentEntity> appts) {
         List<AppointmentEntity> pastAppts = new ArrayList<>();
         Date current = gettheCurrent();
-        for(AppointmentEntity entity : appts){
-            if(entity.getApptDay().before(current)){
+        long currentTime = current.getTime();
+        for (AppointmentEntity entity : appts) {
+            long apptTime = entity.getApptDay().getTime();
+            if (entity.getApptDay().before(current) &&
+                    (Math.abs(currentTime - apptTime) > MILISECOND_OF_DAY)) {
                 pastAppts.add(entity);
             }
         }
         return pastAppts;
     }
 
-    private static Date gettheCurrent(){
+    private static Date gettheCurrent() {
         Calendar calendar = Calendar.getInstance();
         java.util.Date date = calendar.getTime();
-        return new Date(date.getTime());
+        return date;
     }
 
 

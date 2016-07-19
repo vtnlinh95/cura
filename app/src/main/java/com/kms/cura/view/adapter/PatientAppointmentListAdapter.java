@@ -71,7 +71,7 @@ public class PatientAppointmentListAdapter extends BaseAdapter implements Sticky
     }
 
     public String getDate(Date date) {
-        Calendar calendar = new GregorianCalendar(date.getYear(), date.getMonth(), date.getDate());
+        Calendar calendar = new GregorianCalendar(date.getYear()+1900, date.getMonth(), date.getDate());
         String dayOftheWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
         SimpleDateFormat month_date = new SimpleDateFormat("MMMM");
         String month_name = month_date.format(calendar.getTime());

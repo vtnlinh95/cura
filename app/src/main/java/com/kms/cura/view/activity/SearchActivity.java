@@ -37,6 +37,7 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements OnItemSelectedListener, View.OnClickListener {
     private static final String ACTIVITY_NAME = "Results";
+    public static String DOCTOR_SELECTED = "DOCTOR_SELECTED";
     private static final int NAME = 1;
     private static final int RAITING = 2;
     private static final int PRICE = 3;
@@ -62,7 +63,14 @@ public class SearchActivity extends AppCompatActivity implements OnItemSelectedL
         initArray();
         lv = (ListView) findViewById(R.id.listView1);
         lv.setAdapter(new DoctorListViewAdapter(this, doctors));
-
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent toProfileView = new Intent(SearchActivity.this,ViewDoctorProfileActivity.class);
+                toProfileView.putExtra(DOCTOR_SELECTED,EntityToJsonConverter.convertEntityToJson(doctors.get(position)).toString());
+                startActivity(toProfileView);
+            }
+        });
         initAdapter();
         initSpinner();
     }

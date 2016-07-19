@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 public class ChooseTimeActivity extends AppCompatActivity implements View.OnDragListener, View.OnLongClickListener, View.OnClickListener {
@@ -53,7 +54,7 @@ public class ChooseTimeActivity extends AppCompatActivity implements View.OnDrag
     private int[] availableStatus;
 
     private LayoutInflater inflater;
-    private String[] timeFrame;
+    private ArrayList<String> timeFrame;
     private int[] tags;
     private List<Integer> selectedTime;
     private List<Integer> tempSelectedTime;
@@ -65,6 +66,8 @@ public class ChooseTimeActivity extends AppCompatActivity implements View.OnDrag
     private boolean selectRight = false;
     public static String START_TIME = "start_time";
     public static String END_TIME = "end_time";
+    public static String INDEX_START_TIME = "index_start_time";
+    public static String INDEX_END_TIME = "index_end_time";
     private int[] months = {Calendar.JANUARY, Calendar.FEBRUARY, Calendar.MARCH, Calendar.APRIL, Calendar.MAY,
             Calendar.JUNE, Calendar.JULY, Calendar.AUGUST, Calendar.SEPTEMBER, Calendar.OCTOBER,
             Calendar.NOVEMBER, Calendar.DECEMBER, Calendar.UNDECIMBER};
@@ -105,7 +108,7 @@ public class ChooseTimeActivity extends AppCompatActivity implements View.OnDrag
         month = bundle.getInt(BookAppointmentActivity.MONTH_SELECTED);
         year = bundle.getInt(BookAppointmentActivity.YEAR_SELECTED);
         apptLength = bundle.getInt(BookAppointmentActivity.LENGTH_SELECTED);
-        getTimeSpan();
+        getTimeSpan(bundle);
     }
 
     public String getSelectedDate() {
@@ -156,7 +159,7 @@ public class ChooseTimeActivity extends AppCompatActivity implements View.OnDrag
         View view = inflater.inflate(R.layout.time_selection_layout, null);
         TextView txtTime = (TextView) view.findViewById(R.id.txtTime);
         TextView txtTimeChosen = (TextView) view.findViewById(R.id.txtTimeChosen);
-        txtTime.setText(timeFrame[position]);
+        txtTime.setText(timeFrame.get(position));
         if (position % 2 == 0) {
             txtTime.setBackgroundResource(R.drawable.border_right);
             txtTimeChosen.setBackgroundColor(lightGrey);
@@ -411,12 +414,15 @@ public class ChooseTimeActivity extends AppCompatActivity implements View.OnDrag
         return false;
     }
 
-    private void getTimeSpan() {
-        length = 48;
+    private void getTimeSpan(Bundle bundle) {
         increasement = apptLength;
-        timeFrame = getResources().getStringArray(R.array.TimeFrame48);
-        availableStatus = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1};
+        timeFrame = bundle.getStringArrayList(BookAppointmentActivity.TIME_FRAME);
+        length = timeFrame.size();
+        ArrayList<Integer> list = bundle.getIntegerArrayList(BookAppointmentActivity.AVAILABLE);
+        availableStatus = new int [list.size()];
+        for (int i=0; i<list.size(); ++i){
+            availableStatus[i] = list.get(i);
+        }
     }
 
 
@@ -438,11 +444,13 @@ public class ChooseTimeActivity extends AppCompatActivity implements View.OnDrag
             Intent back = new Intent();
             Bundle bundle2 = new Bundle();
             int indexEnd = selectedTime.get(increasement - 1);
-            bundle2.putString(START_TIME, timeFrame[selectedTime.get(0)]);
+            bundle2.putInt(INDEX_START_TIME,selectedTime.get(0));
+            bundle2.putString(START_TIME, timeFrame.get(selectedTime.get(0)));
             if (indexEnd == length - 1) {
                 indexEnd = -1;
             }
-            bundle2.putString(END_TIME, timeFrame[indexEnd + 1]);
+            bundle2.putString(END_TIME, timeFrame.get(indexEnd + 1));
+            bundle2.putInt(INDEX_END_TIME,indexEnd + 1);
             back.putExtras(bundle2);
             setResult(BookAppointmentActivity.RESULT_OK, back);
             finish();

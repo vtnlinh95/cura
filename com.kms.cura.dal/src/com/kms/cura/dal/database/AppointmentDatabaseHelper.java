@@ -62,7 +62,9 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 				resultSet.getDate(AppointmentColumn.APPT_DAY.getColumnName()),
 				resultSet.getTime(AppointmentColumn.START_TIME.getColumnName()),
 				resultSet.getTime(AppointmentColumn.END_TIME.getColumnName()),
-				resultSet.getInt(AppointmentColumn.STATUS.getColumnName()));
+				resultSet.getInt(AppointmentColumn.STATUS.getColumnName()),
+				resultSet.getString(AppointmentColumn.PATIENT_CMT.getColumnName()),
+				resultSet.getString(AppointmentColumn.DOCTOR_CMT.getColumnName()));
 	}
 
 	public List<AppointmentEntity> getAppointment(AppointSearchEntity criteria, PatientUserEntity patientUserEntity,
@@ -125,6 +127,12 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 		if (entity.getStatus() != -1) {
 			columnValueMap.put(AppointmentColumn.APPT_DAY.getColumnName(), entity.getApptDay());
 		}
+		if (entity.getPatientCmt() != null) {
+			columnValueMap.put(AppointmentColumn.PATIENT_CMT.getColumnName(), entity.getPatientCmt());
+		}
+		if (entity.getDoctorCmt() != null) {
+			columnValueMap.put(AppointmentColumn.DOCTOR_CMT.getColumnName(), entity.getDoctorCmt());
+		}
 		return columnValueMap;
 	}
 
@@ -135,7 +143,7 @@ public class AppointmentDatabaseHelper extends DatabaseHelper {
 			con.setAutoCommit(false);
 			createAppointment(entity);
 			AppointmentEntity search = new AppointmentEntity(entity.getPatientUserEntity(), null, null, null, null,
-					null, -1);
+					null, -1,null, null);
 			patientAppts = getAppointment(new AppointSearchEntity(search), entity.getPatientUserEntity(), null);
 			con.commit();
 			return patientAppts;
