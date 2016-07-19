@@ -23,7 +23,7 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
     private Button btnRegister;
     private int count = 0;
     private EventBroker broker;
-    private boolean checkName, checkEmail, checkPass, checkPassReenter;
+    private boolean checkName, checkEmptyName, checkEmail, checkPass, checkPassReenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,8 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        validateFirstName();
+        validateEmptyFirstName();
+        validateValidFirstName();
         validateEmail();
         validatePassword();
         validatePasswordReenter();
@@ -85,62 +86,66 @@ public class PatientSignUpActivity extends AppCompatActivity implements TextWatc
 
     @Override
     public void afterTextChanged(Editable s) {
-        btnRegister.setEnabled(checkName && checkEmail && checkPass && checkPassReenter);
+        btnRegister.setEnabled(checkName && checkEmptyName && checkEmail && checkPass && checkPassReenter);
     }
 
     public String getEditTextText(EditText src) {
         return src.getText().toString();
     }
 
-    public void validateFirstName() {
+    public void validateValidFirstName() {
         edtFirstName.setError(null);
-        if (edtFirstName.hasFocus()) {
-            checkName = false;
-            if (!InputUtils.isNameValid(getEditTextText(edtFirstName))) {
-                edtFirstName.setError(getResources().getString(R.string.FirstNameError));
-            } else if ("".equals(getEditTextText(edtFirstName))) {
-                edtFirstName.setError(getResources().getString(R.string.first_name_error));
-            } else {
-                checkName = true;
-            }
+        if (!edtFirstName.hasFocus()) {
+            return;
+        }
+        checkName = InputUtils.isNameValid(getEditTextText(edtFirstName));
+        if(!checkName){
+            edtFirstName.setError(getResources().getString(R.string.FirstNameError));
+        }
+    }
+
+    public void validateEmptyFirstName(){
+        edtFirstName.setError(null);
+        if(!edtFirstName.hasFocus()){
+            return;
+        }
+        checkEmptyName = !("".equals(getEditTextText(edtFirstName));
+        if(!checkEmptyName){
+            edtFirstName.setError(getResources().getString(R.string.first_name_error));
         }
     }
 
 
     public void validateEmail() {
         edtEmail.setError(null);
-        if (edtEmail.hasFocus()) {
-            if (!InputUtils.isEmailValid(getEditTextText(edtEmail))) {
-                checkEmail = false;
-                edtEmail.setError(getResources().getString(R.string.EmailError));
-            } else {
-                checkEmail = true;
-            }
+        if (!edtEmail.hasFocus()) {
+            return;
+        }
+        checkEmail = InputUtils.isEmailValid(getEditTextText(edtEmail));
+        if(!checkEmail) {
+            edtEmail.setError(getResources().getString(R.string.EmailError));
         }
     }
 
     public void validatePassword() {
         edtPassword.setError(null);
-        if(edtPassword.hasFocus()) {
-            if (!InputUtils.isPasswordValid(getEditTextText(edtPassword))) {
-                checkPass = false;
-                edtPassword.setError(getResources().getString(R.string.PasswordError));
-            } else {
-                checkPass = true;
-            }
+        if(!edtPassword.hasFocus()) {
+            return;
+        }
+        checkPass = InputUtils.isPasswordValid(getEditTextText(edtPassword));
+        if(!checkPass) {
+            edtPassword.setError(getResources().getString(R.string.PasswordError));
         }
     }
 
     public void validatePasswordReenter() {
         edtPasswordReenter.setError(null);
-        if (edtPasswordReenter.hasFocus()) {
-            if (!getEditTextText(edtPasswordReenter).equals(getEditTextText(edtPassword))) {
-                checkPassReenter = false;
-                edtPasswordReenter.setError(getResources().getString(R.string.PasswordReenterError));
-            } else {
-                checkPassReenter = true;
-            }
-
+        if (!edtPasswordReenter.hasFocus()) {
+            return;
+        }
+        checkPassReenter = getEditTextText(edtPasswordReenter).equals(getEditTextText(edtPassword));
+        if(!checkPassReenter){
+            edtPasswordReenter.setError(getResources().getString(R.string.PasswordReenterError));
         }
     }
 
